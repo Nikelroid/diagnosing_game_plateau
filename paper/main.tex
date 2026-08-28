@@ -3,7 +3,9 @@
 %
 % TODO before submission
 %   [ ] swap this preamble for neurips_2026.sty (anonymous mode, NOT [final]) and refit
-%   [ ] check no de-anonymising string survives: names, institution, repo URL, arXiv id
+%   [ ] the \citep{goldstandard} entry names the authors: standard for a public preprint
+%       cited in the third person, but swap to an anonymised form if the chairs object
+%   [ ] check no other de-anonymising string survives: names, institution, repo URL, arXiv id
 %   [ ] declare the overlap with the conference version in the submission form
 %
 % Every number comes from data/ via scripts/atlas_tables.py and scripts/probe_tables.py.
@@ -60,7 +62,9 @@ repair, and it is not enough, because two questions survive it.
 cooperative, Stratego is big. The quantity that supposedly unites them is rarely computed, so
 comparative claims about difficulty rest on tradition.
 
-\textbf{What is the plateau made of?} An agent that stops improving is stuck either because it
+\textbf{What is the plateau made of?} The plateau we diagnose here is the one reported by
+\citet{goldstandard}, whose agents stall well short of their fixed expert. An agent that stops
+improving is stuck either because it
 cannot see enough (information-bound) or because it can and fails to exploit it (learning-bound).
 These call for opposite work, and one win rate cannot separate them.
 
@@ -133,8 +137,9 @@ for reporting provenance in every row, which our released table does.
 
 \section{Part II: three probes for a plateau}
 
-The atlas says what a domain can hide; it cannot say whether a given agent is limited by that. For
-the case study we grade against a fixed, deterministic, cheap rule-based expert that never trains:
+The atlas says what a domain can hide; it cannot say whether a given agent is limited by that. Our case
+study reuses the setting of a recent study of lightweight Gin Rummy agents \citep{goldstandard},
+which grades against a fixed, deterministic, cheap rule-based expert that never trains:
 it grades 600 games in about two minutes, and the graded agent answers in 0.3\,ms per move.
 
 \paragraph{The subset argument, which needs no experiment.} Our expert reads two of the learner's
@@ -160,13 +165,15 @@ domain where the reference is a restriction of the learner.
   \label{fig:probes}
 \end{figure}
 
-\paragraph{Probe 1: capacity.} Train the identical recipe with different encoders. A plain MLP
+\paragraph{Probe 1: capacity.} Train the identical recipe with different encoders, as in the
+architecture sweep of \citet{goldstandard}. A plain MLP
 averages 25.5 percent over four seeds and a self-attention encoder 25.7, with all eight seeds inside
 21.2 to 30.0. Attention buys variance, not mean, at roughly twelve times the wall-clock cost, so the
 network is not the binding constraint.
 
 \paragraph{Probe 2: the value of information, as an upper bound.} Run a determinized search
-\citep{pimc,ismcts} graded fairly, then as an oracle handed the true hidden cards. Fair search
+\citep{pimc,ismcts} graded fairly, then as an oracle handed the true hidden cards, following
+\citet{goldstandard}. Fair search
 reaches 10.3 percent at 10 rollouts and 25.6 at 120; the oracle variant reaches 40.7 and 85.3 on
 identical budgets. The gap bounds what the hidden information is worth but does not price it,
 because oracle access also removes strategy fusion \citep{strategyfusion}, the reason determinized
