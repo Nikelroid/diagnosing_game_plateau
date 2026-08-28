@@ -87,6 +87,8 @@ def fig_hidden_bits(rows, out_dir):
 
     for ax, chunk in zip(axes, chunks):
         for y, row in enumerate(chunk):
+            if row["label"] == ANCHOR_LABEL:      # a band, not just bold text
+                ax.axhspan(y - 0.46, y + 0.46, color=ANCHOR, alpha=0.10, zorder=1)
             color = FAMILY_COLOR[row["family"]]
             # a resampled value is a floor, not a measurement, so it is drawn hollow
             hollow = row["bits_source"] == "resampled"
@@ -225,8 +227,11 @@ def fig_gin_dial(rows, out_dir):
     hands = [deck(r) for r in dial]
     bits = [r["bits"] for r in dial]
 
-    fig, ax = plt.subplots(figsize=(5.2, 3.4))
-    ax.plot(hands, bits, color=FAMILY_COLOR["dial"], linewidth=2, marker="D",
+    fig, ax = plt.subplots(figsize=(5.4, 3.4))
+    # the filled area is the point of this figure: hidden information sweeps a factor of six
+    # while every rule stays fixed
+    ax.fill_between(hands, 0, bits, color=FAMILY_COLOR["dial"], alpha=0.10, zorder=1)
+    ax.plot(hands, bits, color=FAMILY_COLOR["dial"], linewidth=2.4, marker="D",
             markersize=6, markeredgecolor="white", markeredgewidth=0.8, zorder=3)
     for hand, bit, row in zip(hands, bits, dial):
         emphasise = row["label"] == ANCHOR_LABEL

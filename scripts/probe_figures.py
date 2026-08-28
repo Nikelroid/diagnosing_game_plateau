@@ -50,7 +50,7 @@ def _subtitle(ax, text):
 
 def _verdict(ax, text, color):
     """One line per panel saying what the numbers licensed. The figure has to survive a skim."""
-    ax.annotate(text, (0.5, -0.235), xycoords="axes fraction", fontsize=8.6, color=color,
+    ax.annotate(text, (0.5, -0.36), xycoords="axes fraction", fontsize=8.6, color=color,
                 ha="center", va="top", fontweight="bold")
 
 
@@ -135,6 +135,11 @@ def panel_oracle(ax, block, pending):
     drawn = arms[:1] if pending else arms
     for i, arm in enumerate(drawn):
         _seed_cloud(ax, i, arm["win_rates"], BASELINE if i == 0 else TREATMENT)
+    # a line at the baseline mean makes "no benefit" visible rather than something to compute
+    if len(drawn) > 1:
+        base = drawn[0]["win_rates"]
+        ax.axhline(sum(base) / len(base) * 100, color=BASELINE, linewidth=1,
+                   linestyle=(0, (4, 3)), alpha=0.5, zorder=1)
     labels = [a["label"] for a in arms] or ["Baseline", "Oracle"]
     ax.set_xticks(range(len(labels)))
     ax.set_xticklabels(["Baseline\n(4 planes)", "Oracle obs.\n(5 planes)"][: len(labels)],
@@ -163,7 +168,7 @@ def main():
         probes = json.load(f)
 
     pending_oracle = any("oracle_observation" in p for p in probes.get("pending", []))
-    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.6), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 4.0), sharey=True)
 
     panel_capacity(axes[0], probes["capacity"])
     panel_value_of_information(axes[1], probes["value_of_information"])
@@ -182,7 +187,9 @@ def main():
         fontsize=11,
         fontweight="bold",
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.tight_layout(rect=(0, 0.07, 1, 0.93))
+    # a hairline under the title: cheap, and it makes the panel read as one designed object
+    fig.add_artist(Line2D([0.005, 0.995], [0.945, 0.945], color=RULE, linewidth=1))
 
     out = os.path.join(HERE, "figures", "fig1_three_probes")
     os.makedirs(os.path.dirname(out), exist_ok=True)
