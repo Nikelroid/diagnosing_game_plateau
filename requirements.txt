@@ -1,0 +1,7 @@
+# The survey needs the two game engines and matplotlib. Nothing else.
+open_spiel>=1.5      # provides the `pyspiel` module
+rlcard>=1.2
+matplotlib>=3.7
+stable-baselines3>=2.3
+torch>=2.0
+pettingzoo[classic]>=1.24

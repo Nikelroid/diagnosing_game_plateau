@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+# run logs; the committed data/probes.json is the source for every number in the paper
+data/*.log
+data/configs/
+wandb/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.pdf

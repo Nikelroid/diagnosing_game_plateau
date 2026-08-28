@@ -1,0 +1,89 @@
+label,game,engine,family,players,bits,bits_source,bits_exact,bits_closed_form,bits_resampled,resample_censored_frac,actions_declared,branch_mean,branch_max,input_size,len_mean,maxlen_declared,information,dynamics,chance,hidden_note,seconds
+Mahjong 4p,rlcard:mahjong,rlcard,multi,4,163.4,closed form,,163.4,,,38,9.6,14,816,95.3,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,three opponents' hands out of the unseen wall,1.4
+Hearts 4p,hearts,openspiel,multi,4,56.2,closed form,,56.2,6.32,1.0,52,4.6,13,5088,59.9,64,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+Spades 4p,spades,openspiel,multi,4,56.2,closed form,,56.2,,,66,3.9,14,578,56.0,56,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Contract bridge 4p,bridge,openspiel,multi,4,56.2,closed form,,56.2,6.32,1.0,90,8.5,36,571,10.1,319,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,35.0
+Contract bridge (RLCard),rlcard:bridge,rlcard,multi,4,56.2,closed form,,56.2,,,91,4.6,36,573,62.4,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,the other three hands,0.2
+UNO 2p,rlcard:uno,rlcard,card,2,33.9,closed form,,33.9,,,61,1.8,8,240,43.5,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,"opponent's hand, drawn from the unseen deck",0.9
+Bridge uncontested bidding,bridge_uncontested_bidding,openspiel,card,2,32.9,closed form,,32.9,,,36,16.1,36,126,3.4,36,IMPERFECT_INFORMATION,SEQUENTIAL,SAMPLED_STOCHASTIC,partner's 13 cards out of 39 unseen,71.5
+Euchre 4p,euchre,openspiel,multi,4,31.4,closed form,,31.4,6.32,1.0,31,2.3,5,935,21.3,29,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Dou Dizhu 3p,dou_dizhu,openspiel,multi,3,31.1,closed form,,31.1,,,26057,5.3,242,159,59.5,171,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Dou Dizhu 3p (RLCard),rlcard:doudizhu,rlcard,multi,3,31.1,closed form,,31.1,,,27472,5.4,307,790,61.4,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,the opposing hands once the kitty is public,1.3
+Gin rummy (standard),"gin_rummy(num_ranks=13,num_suits=4,hand_size=10,knock_card=10)",openspiel,dial,2,30.1,closed form,,30.1,0.0,0.0,241,6.4,12,644,112.6,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,opponent's 10 cards out of the 41 I have not seen,0.5
+Gin Rummy (RLCard),rlcard:gin-rummy,rlcard,card,2,30.1,closed form,,30.1,,,110,6.2,18,260,118.4,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,opponent's 10-card hand out of 41 unseen,1.3
+"Gin dial: deck 48, hand 10","gin_rummy(num_ranks=12,num_suits=4,hand_size=10,knock_card=10)",openspiel,dial,2,28.4,closed form,,28.4,0.0,0.0,241,6.4,12,644,95.0,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.5
+"Gin dial: deck 44, hand 9","gin_rummy(num_ranks=11,num_suits=4,hand_size=9,knock_card=9)",openspiel,dial,2,25.6,closed form,,25.6,0.0,0.0,241,5.9,11,644,89.9,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.5
+Skat 3p,skat,openspiel,multi,3,25.3,closed form,,25.3,,,39,4.2,12,299,29.0,35,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Cribbage 2p,cribbage(players=2),openspiel,card,2,23.2,closed form,,23.2,,,2757,3.8,15,1,173.9,4400,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+Crazy eights 5p,crazy_eights(players=5),openspiel,multi,5,20.7,closed form,,20.7,,,58,2.5,8,372,82.4,10000,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Crazy eights 4p,crazy_eights(players=4),openspiel,multi,4,20.5,closed form,,20.5,,,58,2.5,8,319,83.5,10000,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Crazy eights 2p,crazy_eights(players=2),openspiel,card,2,20.4,closed form,,20.4,,,58,2.7,10,213,85.4,10000,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Crazy eights 2p (special cards),"crazy_eights(players=2,use_special_cards=True)",openspiel,card,2,20.4,closed form,,20.4,,,58,2.9,10,214,83.1,10000,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Crazy eights 3p,crazy_eights(players=3),openspiel,multi,3,20.4,closed form,,20.4,,,58,2.5,8,266,83.9,10000,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+"Gin dial: deck 30, hand 8","gin_rummy(num_ranks=10,num_suits=3,hand_size=8,knock_card=8)",openspiel,dial,2,17.6,closed form,,17.6,0.0,0.0,241,5.3,10,644,42.9,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.5
+"Gin dial: deck 27, hand 7","gin_rummy(num_ranks=9,num_suits=3,hand_size=7,knock_card=7)",openspiel,dial,2,15.6,closed form,,15.6,0.0,0.0,241,4.8,9,644,41.1,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.5
+"Liar's dice, 5 dice",liars_dice(numdice=5),openspiel,dice,2,12.9,closed form,,12.9,,,61,24.8,60,93,4.7,61,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+"Liar's dice, 4 dice",liars_dice(numdice=4),openspiel,dice,2,10.3,closed form,,10.3,,,49,20.4,48,75,4.4,49,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+Limit Texas hold'em 2p,rlcard:limit-holdem,rlcard,card,2,10.3,closed form,,10.3,,,4,3.0,3,72,2.7,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,opponent's two hole cards,0.0
+No-limit Texas hold'em 2p,rlcard:no-limit-holdem,rlcard,card,2,10.3,closed form,,10.3,,,5,4.0,5,54,2.3,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,opponent's two hole cards,0.0
+"Liar's dice, 3 dice",liars_dice(numdice=3),openspiel,dice,2,7.8,closed form,,7.8,,,37,16.2,36,57,4.1,37,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+"Gin dial: deck 16, hand 6","gin_rummy(num_ranks=8,num_suits=2,hand_size=6,knock_card=6)",openspiel,dial,2,6.4,closed form,,6.4,0.0,0.0,241,3.5,8,644,7.8,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,3.0
+"Gin dial: deck 14, hand 5","gin_rummy(num_ranks=7,num_suits=2,hand_size=5,knock_card=5)",openspiel,dial,2,5.8,closed form,,5.8,0.0,0.0,241,3.3,7,644,7.8,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,3.2
+Oh Hell,oh_hell,openspiel,multi,3,5.75,resampled,,,5.75,0.91,70,4.3,18,4704,29.1,108,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+"Liar's dice, 2 dice",liars_dice(numdice=2),openspiel,dice,2,5.2,closed form,,5.2,,,25,11.3,24,39,3.9,25,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+Liar's dice 2 dice (imperfect recall),liars_dice_ir(numdice=2),openspiel,dice,2,5.2,closed form,,5.2,,,25,11.3,24,39,3.9,25,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,"same dice, but the player forgets the bidding history",0.1
+"Gin dial: deck 12, hand 4","gin_rummy(num_ranks=6,num_suits=2,hand_size=4,knock_card=4)",openspiel,dial,2,5.1,closed form,,5.1,0.0,0.0,241,2.8,6,644,7.1,300,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,3.6
+First-price sealed auction,first_sealed_auction,openspiel,comm,2,4.55,exact,4.55,,,,10,5.6,10,22,2.0,2,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Tiny bridge 2p,tiny_bridge_2p,openspiel,card,2,3.9,closed form,,3.9,,,7,4.4,7,22,2.9,8,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+Leduc poker 3p,leduc_poker(players=3),openspiel,multi,3,3.3,closed form,,3.3,5.04,0.0,3,2.3,3,47,6.6,14,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+"Liar's dice, 1 die",liars_dice(numdice=1),openspiel,dice,2,2.6,closed form,,2.6,,,13,6.8,12,21,3.3,13,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+Kuhn poker 3p,kuhn_poker(players=3),openspiel,multi,3,2.58,exact,2.58,1.6,,,2,2.0,2,17,3.5,5,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Repeated Leduc poker,repeated_leduc_poker,openspiel,card,2,2.3,closed form,,2.3,,,4,1.9,3,30,12.0,20,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+Leduc hold'em (RLCard),rlcard:leduc-holdem,rlcard,card,2,2.3,closed form,,2.3,,,4,2.9,3,36,2.5,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,opponent's single card from a six-card deck,0.0
+Leduc poker,leduc_poker,openspiel,card,2,2.01,exact,2.01,2.3,,,3,2.3,3,30,3.9,8,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Bargaining,bargaining,openspiel,comm,2,1.87,resampled,,,1.87,0.0,121,22.1,37,309,8.9,10,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+Kuhn poker,kuhn_poker,openspiel,card,2,1.0,exact,1.0,1.0,,,2,2.0,2,11,2.2,3,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Tiny Hanabi,tiny_hanabi,openspiel,card,2,1.0,exact,1.0,,,,3,3.0,3,8,2.0,2,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Sheriff of Nottingham,sheriff,openspiel,comm,2,1.0,exact,1.0,,,,10,3.1,4,33,9.0,9,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.1
+Lewis signaling,lewis_signaling,openspiel,comm,2,0.79,exact,0.79,,,,3,3.0,3,6,2.0,2,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Coordinated matching pennies,coordinated_mp,openspiel,comm,2,0.67,exact,0.67,,,,2,2.0,2,,2.0,2,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-5 (hidden bids),"goofspiel(num_cards=5,imp_info=True,points_order=descending)",openspiel,card,2,0.33,exact,0.33,,,,5,3.5,5,97,4.0,5,IMPERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-4 (hidden bids),"goofspiel(num_cards=4,imp_info=True,points_order=descending)",openspiel,card,2,0.29,exact,0.29,,,,4,3.0,4,66,3.0,4,IMPERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-5 (open),"goofspiel(num_cards=5,imp_info=False,points_order=descending)",openspiel,card,2,0.23,exact,0.23,0.0,,,5,3.5,5,67,4.0,5,PERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-13 (open),"goofspiel(num_cards=13,imp_info=False,points_order=descending)",openspiel,card,2,0.0,closed form,,0.0,0.0,0.0,13,7.5,13,379,12.0,13,PERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.0
+Connect Four,connect_four,openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,7,6.8,7,126,21.9,42,PERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Oshi Zumo,oshi_zumo,openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,51,15.4,51,111,6.9,1000,PERFECT_INFORMATION,SIMULTANEOUS,DETERMINISTIC,,0.0
+Tic-tac-toe,tic_tac_toe,openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,9,5.7,9,27,7.5,9,PERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.1
+Hex 3x3,hex(board_size=3),openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,9,5.6,9,81,7.5,9,PERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.1
+Breakthrough 4x4,"breakthrough(rows=4,columns=4)",openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,192,7.5,11,48,9.6,41,PERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Nim,nim,openspiel,board,2,0.0,closed form,,0.0,0.0,0.0,29,7.8,16,39,7.7,16,PERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Universal poker (default),universal_poker,openspiel,card,2,,not measured,,,,,4,2.9,4,83,3.0,11,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.1
+Hanabi 2p (self-hidden),hanabi(players=2),openspiel,card,2,,not measured,,,,,20,15.6,19,658,13.1,118,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,"your own hand, which only your partner can see",0.0
+"Hanabi 2p, hand 3","hanabi(players=2,hand_size=3)",openspiel,card,2,,not measured,,,,,16,10.2,12,468,14.7,114,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-13 (hidden bids),"goofspiel(num_cards=13,imp_info=True,points_order=descending)",openspiel,card,2,,not measured,,,,,13,7.5,13,561,12.0,13,IMPERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.0
+Phantom tic-tac-toe,phantom_ttt,openspiel,board,2,,not measured,,,,,9,6.6,9,108,10.5,17,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Phantom tic-tac-toe (imperfect recall),phantom_ttt_ir,openspiel,board,2,,not measured,,,,,9,6.6,9,108,10.5,17,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Latent tic-tac-toe,latent_ttt,openspiel,board,2,,not measured,,,,,9,6.3,9,27,8.4,18,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Dark Hex 3x3 (perfect recall),dark_hex(board_size=3),openspiel,board,2,,not measured,,,,,9,6.8,9,162,9.7,17,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Dark Hex 3x3,dark_hex_ir(board_size=3),openspiel,board,2,,not measured,,,,,9,6.8,9,162,9.7,17,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Dark Hex 4x4,dark_hex_ir(board_size=4),openspiel,board,2,,not measured,,,,,16,11.3,16,400,19.2,31,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Dark chess 4x4,dark_chess(board_size=4),openspiel,board,2,,not measured,,,,,4674,10.8,28,442,13.0,17695,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Dark chess 8x8,dark_chess,openspiel,board,2,,not measured,,,,,4674,32.8,79,1738,114.2,17695,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.1
+Kriegspiel 4x4,kriegspiel(board_size=4),openspiel,board,2,,not measured,,,,,4674,11.1,33,328,73.2,17695,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Phantom Go 5x5,phantom_go(board_size=5),openspiel,board,2,,not measured,,,,,26,14.3,26,102,70.8,100,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Reconnaissance blind chess 4x4,rbc(board_size=4),openspiel,board,2,,not measured,,,,,4674,9.7,38,238,33.4,17695,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.0
+Reconnaissance blind chess 8x8,rbc,openspiel,board,2,,not measured,,,,,4674,39.8,85,814,191.8,17695,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,,0.1
+Battleship 10x10,battleship,openspiel,board,2,,not measured,,,,,300,102.8,180,2615,110.0,110,IMPERFECT_INFORMATION,SEQUENTIAL,DETERMINISTIC,where the opponent placed their ships,0.3
+Negotiation,negotiation,openspiel,comm,2,,not measured,,,,,342,84.1,217,90,12.3,20,IMPERFECT_INFORMATION,SEQUENTIAL,SAMPLED_STOCHASTIC,,0.0
+Trade and communicate,trade_comm,openspiel,comm,2,,not measured,,,,,110,55.0,100,57,4.0,4,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Cooperative box pushing,coop_box_pushing,openspiel,comm,2,,not measured,,,,,4,4.0,4,5,100.0,100,IMPERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.1
+Tiny bridge 4p,tiny_bridge_4p,openspiel,multi,4,,not measured,,,,,9,3.0,7,84,9.0,57,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.2
+Tarok 3p,tarok(players=3),openspiel,multi,3,,not measured,,,,,54,5.3,16,,11.1,65,IMPERFECT_INFORMATION,SEQUENTIAL,SAMPLED_STOCHASTIC,,0.0
+Colored trails 3p,colored_trails,openspiel,multi,3,,not measured,,,,,93123,126.1,426,463,3.0,3,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,1.2
+Hanabi 3p,hanabi(players=3),openspiel,multi,3,,not measured,,,,,30,21.8,28,956,17.1,123,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Hanabi 4p,hanabi(players=4),openspiel,multi,4,,not measured,,,,,38,22.4,31,1041,19.0,124,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Hanabi 5p,hanabi(players=5),openspiel,multi,5,,not measured,,,,,48,26.2,37,1280,19.6,128,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,,0.0
+Goofspiel-8 (hidden bids),"goofspiel(num_cards=8,imp_info=True,points_order=descending)",openspiel,card,2,,not measured,,,,,8,5.0,8,226,7.0,8,IMPERFECT_INFORMATION,SIMULTANEOUS,EXPLICIT_STOCHASTIC,,0.2
+Blackjack (solo vs deck),blackjack,openspiel,solo,1,,not measured,,,,,2,2.0,2,189,1.4,12,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,the dealer's hole card and the order of the shoe,0.1
+Klondike solitaire,solitaire,openspiel,solo,1,,not measured,,,,,205,4.1,14,1741,97.6,150,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,"the order of the stock, and nobody to model",0.1
+Blackjack (RLCard),rlcard:blackjack,rlcard,solo,1,,not measured,,,,,2,2.0,2,2,1.3,,IMPERFECT_INFORMATION,SEQUENTIAL,EXPLICIT_STOCHASTIC,"the dealer's hole card and the shoe order, no opponent to model",0.0
