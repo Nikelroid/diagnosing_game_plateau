@@ -1,11 +1,23 @@
-% Single submission for the NeurIPS 2026 workshop on Evaluation of Interactive Agents (IAEval).
-% 4 pages excluding references, double blind, non-archival.
+% Submission to the NeurIPS 2026 workshop TAE (Trust-AI-Eval): Can We Trust AI Evaluation?
+% 8 pages excluding references AND appendices; appendices unlimited; double blind; non-archival.
+% Verified against https://tai-eval.github.io/cfp/ on 2026-08-29.
 %
-% TODO before submission
-%   [ ] swap this preamble for neurips_2026.sty (anonymous mode, NOT [final]) and refit
-%   [ ] the \citep{goldstandard} entry names the authors: standard for a public preprint
-%       cited in the third person, but swap to an anonymised form if the chairs object
-%   [ ] check no other de-anonymising string survives: names, institution, repo URL, arXiv id
+% ANONYMITY. The chairs require anonymised submissions. In anonymous mode neurips_2026.sty
+% prints its own "Anonymous Author(s) / Affiliation / Address / email" block and IGNORES the
+% \author line below, so that line is inert until someone removes the anonymous option. The
+% [dblblindworkshop] option keeps \@anonymoustrue; [sglblindworkshop] and [nonanonymous] both
+% clear it. If accepted, the camera-ready wants [dblblindworkshop, final] and a real \author.
+%
+% The \citep{goldstandard} entry names the authors of the conference version. That is correct
+% under double blind: NeurIPS asks that you cite your own prior work in the third person rather
+% than anonymise the reference, and every mention of it here is third person. A reviewer may
+% still infer the group from the shared setting, which is expected and not a violation.
+%
+% Checked before each push (scripts/sync_overleaf.sh gates on the first three):
+%   [x] neurips_2026.sty, [dblblindworkshop], workshop title set
+%   [x] content pages within 8, references and appendix excluded
+%   [x] no unresolved citations, no undefined refs
+%   [x] no names, institution, repo URL, handle or email in the built PDF or its metadata
 %   [ ] declare the overlap with the conference version in the submission form
 %
 % Every number comes from data/ via scripts/atlas_tables.py and scripts/probe_tables.py.
