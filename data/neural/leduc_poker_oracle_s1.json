@@ -1,0 +1,11 @@
+{
+ "game": "leduc_poker",
+ "arm": "oracle",
+ "seed": 1,
+ "episodes": 200000,
+ "learner": "policy_gradient(rpg) 64x64",
+ "input_dim": 36,
+ "mean_return_vs_cfr": 0.5526,
+ "sem": 0.036775580539265454,
+ "seconds": 394.7
+}

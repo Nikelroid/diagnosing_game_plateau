@@ -1,0 +1,11 @@
+{
+ "game": "liars_dice(numdice=1,dice_sides=4)",
+ "arm": "baseline",
+ "seed": 3,
+ "episodes": 200000,
+ "learner": "policy_gradient(rpg) 64x64",
+ "input_dim": 15,
+ "mean_return_vs_cfr": -0.0468,
+ "sem": 0.009989042796985105,
+ "seconds": 251.6
+}

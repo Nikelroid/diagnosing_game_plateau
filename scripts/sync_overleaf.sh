@@ -11,7 +11,8 @@
 set -uo pipefail
 
 PROJECT=6a9187545883feb1b5e78337     # "Is it the game or the agent?" (IAEval workshop)
-LIMIT=4                              # content pages, excluding references
+LIMIT=8                              # content pages: the workshop allows 8, excluding
+                                     # references AND appendices, which are unlimited
 SRC=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 PY=$SCRATCH/envs/coev/bin/python
 CHECK_ONLY=${1:-}
@@ -21,7 +22,7 @@ B=$(mktemp -d $SCRATCH/ol_bundle_XXXX)
 trap 'rm -rf "$B" "${C:-}"' EXIT
 mkdir -p "$B/figures" "$B/tables"
 sed -e 's|{{\.\./figures/}}|{{figures/}}|' -e 's|\.\./tables/|tables/|' "$SRC/paper/main.tex" > "$B/main.tex"
-cp "$SRC/paper/refs.tex" "$B/"
+cp "$SRC/paper/refs.tex" "$SRC/paper/neurips_2026.sty" "$B/"
 # Copy every asset the paper references, and fail loudly if one is missing. A silently absent
 # figure still compiles under nonstopmode and still reports the right page count, so without this
 # check a broken paper can pass every other gate and reach Overleaf.
@@ -43,12 +44,12 @@ module load texlive/2026 2>/dev/null
 ( cd "$B" && for i in 1 2 3; do pdflatex -interaction=nonstopmode main.tex >/dev/null 2>&1; done )
 [ -f "$B/main.pdf" ] || { echo "paper does not compile; nothing pushed"; exit 1; }
 
-read -r PAGES BAD <<<"$(PYTHONNOUSERSITE= $PY -c "
-import fitz
+read -r PAGES TOTAL BAD <<<"$(PYTHONNOUSERSITE= $PY -c "
+import fitz, re
 d = fitz.open('$B/main.pdf')
-ref = next(i+1 for i,p in enumerate(d) if 'References' in p.get_text())
-print(ref-1, sum(p.get_text().count('[?]') for p in d))")"
-echo "  content pages: ${PAGES}/${LIMIT}   unresolved citations: ${BAD}"
+ref = next(i+1 for i,p in enumerate(d) if re.search(r'^\s*References\s*$', p.get_text(), re.M))
+print(ref-1, d.page_count, sum(p.get_text().count('[?]') for p in d))")"
+echo "  content pages: ${PAGES}/${LIMIT}   total with refs+appendix: ${TOTAL}   unresolved citations: ${BAD}"
 if ! [ "${PAGES:-x}" -eq "${PAGES:-x}" ] 2>/dev/null; then echo "page check failed; refusing"; exit 2; fi
 [ "$PAGES" -gt "$LIMIT" ] && { echo "over the page limit; refusing to push"; exit 2; }
 [ "$BAD" -gt 0 ] && { echo "unresolved citations; refusing to push"; exit 2; }
@@ -59,7 +60,7 @@ C=$(mktemp -d $SCRATCH/ol_clone_XXXX); rm -rf "$C"
 git clone -q "https://git:${TOKEN}@git.overleaf.com/${PROJECT}" "$C" 2>&1 | redact
 
 rm -rf "$C"/figures "$C"/tables
-cp -r "$B"/main.tex "$B"/refs.tex "$B"/figures "$B"/tables "$C"/
+cp -r "$B"/main.tex "$B"/refs.tex "$B"/neurips_2026.sty "$B"/figures "$B"/tables "$C"/
 rm -f "$C"/*.aux "$C"/*.log "$C"/*.out "$C"/*.pdf "$C"/*.synctex.gz
 git -C "$C" add -A
 if git -C "$C" diff --cached --quiet; then

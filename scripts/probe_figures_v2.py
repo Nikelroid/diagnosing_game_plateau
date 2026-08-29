@@ -44,7 +44,8 @@ plt.rcParams.update({
     "figure.dpi": 200, "savefig.bbox": "tight", "savefig.pad_inches": 0.03,
 })
 SHORT = {"kuhn_poker": "Kuhn poker", "leduc_poker": "Leduc poker",
-         "leduc_poker(action_mapping=true)": "Leduc (action map)"}
+         "leduc_poker(action_mapping=true)": "Leduc (action map)",
+         "leduc_poker(players=2,suit_isomorphism=true)": "Leduc (suit-iso)"}
 def nice(g):
     if g in SHORT: return SHORT[g]
     if g.startswith("liars_dice"):

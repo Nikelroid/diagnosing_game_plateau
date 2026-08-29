@@ -1,0 +1,11 @@
+{
+ "game": "leduc_poker",
+ "arm": "placebo",
+ "seed": 2,
+ "episodes": 200000,
+ "learner": "policy_gradient(rpg) 64x64",
+ "input_dim": 36,
+ "mean_return_vs_cfr": -0.6028,
+ "sem": 0.05754514068103405,
+ "seconds": 406.3
+}
