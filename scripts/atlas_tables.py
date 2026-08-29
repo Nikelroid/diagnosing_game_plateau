@@ -111,7 +111,7 @@ def write_family_latex(rows, path):
             rng = f"{min(bits):.1f} to {max(bits):.1f}"
             med = f"{median(bits):.1f}"
         else:
-            rng, med = "---", "---"
+            rng, med = "n/a", "n/a"
         lines.append(f"{FAMILIES[fam]} & {len(group)} & {len(bits)} & {med} & {rng} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     os.makedirs(os.path.dirname(path), exist_ok=True)

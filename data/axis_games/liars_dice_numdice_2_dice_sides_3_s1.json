@@ -1,0 +1,35 @@
+{
+ "game": "liars_dice(numdice=2,dice_sides=3)",
+ "seed": 1,
+ "episodes": 2000000,
+ "hidden_bits": null,
+ "cfr_exploitability": 0.0006744862851486774,
+ "arms": {
+  "baseline": {
+   "mean_return_vs_cfr": -0.10735,
+   "states_visited": 3070,
+   "ceiling": 0.062228058524353695,
+   "gap_to_ceiling": 0.1695780585243537,
+   "exploitability": 0.8888888888888888
+  },
+  "oracle": {
+   "mean_return_vs_cfr": 0.97565,
+   "states_visited": 5787,
+   "ceiling": 0.9999999999999998,
+   "gap_to_ceiling": 0.02434999999999976
+  },
+  "placebo": {
+   "mean_return_vs_cfr": 0.7267,
+   "states_visited": 4178,
+   "ceiling": 0.062228058524353695,
+   "gap_to_ceiling": -0.6644719414756464
+  }
+ },
+ "oracle_minus_baseline": 1.083,
+ "oracle_minus_placebo": 0.24895,
+ "widening_cost": -0.83405,
+ "placebo_oversplit": -1609,
+ "information_worth": 0.9377719414756461,
+ "capture": 1.1548650072594706,
+ "seconds": 10275.6
+}
