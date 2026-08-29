@@ -22,7 +22,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from hidden_info_survey.hidden_bits import deal_bits, hand_bits
+from hidden_info_survey.hidden_bits import multiset_deal_bits, deal_bits, hand_bits
 
 __all__ = ["GameSpec", "OPENSPIEL_GAMES", "RLCARD_GAMES", "FAMILIES"]
 
@@ -139,7 +139,7 @@ OPENSPIEL_GAMES = [
     GameSpec("oh_hell", "Oh Hell", "multi"),  # hand size varies by round, so no single closed form
     GameSpec("tarok(players=3)", "Tarok 3p", "multi"),
     GameSpec("colored_trails", "Colored trails 3p", "multi"),
-    GameSpec("crazy_eights(players=4)", "Crazy eights 4p", "multi", hand_bits(47, 5)),
+    GameSpec("crazy_eights(players=4)", "Crazy eights 4p", "multi", deal_bits(46, [5, 5, 5])),
 
     # -- breadth added for the workshop version -------------------------------------------------
     # perfect-information controls: the zero end of the axis needs more than two points
@@ -160,15 +160,15 @@ OPENSPIEL_GAMES = [
     GameSpec("hanabi(players=4)", "Hanabi 4p", "multi"),
     GameSpec("hanabi(players=5)", "Hanabi 5p", "multi"),
     # the smallest poker benchmarks at a bigger table
-    GameSpec("kuhn_poker(players=3)", "Kuhn poker 3p", "multi", hand_bits(3, 2)),
-    GameSpec("leduc_poker(players=3)", "Leduc poker 3p", "multi", hand_bits(5, 2)),
+    GameSpec("kuhn_poker(players=3)", "Kuhn poker 3p", "multi", deal_bits(3, [1, 1])),
+    GameSpec("leduc_poker(players=3)", "Leduc poker 3p", "multi", deal_bits(7, [1, 1])),
     # bidding games at more sizes
     GameSpec("goofspiel(num_cards=4,imp_info=True,points_order=descending)",
              "Goofspiel-4 (hidden bids)", "card"),
     GameSpec("goofspiel(num_cards=8,imp_info=True,points_order=descending)",
              "Goofspiel-8 (hidden bids)", "card"),
-    GameSpec("crazy_eights(players=3)", "Crazy eights 3p", "multi", hand_bits(46, 5)),
-    GameSpec("crazy_eights(players=5)", "Crazy eights 5p", "multi", hand_bits(48, 5)),
+    GameSpec("crazy_eights(players=3)", "Crazy eights 3p", "multi", deal_bits(46, [5, 5])),
+    GameSpec("crazy_eights(players=5)", "Crazy eights 5p", "multi", deal_bits(46, [5, 5, 5, 5])),
 
     # -- one player against a shuffled deck: the Balatro shape ----------------------------------
     GameSpec("blackjack", "Blackjack (solo vs deck)", "solo",
@@ -180,10 +180,10 @@ OPENSPIEL_GAMES = [
 # --------------------------------------------------------------------------- RLCard
 RLCARD_GAMES = [
     # 108 cards, 7 each. From my seat 108 - my 7 - the face-up card = 100 unseen.
-    GameSpec("uno", "UNO 2p", "card", deal_bits(100, [7]),
+    GameSpec("uno", "UNO 2p", "card", multiset_deal_bits([(1, 4), (2, 48), (4, 2)], 7),
              "opponent's hand, drawn from the unseen deck"),
     # 136 tiles, 13 each to four players. 136 - my 13 = 123 unseen, three hands of 13.
-    GameSpec("mahjong", "Mahjong 4p", "multi", deal_bits(123, [13, 13, 13]),
+    GameSpec("mahjong", "Mahjong 4p", "multi", 3 * multiset_deal_bits([(4, 34)], 13),
              "three opponents' hands out of the unseen wall"),
     GameSpec("doudizhu", "Dou Dizhu 3p (RLCard)", "multi", deal_bits(34, [17]),
              "the opposing hands once the kitty is public"),

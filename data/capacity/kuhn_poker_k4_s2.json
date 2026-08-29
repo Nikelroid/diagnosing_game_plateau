@@ -1,0 +1,10 @@
+{
+ "game": "kuhn_poker",
+ "buckets": 4,
+ "seed": 2,
+ "episodes": 400000,
+ "mean_return_vs_cfr": -0.059775,
+ "exploitability": 0.6666666666666666,
+ "distinct_keys": 4,
+ "seconds": 32.1
+}

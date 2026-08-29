@@ -45,6 +45,31 @@ def deal_bits(unseen: int, hands: list[int]) -> float:
     return bits
 
 
+def multiset_deal_bits(type_counts: list[tuple[int, int]], k: int) -> float:
+    """Bits for one hidden hand of `k` drawn from a deck whose cards come in identical copies.
+
+    `hand_bits` and `deal_bits` count C(unseen, k), which assumes every card is distinguishable.
+    That is right for a 52-card deck and wrong for UNO and Mahjong, where a hand is a multiset:
+    two red sevens are the same holding whichever physical card you were dealt. Counting them as
+    distinct inflates the estimate, and by enough to put UNO above a ceiling it cannot reach.
+
+    `type_counts` is a list of (copies of this type, how many types have that many copies), so
+    UNO's 108 cards are [(1, 4), (2, 48), (4, 2)]. Returns log2 of the number of distinct hands.
+    """
+    poly = [1]
+    for copies, count in type_counts:
+        factor = [1] * (copies + 1)
+        for _ in range(count):
+            nxt = [0] * min(len(poly) + copies, k + 1)
+            for i, a in enumerate(poly):
+                if a:
+                    for j, b in enumerate(factor):
+                        if i + j <= k:
+                            nxt[i + j] += a * b
+            poly = nxt
+    return math.log2(poly[k]) if len(poly) > k and poly[k] else float("nan")
+
+
 def CENSOR_MARK(n_resamples: int) -> float:  # noqa: N802 - reads as a constant at call sites
     """The value a fully saturated resampled estimate returns. Any row at this number is a floor."""
     return math.log2(n_resamples)

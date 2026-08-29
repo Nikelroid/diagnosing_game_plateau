@@ -1,0 +1,35 @@
+{
+ "game": "leduc_poker",
+ "seed": 0,
+ "episodes": 100000,
+ "hidden_bits": 2.01238184980336,
+ "cfr_exploitability": 0.005246493150232248,
+ "arms": {
+  "baseline": {
+   "mean_return_vs_cfr": -0.2361,
+   "states_visited": 445,
+   "ceiling": -0.0811774264313739,
+   "gap_to_ceiling": 0.1549225735686261,
+   "exploitability": 1.2708333333333333
+  },
+  "oracle": {
+   "mean_return_vs_cfr": 0.588225,
+   "states_visited": 1353,
+   "ceiling": 1.2361552976721408,
+   "gap_to_ceiling": 0.6479302976721408
+  },
+  "placebo": {
+   "mean_return_vs_cfr": -0.357425,
+   "states_visited": 1733,
+   "ceiling": -0.0811774264313739,
+   "gap_to_ceiling": 0.27624757356862606
+  }
+ },
+ "oracle_minus_baseline": 0.824325,
+ "oracle_minus_placebo": 0.94565,
+ "widening_cost": 0.12132499999999999,
+ "placebo_oversplit": 380,
+ "information_worth": 1.3173327241035147,
+ "capture": 0.6257530727941025,
+ "seconds": 412.5
+}

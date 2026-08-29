@@ -1,0 +1,82 @@
+[
+ {
+  "spec": "kuhn_poker",
+  "info_states": 12,
+  "actions": 2
+ },
+ {
+  "spec": "kuhn_poker(players=2)",
+  "info_states": 12,
+  "actions": 2
+ },
+ {
+  "spec": "dark_hex_ir(board_size=2)",
+  "info_states": 42,
+  "actions": 4
+ },
+ {
+  "spec": "dark_hex(board_size=2)",
+  "info_states": 134,
+  "actions": 4
+ },
+ {
+  "spec": "liars_dice(numdice=1,dice_sides=3)",
+  "info_states": 192,
+  "actions": 7
+ },
+ {
+  "spec": "leduc_poker(players=2,suit_isomorphism=true)",
+  "info_states": 288,
+  "actions": 3
+ },
+ {
+  "spec": "liars_dice_ir(numdice=1,dice_sides=4)",
+  "info_states": 792,
+  "actions": 9
+ },
+ {
+  "spec": "leduc_poker",
+  "info_states": 936,
+  "actions": 3
+ },
+ {
+  "spec": "leduc_poker(action_mapping=true)",
+  "info_states": 936,
+  "actions": 3
+ },
+ {
+  "spec": "liars_dice(numdice=1,dice_sides=4)",
+  "info_states": 1024,
+  "actions": 9
+ },
+ {
+  "spec": "liars_dice_ir(numdice=1,dice_sides=5)",
+  "info_states": 2560,
+  "actions": 11
+ },
+ {
+  "spec": "liars_dice(numdice=1,dice_sides=5)",
+  "info_states": 5120,
+  "actions": 11
+ },
+ {
+  "spec": "liars_dice_ir(numdice=1,dice_sides=6)",
+  "info_states": 6744,
+  "actions": 13
+ },
+ {
+  "spec": "liars_dice(numdice=1,dice_sides=6)",
+  "info_states": 24576,
+  "actions": 13
+ },
+ {
+  "spec": "liars_dice(numdice=2,dice_sides=3)",
+  "info_states": 24576,
+  "actions": 13
+ },
+ {
+  "spec": "liars_dice_ir(numdice=1,dice_sides=8)",
+  "info_states": 31056,
+  "actions": 17
+ }
+]

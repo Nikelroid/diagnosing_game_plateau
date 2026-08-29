@@ -1,0 +1,10 @@
+{
+ "game": "leduc_poker",
+ "buckets": 16,
+ "seed": 2,
+ "episodes": 400000,
+ "mean_return_vs_cfr": -0.5204,
+ "exploitability": 4.741666666666667,
+ "distinct_keys": 16,
+ "seconds": 427.8
+}

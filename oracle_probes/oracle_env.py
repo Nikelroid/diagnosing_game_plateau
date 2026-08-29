@@ -36,7 +36,11 @@ import numpy as np
 from gymnasium import spaces
 from pettingzoo.classic.rlcard_envs import gin_rummy as _pz_gin
 
-__all__ = ["opponent_hand_plane", "enable", "disable", "is_enabled", "oracle_observation"]
+__all__ = ["opponent_hand_plane", "placebo_hand_plane", "enable", "enable_placebo",
+           "disable", "is_enabled", "oracle_observation"]
+
+_PLACEBO_RNG = np.random.default_rng(20260829)
+_PLACEBO_CACHE: dict = {}
 
 _ORIGINAL_OBSERVE = None
 _ORIGINAL_OBSERVATION_SPACE = None
@@ -51,6 +55,53 @@ def opponent_hand_plane(rlcard_env, player_id: int) -> np.ndarray:
     """
     opponent = rlcard_env.game.round.players[(player_id + 1) % 2]
     return np.asarray(rlcard_env._utils.encode_cards(opponent.hand))
+
+
+def placebo_hand_plane(rlcard_env, player_id: int) -> np.ndarray:
+    """A fifth plane with the oracle's shape and none of its information.
+
+    Why this exists
+    ---------------
+    Widening the observation is not free. The network gains 52 input weights it must learn to
+    ignore, and any cost of that widening is subtracted from whatever the real plane is worth.
+    Without a placebo, "the oracle plane changed nothing" and "the information's benefit exactly
+    cancelled the cost of carrying it" are the same measurement, and they support opposite
+    conclusions.
+
+    The placebo marks ten cards drawn from the cards this player cannot see, using the engine's
+    own encoder. It has the same shape, the same sparsity and the same marginal distribution as
+    the real plane. It is drawn independently of the opponent's actual hand, so it carries no
+    information about it.
+    """
+    env = rlcard_env.game
+    me = env.round.players[player_id]
+    seen = set(id(c) for c in me.hand)
+    pool = [c for c in env.round.dealer.stock_pile if id(c) not in seen]
+    opp = env.round.players[(player_id + 1) % 2]
+    pool += [c for c in opp.hand if id(c) not in seen]
+    if not pool:
+        return np.zeros(52, dtype=np.int8)
+    # One draw per deal, not per observation. The real plane is a fixed hand that only changes
+    # when a card is drawn or discarded; a placebo redrawn at every step would be pure noise
+    # rather than a matched control, and would overstate what the widening costs.
+    key = id(env.round)
+    cached = _PLACEBO_CACHE.get(key)
+    if cached is None or len(cached) != len(opp.hand):
+        idx = _PLACEBO_RNG.choice(len(pool), size=min(len(opp.hand), len(pool)), replace=False)
+        cached = [pool[i] for i in idx]
+        _PLACEBO_CACHE.clear()          # only ever one live round; keeps this from growing
+        _PLACEBO_CACHE[key] = cached
+    return np.asarray(rlcard_env._utils.encode_cards(cached))
+
+
+def _observe_with_placebo(self, agent):
+    obs = _ORIGINAL_OBSERVE(self, agent)
+    observation = obs["observation"]
+    plane = placebo_hand_plane(self.env, self._name_to_int(agent))
+    obs["observation"] = np.concatenate(
+        [observation, plane[None, :].astype(observation.dtype)], axis=0
+    )
+    return obs
 
 
 def _observe_with_oracle(self, agent):
@@ -78,6 +129,22 @@ def _observation_space_with_oracle(self, agent):
 
 def is_enabled() -> bool:
     return _ORIGINAL_OBSERVE is not None
+
+
+def enable_placebo() -> None:
+    """Same widening as `enable`, with an uninformative fifth plane.
+
+    This is the control for the oracle probe: identical observation shape, identical training
+    recipe, zero information about the opponent's hand. It captures the originals the same way
+    `enable` does, so `is_enabled` and `disable` work for either arm.
+    """
+    global _ORIGINAL_OBSERVE, _ORIGINAL_OBSERVATION_SPACE
+    if is_enabled():
+        return
+    _ORIGINAL_OBSERVE = _pz_gin.raw_env.observe
+    _ORIGINAL_OBSERVATION_SPACE = _pz_gin.raw_env.observation_space
+    _pz_gin.raw_env.observe = _observe_with_placebo
+    _pz_gin.raw_env.observation_space = _observation_space_with_oracle
 
 
 def enable() -> None:

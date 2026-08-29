@@ -1,0 +1,32 @@
+[
+ {
+  "game": "kuhn_poker",
+  "info_states": 12,
+  "actions": 2,
+  "tensor": 11
+ },
+ {
+  "game": "leduc_poker",
+  "info_states": 936,
+  "actions": 3,
+  "tensor": 30
+ },
+ {
+  "game": "liars_dice_ir",
+  "info_states": 6744,
+  "actions": 13,
+  "tensor": 21
+ },
+ {
+  "game": "universal_poker",
+  "info_states": 20160,
+  "actions": 4,
+  "tensor": 83
+ },
+ {
+  "game": "liars_dice",
+  "info_states": 24576,
+  "actions": 13,
+  "tensor": 21
+ }
+]

@@ -1,0 +1,10 @@
+{
+ "game": "liars_dice(numdice=1,dice_sides=4)",
+ "buckets": 4,
+ "seed": 0,
+ "episodes": 400000,
+ "mean_return_vs_cfr": -0.0593,
+ "exploitability": 0.75,
+ "distinct_keys": 4,
+ "seconds": 249.4
+}

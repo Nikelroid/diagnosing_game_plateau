@@ -1,0 +1,35 @@
+{
+ "game": "kuhn_poker",
+ "seed": 5,
+ "episodes": 300000,
+ "hidden_bits": 1.0,
+ "cfr_exploitability": 0.00041863067048555913,
+ "arms": {
+  "baseline": {
+   "mean_return_vs_cfr": -0.10315,
+   "states_visited": 6,
+   "ceiling": -0.05521361168592903,
+   "gap_to_ceiling": 0.047936388314070974,
+   "exploitability": 0.5833333333333334
+  },
+  "oracle": {
+   "mean_return_vs_cfr": 0.2844,
+   "states_visited": 12,
+   "ceiling": 0.33301900659482064,
+   "gap_to_ceiling": 0.04861900659482066
+  },
+  "placebo": {
+   "mean_return_vs_cfr": -0.075525,
+   "states_visited": 12,
+   "ceiling": -0.05521361168592903,
+   "gap_to_ceiling": 0.020311388314070963
+  }
+ },
+ "oracle_minus_baseline": 0.38755,
+ "oracle_minus_placebo": 0.359925,
+ "widening_cost": -0.02762500000000001,
+ "placebo_oversplit": 0,
+ "information_worth": 0.3882326182807497,
+ "capture": 0.9982417286734624,
+ "seconds": 89.5
+}

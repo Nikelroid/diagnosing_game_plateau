@@ -37,13 +37,14 @@ DEFAULT_MAIN_REPO = os.environ.get(
 )
 
 
-def build_config(main_repo: str, seed: int, steps: int, out_dir: str) -> str:
+def build_config(main_repo: str, seed: int, steps: int, out_dir: str, arm: str = "oracle") -> str:
     """Copy the baseline config, change only the name, seed and step budget."""
     baseline = os.path.join(main_repo, "sweep", "ppoarch_cfgs", f"ppoarch_mlp_s{seed}.json")
     with open(baseline) as f:
         cfg = json.load(f)
 
-    cfg["name"] = f"oracleobs_s{seed}"
+    cfg["name"] = {"oracle": f"oracleobs_s{seed}", "placebo": f"placebo_s{seed}",
+                   "baseline": f"basewide_s{seed}"}[arm]
     cfg["seed"] = seed
     cfg["steps"] = steps
     cfg["purpose"] = (
@@ -67,6 +68,9 @@ def main() -> int:
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--arm", choices=("oracle", "placebo", "baseline"), default="oracle",
+                    help="oracle = the opponent's real hand; placebo = same width, no "
+                         "information; baseline = the original four planes")
     ap.add_argument("--steps", type=int, default=3_000_000)
     ap.add_argument("--smoke", action="store_true", help="20k steps, just to prove it runs")
     ap.add_argument("--main-repo", default=DEFAULT_MAIN_REPO)
@@ -79,7 +83,7 @@ def main() -> int:
         print(f"main repository not found at {main_repo}; pass --main-repo", file=sys.stderr)
         return 2
 
-    cfg_path = build_config(main_repo, args.seed, steps, args.config_dir)
+    cfg_path = build_config(main_repo, args.seed, steps, args.config_dir, args.arm)
     print(f"[oracle] config  {cfg_path}")
     print(f"[oracle] steps   {steps:,}")
 
@@ -89,12 +93,18 @@ def main() -> int:
     os.environ["CFG"] = cfg_path
     os.environ.setdefault("OMP_NUM_THREADS", "1")  # forked vec envs deadlock otherwise
 
-    from oracle_probes.oracle_env import enable
+    from oracle_probes.oracle_env import enable, enable_placebo
     from oracle_probes.opponent_shim import enable_opponent_trim
 
-    enable()
-    enable_opponent_trim()
-    print("[oracle] observation widened to 5 planes; opponents trimmed to their own width")
+    if args.arm == "oracle":
+        enable(); enable_opponent_trim()
+    elif args.arm == "placebo":
+        enable_placebo(); enable_opponent_trim()
+    else:
+        pass                      # baseline keeps the original four planes, nothing patched
+    print(f"[oracle] arm={args.arm}: "
+          + ("four planes, unmodified" if args.arm == "baseline"
+             else "observation widened to 5 planes; opponents trimmed to their own width"))
 
     from sweep import curriculum_train
 

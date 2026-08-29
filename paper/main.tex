@@ -36,8 +36,8 @@
 A win rate is only as informative as what it was measured against, and two things are almost never
 measured: how much the game actually hides, and what an agent's plateau is made of. We supply both.
 First, an atlas: across 88 games from two engines we compute the bits of hidden information at a
-typical decision. Two-player card games saturate early, with a median of 3.1 bits and only two of
-23 hiding more than Gin Rummy's 30.1; everything clearly above sits at a larger table, where extra
+typical decision. Two-player card games saturate early, with a median of 3.1 bits and only one of 23
+hiding more than Gin Rummy's 30.1; everything clearly above sits at a larger table, where extra
 bits come from extra hands rather than a deeper duel. The atlas also catches its own instrument
 lying in two directions: the resampling estimator returns a saturated constant for three games and
 a confident \emph{zero} for a game with 30.1 bits. And it exposes a blind spot: of 19 board games,
@@ -102,13 +102,14 @@ form can be cross-checked across libraries; it agrees at 30.1 bits each. Petting
   \label{tab:families}
 \end{table}
 
-\paragraph{Two-player card games saturate.} Their median is 3.1 bits, and of 23 only two hide more
-than standard Gin Rummy's 30.1: bridge uncontested bidding at 32.9 and, unexpectedly, UNO at 33.9.
+\paragraph{Two-player card games saturate.} Their median is 3.1 bits, and of 23 only one hides more than standard Gin
+Rummy's 30.1: bridge uncontested bidding, at 32.9, and that is a three-turn auction fragment
+rather than a whole game.
 A 52-card deck split between two hands cannot conceal much more. A difficulty ladder assembled from
 distinct two-player card games therefore bunches at the top rather than spanning a range.
 
 \paragraph{More hidden information means more players.} The three and four-handed family has a
-median of 31.1 bits and reaches 163.4 for Mahjong, with Hearts, Spades and contract bridge at 56.2.
+median of 31.1 bits and reaches 109.6 for Mahjong, with Hearts, Spades and contract bridge at 56.2.
 Those bits are bought with extra hands and arrive attached to coalitions and signalling, which is a
 different problem rather than a deeper version of the same one. If a difficulty \emph{axis} is what
 is wanted, it has to come from a dial inside one game: our eight Gin Rummy configurations hold the

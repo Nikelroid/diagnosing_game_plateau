@@ -77,3 +77,31 @@ slurm/oracle.slurm    array launcher for the oracle seeds
 `PYTHONNOUSERSITE=1` is required for anything that loads the curated seed models: the conda env has
 NumPy 2.4.6 while `~/.local` has 1.26.4 and shadows it. `OMP_NUM_THREADS=1` or the forked vectorised
 envs deadlock after the first evaluation. Both are set by `slurm/oracle.slurm`.
+
+## Plateau decomposition (new)
+
+A plateau splits into three measurable parts, and the split is what this repository now
+measures:
+
+- **what the hidden information is worth** — the difference between the best return achievable
+  with and without it, exact wherever counterfactual regret minimisation solves the game;
+- **how much of that the learner banks** — `capture`, its competence at using what it is given;
+- **what the wider observation costs** — a placebo arm carrying a fifth channel with the same
+  shape, the same sparsity and no information.
+
+Worth is a property of the game and does not move: measured across a 64x range of training
+budgets it is constant to three decimals (Kuhn 0.388, Leduc 1.317). Capture is a property of
+the learner and grows with budget (Leduc 55.6% -> 78.7%).
+
+Capture above 100% is not an error. It means the learner sits further below its ceiling without
+the oracle than with it, so the extra observation both supplies information and makes the task
+easier to learn. All five liar's dice variants behave that way; Leduc is the opposite, where the
+oracle triples the state space and capture falls to 73%.
+
+On Gin Rummy, at twelve seeds per arm: oracle minus baseline -0.25pp (95% CI -1.78 to +1.28),
+and the placebo shows the widening itself costs -0.03pp. The null is not an artefact of paying
+for a wider observation, because there is no cost to pay.
+
+Reproduce: `scripts/probe_axis.py` (tabular, exact ceilings), `scripts/probe_capacity.py`,
+`scripts/probe_neural.py` (same apparatus as the Gin Rummy learner), `scripts/collect_axis.py`,
+`scripts/probe_figures_v2.py`.
