@@ -1,0 +1,11 @@
+{
+ "game": "kuhn_poker",
+ "arm": "baseline",
+ "seed": 2,
+ "episodes": 200000,
+ "learner": "policy_gradient(rpg) 64x64",
+ "input_dim": 11,
+ "mean_return_vs_cfr": -0.1286,
+ "sem": 0.014289373814131952,
+ "seconds": 85.4
+}

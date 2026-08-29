@@ -110,14 +110,21 @@ def placebo_card(state, player, episode_rng_state):
     return order[0]
 
 
+_DEALS_PER_PLAYER = 1   # set per game in main(); games deal more than one card or die
+
+
 def private_card(state, player):
     """The opponent's private information, as the engine knows it.
 
-    This is the hidden state the probe hands over. It is read from the chance outcomes
-    already dealt, never inferred, which is the same contract as the Gin Rummy plane.
+    Read from the chance outcomes already dealt, never inferred, which is the same contract as
+    the Gin Rummy plane. Games that deal several cards or dice per player return all of them:
+    indexing the raw history by player number silently returns the wrong player's second die as
+    soon as a game deals more than one, which is a bug that produces plausible numbers.
     """
-    hist = state.history()
-    return hist[player] if player < len(hist) else -1
+    dealt = chance_history(state)
+    k = _DEALS_PER_PLAYER
+    got = dealt[player * k:(player + 1) * k]
+    return got[0] if k == 1 and got else tuple(got)
 
 
 def ceiling(game, opponent, oracle, player=0):
@@ -129,9 +136,19 @@ def ceiling(game, opponent, oracle, player=0):
     higher" into two quantities that mean something: how much of the table the learner left
     (ceiling minus achieved) and what fraction of the information's worth it actually captured.
     """
-    from functools import lru_cache
+    memo = {}
 
     def rec(state):
+        # The tree revisits the same position by many action orders, so without a memo this
+        # recursion is exponential and a 24k-state game never finishes.
+        h = (tuple(state.history()),)
+        if h in memo:
+            return memo[h]
+        v = _rec(state)
+        memo[h] = v
+        return v
+
+    def _rec(state):
         if state.is_terminal():
             return state.returns()[player]
         if state.is_chance_node():
@@ -285,6 +302,15 @@ def main():
     print(f"[{args.game}] hidden information {bits if bits is None else round(bits, 3)} bits", flush=True)
     global _N_PRIVATE
     _N_PRIVATE = max(2, len(game.new_initial_state().chance_outcomes()))
+    global _DEALS_PER_PLAYER
+    probe, n_dealt = game.new_initial_state(), 0
+    while probe.is_chance_node():
+        probe.apply_action(probe.chance_outcomes()[0][0]); n_dealt += 1
+    if n_dealt % game.num_players():
+        raise SystemExit(f"{args.game}: {n_dealt} chance actions for {game.num_players()} "
+                         "players is not a clean deal; the probe's assumption does not hold")
+    _DEALS_PER_PLAYER = n_dealt // game.num_players()
+    print(f"[{args.game}] {_DEALS_PER_PLAYER} private outcome(s) per player", flush=True)
     ref, expl_ref = solve_cfr(game, args.cfr_iters)
     print(f"[{args.game}] CFR reference exploitability {expl_ref:.5f}", flush=True)
 

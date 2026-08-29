@@ -1,0 +1,270 @@
+FOUR-EXPERT BRAINSTORM: WHERE THIS PAPER SHOULD GO
+Working title: Is It the Game or the Agent? Diagnosing why an agent stops improving.
+Every number below is read from the result files, not typed. Sections are S1..S9.
+
+================================================================================================
+
+[S1] THE STORY AS IT STANDS
+
+The paper has two halves that were written separately and now need one spine.
+
+  Half one, the atlas: across 88 game configurations from two engines, measure the bits of
+  hidden information at a typical decision. Two-player card games saturate near 3 bits median;
+  one of 23 hides more than Gin Rummy's 30.1.
+
+  Half two, the probes: when an agent stops improving, is it short of information or short of
+  the ability to use it? Hand the learner the hidden state and see whether it does better.
+
+  The proposed spine: a plateau decomposes into three separately measurable quantities.
+    (a) what the hidden information is WORTH   - a property of the game, exactly computable
+                                                 wherever CFR solves it
+    (b) what share of that the learner BANKS   - "capture", a property of the learner
+    (c) what the wider observation COSTS       - measured by a placebo channel carrying the
+                                                 same shape and no information
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S2] THE HEADLINE NULL, NOW PROPERLY POWERED
+
+Gin Rummy, 3M steps per run, win rate against a fixed rule-based expert.
+The earlier version of this result used 4 seeds and no placebo.
+
+  baseline  n=12  27.04% +/- 1.19
+  oracle    n=12  26.79% +/- 0.97
+  placebo   n=12  27.02% +/- 1.05
+  oracle minus baseline -0.25 pp, 95% CI [-1.78, +1.28]
+  placebo minus baseline -0.03 pp  (the cost of widening the observation)
+
+  The four-seed version had a 95% interval of [-4.5, +2.7] pp, which could not exclude an 11%
+  relative gain. Twelve seeds plus a placebo arm is the version above.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S3] THE DECOMPOSITION ACROSS GAMES
+
+Tabular Q-learning against a near-Nash CFR opponent, seat 0, exact ceilings.
+"worth" is ceiling(oracle) - ceiling(baseline). "banked" is achieved(oracle) - achieved(baseline).
+
+  game                                  bits  n   worth  banked  capture   widen
+  kuhn_poker                            1.00  8   0.388   0.347   89.5%  -0.002
+  leduc_poker(players=2,suit_isomorphism=true)  1.40  8   1.331   1.038   78.0%  +0.044
+  liars_dice(numdice=1,dice_sides=3)    1.58  8   0.889   0.913  102.8%  +0.014
+  liars_dice(numdice=1,dice_sides=4)    2.00  8   0.937   1.014  108.2%  +0.000
+  liars_dice_ir(numdice=1,dice_sides=4)  2.21  8   0.937   1.008  107.5%  +0.014
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S4] CAPTURE ABOVE 100% IS A SECOND EFFECT, NOT AN ERROR
+
+Capture above 100% turned out to mean the learner sits FURTHER below its ceiling without the
+oracle than with it. The extra observation does two things: it supplies information, and it
+changes how hard the task is to learn. The sign sorted 9 of 9 games with no exceptions.
+
+  liar's dice: gap falls 0.025-0.084 -> 0.000-0.007 with the oracle  (capture 103-108%)
+  Leduc:       gap RISES 0.035 -> 0.394 with the oracle              (capture 73-77%)
+
+In liar's dice, revealing the die turns a belief problem into a lookup. In Leduc the oracle
+triples the state space and the learner cannot fill it at this budget.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S5] THE FALSIFICATION TEST OF S4
+
+S4 predicts worth is fixed by the game and must not move with budget, while capture is a
+property of the learner and should climb. Across a 64x range:
+
+  game           episodes   worth  capture  gap oracle
+  kuhn_poker        25000   0.388   97.0%      0.0128
+  kuhn_poker       100000   0.388   89.8%      0.0408
+  kuhn_poker       400000   0.388   82.9%      0.0675
+  kuhn_poker      1600000   0.388   97.0%      0.0123
+  leduc_poker       25000   1.317   55.6%      0.7267
+  leduc_poker      100000   1.317   68.0%      0.5780
+  leduc_poker      400000   1.317   67.5%      0.4732
+  leduc_poker     1600000   1.317   78.7%      0.4120
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S6] THE CAPACITY AXIS
+
+Capacity is the number of buckets the learner may fold its information states into. At 0 it is
+exact. This is what a genuinely capacity-bound plateau looks like, which is the reference the
+Gin Rummy capacity null has never had.
+
+  game                                buckets  n   return exploitability
+  dark_hex(board_size=2)                    2  3  +1.0000         0.0000
+  dark_hex(board_size=2)                    4  3  +1.0000         0.0000
+  dark_hex(board_size=2)                    8  3  +1.0000         0.0000
+  dark_hex(board_size=2)                   16  3  +1.0000         0.0000
+  dark_hex(board_size=2)                   32  3  +1.0000         0.0000
+  dark_hex(board_size=2)                  128  3  +1.0000         0.0000
+  dark_hex(board_size=2)                  512  3  +1.0000         0.0000
+  dark_hex(board_size=2)                exact  3  +1.0000         0.0000
+  kuhn_poker                                2  3  -0.1470         0.5556
+  kuhn_poker                                4  3  -0.1114         0.7778
+  kuhn_poker                                8  3  -0.0560         0.4722
+  kuhn_poker                               16  3  -0.0736         0.3333
+  kuhn_poker                               32  3  -0.0579         0.3611
+  kuhn_poker                              128  3  -0.0579         0.6389
+  kuhn_poker                              512  3  -0.0756         0.6111
+  kuhn_poker                            exact  3  -0.0756         0.6111
+  leduc_poker                               2  3  -0.8892         5.5792
+  leduc_poker                               4  3  -0.7208         4.2625
+  leduc_poker                               8  3  -0.6568         4.3111
+  leduc_poker                              16  3  -0.6739         4.5444
+  leduc_poker                              32  3  -0.6100         4.4319
+  leduc_poker                             128  3  -0.2599         3.5889
+  leduc_poker                             512  3  -0.1739         2.7847
+  leduc_poker                           exact  3  -0.1370         1.5542
+  liars_dice(numdice=1,dice_sides=4)        2  3  -0.1636         0.7917
+  liars_dice(numdice=1,dice_sides=4)        4  3  -0.0721         0.6458
+  liars_dice(numdice=1,dice_sides=4)        8  3  -0.0834         0.6875
+  liars_dice(numdice=1,dice_sides=4)       16  3  -0.0113         0.6042
+  liars_dice(numdice=1,dice_sides=4)       32  3  -0.0172         0.7917
+  liars_dice(numdice=1,dice_sides=4)      128  3  -0.0071         0.8125
+  liars_dice(numdice=1,dice_sides=4)      512  3  -0.0548         0.7292
+  liars_dice(numdice=1,dice_sides=4)    exact  3  -0.0096         0.8125
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S7] WHAT IS BROKEN, MISSING OR UNRESOLVED
+
+1. Dark hex was never actually probed. It has no chance nodes, so "append the opponent's
+     private card" appended nothing. Fog-of-war needs a different oracle (reveal the board).
+     This is the family the atlas itself calls its blind spot.
+  2. The neural probe (same fixed-width tensor and network as the Gin learner, rather than a
+     table) is running now at 200k episodes. It is the only thing that closes the construct gap
+     between the poker control and the Gin experiment.
+  3. Liar's dice has seat-identical information-state strings. Seat-0-only evaluation avoids the
+     bug this caused, but the consequences for the ceiling have not been fully chased down.
+  4. The atlas carried seven closed-form errors, now fixed: UNO counted 108 cards as
+     distinguishable when the deck has 54 types (33.9 -> 28.4 bits, BELOW Gin Rummy, so the
+     abstract's "two of 23" became one); Mahjong exceeded a hard ceiling by 54 bits; five rows
+     used a binomial where the method promises a multinomial.
+  5. An earlier evaluation bug scored an untrained fold-bot on 42% of decisions. All affected
+     results were discarded and re-run. Anything quoted from before that is void.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S8] THREATS FROM PRIOR WORK
+
+Whitehouse, Powley & Cowling (CIG 2011) already concluded "hidden information is not often
+  important in Dou Di Zhu". That is close to our headline null, fifteen years earlier.
+
+  Furtak & Buro (CIG 2013) already run our plateau argument for search: sampling more worlds
+  stops closing the gap to a cheating player.
+
+  Rebstock et al. (CoG 2019) show a cheating player scoring WORSE than a fair one, because it
+  assumes the opponent also cheats. So an oracle is not automatically an upper bound. Our probe
+  is asymmetric (opponents are trimmed to their own observation width), which we must state.
+
+  Ni, Eysenbach & Salakhutdinov (ICML 2022) use an oracle on hidden state as an explicit upper
+  bound. Closest neighbour to our main probe.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[S9] CANDIDATE NEXT RUNS, RANKED BY WHAT THEY WOULD SETTLE
+
+A. Fog-of-war oracle: reveal the opponent's board in dark hex / phantom tic-tac-toe. Would put
+     a number on the family the atlas cannot measure at all.
+  B. Neural probe across more games and budgets, to test whether capture-below-100 in Leduc is a
+     budget effect in the neural setting as it is in the tabular one.
+  C. Gin Rummy at several training budgets, to see whether its null is a budget artefact the way
+     Leduc's shortfall is.
+  D. A learner sweep: tabular vs policy gradient vs DQN on one game, to test whether "capture"
+     is a property of the algorithm rather than the game.
+  E. The Gin Rummy dial: same rules, vary deck and hand size, so hidden bits move while
+     everything else is held fixed. The atlas already measures the dial at 5.1 to 30.1 bits.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(CLAUDE):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
