@@ -68,25 +68,19 @@
 \begin{abstract}
 A win rate is only as informative as what it was measured against, and two things behind it are
 almost never measured: how much the game hides, and what an agent's plateau is made of. We measure
-both, and show they come apart.
-
-First, an atlas. Across 88 game configurations from two engines we compute \emph{support bits}, the
-log-cardinality of the acting player's information set. Support bits bound a player's uncertainty
-from above and say nothing about what the hidden state is worth, and keeping those apart is most of
-what this paper argues for. Two-player card games saturate early, at a median of 3.1 bits. The
-atlas also catches instruments lying three times, once inside our own apparatus, and it exposes a
-blind spot: of 19 board games the only six we can measure are the perfect-information controls.
-
-Second, a decomposition. Against a fixed reference, a plateau splits into what the hidden
-information is \emph{worth}, an exact property of the game and opponent, and what the learner
-\emph{banks} of it. We compute both exactly in eleven games where an optimum is available, add a
-placebo arm that prices the wider observation, and show that worth is invariant to a sixty-fourfold
-change in training budget while capture is not. The same instrument then runs on a twelfth game far
-too large to solve, where handing the learner the opponent's hand outright yields no detectable
-gain: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$ against the placebo.
-
-The three quantities are routinely reported as one. Separating them changes which experiment comes
-next, and we release the code and every measurement.
+both and show they come apart. Across 88 game configurations from two engines we compute
+\emph{support bits}, the log-cardinality of the acting player's information set, which bounds a
+player's uncertainty from above and says nothing about what the hidden state is worth. Two-player
+card games saturate early, at a median of 3.1 bits, and the atlas catches instruments lying three
+times, once inside our own apparatus. We then decompose a plateau against a fixed reference into
+what the hidden information is \emph{worth}, an exact property of the game and opponent, and what
+the learner \emph{banks} of it. Both are computed exactly in eleven games where an optimum is
+available, against a placebo arm that prices the wider observation, and worth proves invariant to a
+sixty-fourfold change in training budget while capture does not. The same instrument then runs
+unchanged on a twelfth game far too large to solve, where handing the learner the opponent's hand
+yields no detectable gain: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$
+against the placebo. These three quantities are routinely reported as one, and separating them
+changes which experiment comes next. We release the code and every measurement.
 \end{abstract}
 
 \section{Two measurements nobody makes}
@@ -172,7 +166,7 @@ it does.
 The catalog spans 79 games from OpenSpiel \citep{openspiel}, the only engine here exposing
 information-state strings and world resampling, and 9 from RLCard \citep{rlcard} for games it does
 not ship. Gin Rummy is measured by both and agrees at 30.1 bits, which cross-checks the closed form
-across libraries. PettingZoo \citep{pettingzoo} supplies the environment API.
+across libraries. 
 
 \begin{table}[t]
   \centering \small
@@ -193,9 +187,12 @@ distinct two-player card games therefore bunches at the top rather than spanning
 
 \paragraph{In this atlas, the extra bits come from extra players.} The three and four-handed family
 has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong. Those
-bits are bought with extra hands, and they arrive attached to coalitions and signalling. Those extra hands create a different problem, not a deeper version of the same one. A difficulty \emph{axis} therefore has to come
-from a dial inside one game. Our eight Gin Rummy configurations hold the rules fixed and move only
-the deck and hand size. They sweep 5.1 to 30.1 bits.
+bits come with extra hands, coalitions and signalling, which is a different problem rather than a
+deeper version of the same one.
+
+\paragraph{A difficulty axis has to come from a dial inside one game.} Our eight Gin Rummy
+configurations hold the rules fixed and move only the deck and hand size. They sweep 5.1 to 30.1
+bits.
 
 \paragraph{The blind spot.} Thirteen fog-of-war games, dark chess and reconnaissance blind chess
 among them, carry no number by any method. They are too large to enumerate, have no deal to count,
@@ -205,9 +202,11 @@ exactly the ones nobody can currently size.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig1_hidden_bits.pdf}
-  \caption{How much the player to move cannot see, across 88 games from two engines. Two-player
-  card games saturate early; the games clearly above Gin Rummy are seated at a larger table, where
-  the extra bits come from extra hands rather than from a deeper duel.}
+  \caption{How much the player to move cannot see, across 88 games from two engines. The values mix
+  exact enumeration, hand-only upper bounds and censored resampling floors, and
+  Appendix~\ref{app:atlas} gives the provenance of every row. Two-player card games saturate early.
+  The games clearly above Gin Rummy are seated at a larger table, where the extra bits come from
+  extra hands rather than from a deeper duel.}
   \label{fig:atlas}
 \end{figure}
 
@@ -241,8 +240,8 @@ independently.
 The atlas says what a domain can hide. It cannot say whether a given agent is limited by that, and
 the rest of the paper is about telling those apart. Our large case reuses the setting of a recent
 study of lightweight card-game agents \citep{goldstandard}, which grades against a fixed rule-based
-reference that never trains. The reference plays 600 games in about two minutes, and the graded
-agent answers in 0.3\,ms per move. Nothing in the method depends on which game this is.
+reference that never trains. The reference plays 600 games in about two minutes, the graded agent answers in 0.3\,ms per
+move, and PettingZoo \citep{pettingzoo} supplies the environment API. Nothing in the method depends on which game this is.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
 learner's four observation planes, so its observation is a strict subset, and it scores about 50
@@ -318,7 +317,7 @@ fire. We ran the identical probe on every OpenSpiel game small enough for counte
 minimisation to supply a true optimum, under two learners: a tabular one, and a neural one reading
 a fixed-width tensor as the Gin Rummy learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
 $1.07$ in expected return, and the placebo lands on the baseline. Those margins show the instrument works on games of this size. They do not prove it fires
-wherever information exists. On Gin Rummy the same construction reads zero
+wherever information exists. On the large case study the same construction reads zero
 (Figure~\ref{fig:sensitivity}).
 
 \begin{figure}[t]
@@ -329,8 +328,7 @@ wherever information exists. On Gin Rummy the same construction reads zero
   seeds, so that games scored in return and in win rate share one axis. Raw effects are printed
   beside each point. The axis is symmetric log, linear inside $\pm 1$ and logarithmic outside, so
   that small and large effects are both visible. The shaded band marks effects below $0.8$ pooled
-  standard deviations, where this design cannot separate an effect from none. Gin Rummy's interval
-  is the only one that lies inside it.}
+  standard deviations, where this design cannot separate an effect from none. The large case study's interval is the only one that lies inside it.}
   \label{fig:sensitivity}
 \end{figure}
 
@@ -364,12 +362,10 @@ cannot make.
   \label{tab:axis}
 \end{table}
 
-Table~\ref{tab:axis} runs the decomposition across eleven games, eight seeds each. The widening
-column is what makes the case-study null mean anything. It is the placebo arm minus the baseline
-arm, averaged over the eight seeds of each game, and it stays inside seed noise in all eleven. In
-the case study the same contrast is $-0.02$ points, with an interval of $[-1.51, +1.47]$. We therefore
-find no evidence that the cost of a wider input hides a real gain, which is the reading a placebo
-exists to rule out. That claim is weaker than saying widening is free, and it is the one the runs support.
+Across the eleven decomposed games in Table~\ref{tab:axis}, placebo-minus-baseline widening stays
+inside seed noise in every row. These runs therefore give no evidence that the wider input hides a
+real gain, which is the reading a placebo exists to rule out. That claim is weaker than saying
+widening is free, and it is the one the runs support.
 
 \paragraph{Capture can exceed one hundred percent, and the algebra says why.} Seven of the eleven
 games report capture above $100$ percent. At face value that is impossible. The ceilings are exact,
@@ -386,10 +382,11 @@ That equation is an identity, not a
 finding. It follows from the definitions in one line, and our runs satisfy it to machine precision. Dividing by worth gives the consequence: capture exceeds $1$ exactly when $g_b > g_o$. That is, exactly when the baseline arm sits further below its ceiling
 than the oracle arm sits below its own.
 
-So the seven games are neither anomalies nor noise. Capture reads above $100$ percent whenever the
-oracle arm is the easier one to learn, and revealing the hidden state does make it easier: the
-learner no longer holds a belief over what it cannot see. The four games below $100$ percent are
-the poker variants, where a much higher oracle ceiling leaves the learner further from it.
+The seven games are therefore neither anomalies nor noise. Capture exceeds $100$ percent exactly
+when the baseline arm finishes further below its ceiling than the oracle arm finishes below its own.
+The seven dice configurations satisfy that inequality and the four poker variants do not. The
+identity establishes the relationship. It does not show that revealing the hidden state caused
+either arm to be easier to learn.
 
 \begin{figure}[t]
   \centering
@@ -400,25 +397,26 @@ the poker variants, where a much higher oracle ceiling leaves the learner furthe
   \label{fig:mechanism}
 \end{figure}
 
-Capture is therefore distorted in a known direction rather than unreliable. In the four poker variants the oracle arm is
-harder to learn, so capture is pulled down rather than up and the $73$ to $78$ percent shown
-understates those learners. We give the direction, not a corrected value. We cannot correct
+Capture is therefore sensitive to unequal ceiling gaps. In the four poker variants the oracle arm
+finishes further below its ceiling and capture lies between $73$ and $78$ percent. In the seven dice
+variants the baseline arm finishes further below and capture exceeds $100$ percent. We report the
+direction of that discrepancy and not a corrected value, because Equation~\eqref{eq:identity}
+identifies the gap difference and not a causal learning effect. We cannot correct
 it, because Equation~\eqref{eq:identity} gives the direction of the distortion and not its size.
 None of this reaches the case-study null, which never divides by worth.
 
 \section{Reading both halves together}
 
-The atlas places the case study at 30.1 support bits, within 4 of the two-player ceiling, so the
-agent is graded in a game with high observational ambiguity. The probes then say the plateau is not
-relieved by that information. No tested encoder does better, the subset argument puts parity inside
-the learner's own information, and the opponent's hand handed over outright moves nothing.
+The atlas places the case study at 30.1 support bits, within 4 bits of the largest measured
+two-player card game. No tested encoder performs better, and the subset argument puts parity within
+the learner's existing information. The oracle-observation probe finds no detectable gain from the
+raw hidden-hand channel, for this learner, this recipe and this reference. Twelve seeds rule out
+gains above about $1.2$ points, and smaller gains remain possible.
 
-The result has a narrower scope than it looks. We have not shown the opponent's hand is worth nothing, nor that
-belief modelling cannot help. We have shown that this learner, on this recipe, against this
-reference, banks nothing from a raw hidden-hand channel. The cheapest possible belief model, the
-true answer handed over free, already buys nothing, so optimisation, reward, curriculum and
-representation come first. A structured encoding of the same information might still pay, and that
-is the experiment we would run next.
+The result does not show that the opponent's hand has zero worth, that belief modelling cannot
+help, or that optimisation, reward and curriculum should be tried first. It shows that the cheapest
+possible belief model, the true answer handed over free, buys nothing here. A structured encoding of
+the same information might still pay, and that is the experiment we would run next.
 
 \paragraph{Limitations.} The case study is one game and one reference, and the search bound is
 confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly,

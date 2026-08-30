@@ -102,14 +102,14 @@ def fig_sensitivity():
                     capthick=1.1, alpha=0.75, zorder=3)
         ax.plot(d, i, "o", color="white", mec=c, mew=1.6, ms=6, zorder=4)
         ax.text(d + ci + 0.5, i, f"{raw:+.2f}", color=c, fontsize=8.0, va="center")
-    labels = ["Gin Rummy   the paper's game"] + [
+    labels = ["the large case study"] + [
         (f"{t[0]}   {t[5]:.1f} bits" if t[5] else t[0]) for t in items]
     ax.set_yticks(range(len(items) + 1)); ax.set_yticklabels(labels, fontsize=8.6, color=INK)
     ax.get_yticklabels()[0].set_color(PLUM); ax.get_yticklabels()[0].set_fontweight("bold")
     ax.set_ylim(-0.8, len(items) + 0.8)
     ax.set_xlabel("standardised effect of handing the learner the hidden state "
                   "(difference in units of seed spread)")
-    ax.set_title("The probe fires in every tested small game, but not detectably on Gin Rummy")
+    ax.set_title("The probe fires in every tested small game, and not on the large one")
     # symlog: the poker effects are two orders of magnitude larger than Gin Rummy's, and a
     # linear axis that shows one hides the other
     ax.set_xscale("symlog", linthresh=1.0)
