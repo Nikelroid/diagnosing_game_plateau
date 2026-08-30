@@ -133,11 +133,8 @@ connection and validation sequence are.
 \label{sec:m-atlas}
 
 At any decision, some complete histories of the game remain consistent with everything the acting
-player has seen. Hidden information is $\log_2$ of how many, so zero means the player can see
-everything and each further bit doubles the worlds still in play.
-
-Write $o$ for what the acting player observes, $I(o)$ for the set of complete histories consistent
-with $o$, and $Z$ for the hidden state. Fix an opponent policy $\pi$ and let $V^\star_\pi(\cdot)$
+player has seen, and hidden information is $\log_2$ of how many. Write $o$ for what the acting
+player observes, $I(o)$ for that set of consistent histories, and $Z$ for the hidden state. Fix an opponent policy $\pi$ and let $V^\star_\pi(\cdot)$
 be the best expected return achievable against it from a given observation. Then
 %
 \begin{align}
@@ -152,9 +149,9 @@ be the best expected return achievable against it from a given observation. Then
 %
 Equation~\eqref{eq:bound} is why we keep the three apart. Support bits weight every possible
 history equally, so they bound a player's real uncertainty and meet it only when every history is
-equally likely. A player who knows the opponent almost always holds one hand is nearly certain,
-even with a thousand hands still possible. Worth is further removed again:
-Equation~\eqref{eq:worth} can be zero while $b(o)$ is large, because many hidden hands call for the
+equally likely: a player who knows the opponent almost always holds one hand is nearly certain,
+even with a thousand hands still possible. Worth is further removed again, since
+Equation~\eqref{eq:worth} can be zero while $b(o)$ is large when many hidden hands call for the
 same move. We compute worth exactly wherever an optimum is available.
 
 We report the mean support bits over every distinct information state in the tree, pooled across
@@ -225,13 +222,11 @@ own plane and verified it against engine ground truth (Appendix~\ref{app:apparat
 
 Where exact optima are available, the probe decomposes the plateau into worth, banked and capture.
 Worth is the best return achievable with the hidden state minus the best achievable without it.
-Both ceilings are exact for the stated opponent policy. Banked is the oracle arm's observed return
-minus the baseline arm's observed return, and capture is banked divided by worth.
-
-Both ceilings use the same fixed opponent policy and differ only in whether the learner sees the
-hidden state. Worth is therefore exact for that evaluation setting, not for the game in the
-abstract. Unequal gaps between the trained arms and their own ceilings can place capture above or
-below one. Write $g_b$ for how far the baseline arm sits below its own ceiling, and $g_o$ for the
+Banked is the oracle arm's observed return minus the baseline arm's observed return, and capture is
+banked divided by worth. Both ceilings use the same fixed opponent policy and differ only in
+whether the learner sees the hidden state, so worth is exact for that evaluation setting rather
+than for the game in the abstract. Unequal gaps between the trained arms and their own ceilings can
+place capture above or below one. Write $g_b$ for how far the baseline arm sits below its own ceiling, and $g_o$ for the
 same quantity in the oracle arm. Then banked, worth and those two gaps are not independent:
 %
 \begin{equation}
@@ -292,7 +287,8 @@ currently size.
 \label{sec:r-failures}
 
 A measurement that fails loudly is not dangerous. Three of ours failed quietly, returning ordinary
-looking numbers, and an independent bound caught all three.
+looking numbers, and an independent bound caught all three. Resampling is what a practitioner
+reaches for when a game is too large to enumerate, and here it fails both ways.
 
 \textbf{Saturation.} Hearts, Euchre and contract bridge each returned exactly 6.32 bits, which is
 $\log_2 80$, the sample count, with 100 percent of sampled points censored. The estimator had
@@ -362,9 +358,10 @@ hidden state caused either arm to be easier to learn.
 
 Capture is therefore sensitive to unequal ceiling gaps. In the four poker variants, the oracle arm
 finishes further below its ceiling and capture lies between $73$ and $78$ percent. In the seven dice
-variants, the baseline arm finishes further below and capture exceeds $100$ percent. These are
-observed gap differences, not evidence that either arm was causally easier to learn. We report them
-without a corrected capture value because the identity supplies no such correction.
+variants, the baseline arm finishes further below and capture exceeds $100$ percent. These are observed gap differences, not evidence that either arm was causally easier to learn. We
+report them without a corrected capture value because the identity supplies no such correction.
+None of this reaches the case-study null in Section~\ref{sec:r-case}, which never divides by
+worth.
 
 \subsection{The large case study}
 \label{sec:r-case}
