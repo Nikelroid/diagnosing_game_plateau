@@ -154,7 +154,7 @@ def fig_apparatus():
             ax.text(xx, v + e + 0.045, f"{v:.2f}", ha="center", fontsize=8.4,
                     fontweight="bold", color=c)
     ax.set_xticks(x); ax.set_xticklabels([nice(g) for g in shared], color=INK, fontsize=8.8)
-    ax.set_ylabel("gain from the hidden state (return)")
+    ax.set_ylabel("banked, the gain from the hidden state (return)")
     ax.set_title("Different learner, different mechanism, same answer")
     ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
     ax.legend(loc="upper left", handlelength=1.2)

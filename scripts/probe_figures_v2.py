@@ -97,7 +97,7 @@ def fig_decomposition():
     ax.set_yticklabels([f"{l}   {b:.1f} bits" for l, b in zip(labels, bits)], color=INK)
     ax.set_ylim(-0.6, len(items) - 0.4)
     ax.set_xlabel("expected return against the reference opponent")
-    ax.set_title("Worth is set by the game; the share banked is not", pad=26)
+    ax.set_title("Worth is fixed by the evaluation setting; capture is not", pad=26)
     ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
     # legend above the plot as a strip: the bars run the full width, so any in-axes box collides
     ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=2,
@@ -132,7 +132,7 @@ def fig_gin():
                 fontweight="bold", color=c)
     ax.set_xticks(range(len(arms)))
     ax.set_xticklabels([a[0] for a in arms], color=INK, fontsize=8.8)
-    ax.set_ylabel("win rate against the fixed expert (%)")
+    ax.set_ylabel("win rate against the reference (%)")
     ax.set_ylim(22, 31)
     ax.set_title("Gin Rummy: no detectable gain from the hidden hand, or from the widening")
     ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
@@ -160,7 +160,7 @@ def fig_budget():
         a2.text(eps[-1] * 1.15, cap[-1], nice(game), color=c, fontsize=8.8,
                 fontweight="bold", va="center")
     for ax, ttl, ylab in ((a1, "(a) Worth is fixed by the evaluation setting", "information's worth (return)"),
-                          (a2, "(b) The share banked moves with budget; Leduc rises overall", "captured (%)")):
+                          (a2, "(b) Capture moves with budget; Leduc rises overall", "capture (%)")):
         ax.set_xscale("log"); ax.set_xlabel("training episodes")
         ax.set_ylabel(ylab); ax.set_title(ttl); ax.yaxis.grid(True)
         ax.set_xlim(2e4, 6e6)
