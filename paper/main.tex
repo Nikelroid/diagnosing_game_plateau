@@ -66,15 +66,16 @@
 \maketitle
 
 \begin{abstract}
-An agent stops improving against a fixed opponent. Is the game hiding too much from it, or is it
-failing to use what it can already see? The two call for opposite work, and a win rate cannot tell
+A reinforcement learning agent in an imperfect-information game stops improving against a fixed
+opponent. Is the game hiding too much from it, or is it failing to use what it can already
+see? The two call for opposite work, and a win rate cannot tell
 them apart. We measure both. First we ask how much a game hides. Across 88 game configurations we
 count the worlds a player cannot rule out and take the logarithm, a number we call \emph{support
 bits}. Two-player card games run out of room early, at a median of 3.1 bits, so a difficulty ladder
 built from different card games spans almost no range at all. Then we ask whether the hiding is
 what stops the agent. We hand the learner the opponent's hidden cards, retrain, and see whether it
-does better. In eleven games small enough to solve exactly, a known optimum tells us what those
-cards are \emph{worth} and how much of it the learner \emph{banks}. A third arm carries a fake
+does better. In eleven games small enough to solve exactly, a known optimum tells us what those cards are
+\emph{worth} and how much of it a tabular and a neural learner \emph{bank}. A third arm carries a fake
 hidden hand of the same shape, so we can price the cost of a wider input on its own. Worth holds
 steady across a sixty-fourfold change in training budget; what the learner banks does not, and the
 two can be told apart only because both are computed against a known answer. In a twelfth game, far too large to solve, the real hidden hand buys
@@ -95,7 +96,7 @@ reference is the obvious repair, and two questions survive it.
 cooperative, and Stratego is big. The quantity that unites them is rarely computed, so comparative
 claims about difficulty rest on tradition.
 
-\textbf{What is the plateau made of?} An agent that stops improving is stuck either because it
+\textbf{What is the plateau made of?} A learner that stops improving is stuck either because it
 cannot see enough, or because it can and fails to exploit what it sees. Those call for opposite
 work, and one win rate cannot separate them.
 
