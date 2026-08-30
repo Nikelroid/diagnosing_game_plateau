@@ -9,3 +9,7 @@ paper/*.aux
 paper/*.log
 paper/*.out
 paper/*.pdf
+
+# Jupyter writes checkpoint copies of every file opened in the browser. They are stale
+# duplicates by construction, and two of them outlived the files they copied.
+.ipynb_checkpoints/
