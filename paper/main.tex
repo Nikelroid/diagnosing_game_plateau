@@ -285,6 +285,8 @@ identity does not explain why the gaps differ or provide a corrected capture val
   \label{tab:families}
 \end{table}
 
+Table~\ref{tab:families} gives the atlas by family.
+
 \paragraph{Two-player card games saturate.} We can report a value or bound for 18 of the 23, and
 their median reported value is 3.1 bits. Only one measured two-player card game has a reported
 value above standard Gin Rummy's hand-only upper bound of $30.1$ support bits, and it exceeds that
@@ -323,7 +325,8 @@ when a game is too large to enumerate, but its headline value can saturate or co
 looking plausible. Independent checks catch three such failures in our study.
 
 Agreement or disagreement between methods does not by itself indicate failure. OpenSpiel and RLCard
-both measure Gin Rummy at 30.1 bits, which cross-checks the closed form across libraries. Leduc
+both return the same hand-only closed form of 30.1 bits for Gin Rummy, which cross-checks that
+arithmetic across libraries. Leduc
 measures 2.01 bits under exact enumeration and 2.30 under the closed form, though one row does not
 show the gap stays small in games with richer public histories.
 
@@ -404,8 +407,9 @@ worth.
 \label{sec:r-case}
 
 The large case study is the decisive application. For this learner and reference, adding the raw
-hidden-hand channel produces no detectable gain. We first show that the same probe detects effects
-in every tested small-game configuration.
+hidden-hand channel produces no detectable gain. Table~\ref{tab:probes} states what each probe
+licenses. We first show that the same probe detects effects in every tested small-game
+configuration.
 
 \paragraph{The sensitivity check.} Across the fourteen small-game and learner combinations that
 contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo-baseline difference stays
@@ -607,7 +611,8 @@ re-run.
 We also verified that the oracle plane is what we say it is. PettingZoo's
 \texttt{opponents\_hand\_visible} flag does not supply the opponent's hand. It exposes an
 ``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10, so a
-learner reading it cannot recover the hand. We built our own plane and checked it against engine
+learner reading it cannot recover the hand (Figure~\ref{fig:app-apparatus}). We built our own
+plane and checked it against engine
 ground truth at 1,200 decision points. Each curriculum opponent's input is trimmed to its own
 width, so the extra plane reaches the learner and nobody else.
 
@@ -685,7 +690,8 @@ tracks two game families, not seven independent confirmations, and we do not rea
 \label{app:budget}
 
 Worth is defined by the two exact ceilings, so changing the learner's training budget should not
-change it. Table~\ref{tab:app-budget} checks this implementation from 25,000 to 1,600,000 episodes,
+change it. Table~\ref{tab:app-budget} and Figure~\ref{fig:app-budget} check this implementation
+from 25,000 to 1,600,000 episodes,
 a sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which
 is what an exact property of the evaluated game and opponent should do. Capture moves instead,
 rising from 56 to 79 percent in Leduc Hold'em. Kuhn poker is the useful contrast. Its capture dips to 83 percent at 400,000 episodes, then
@@ -716,7 +722,8 @@ game hides. We fold information states into a fixed number of buckets and sweep 
 learner limited by state resolution improves as the number of buckets increases, then stops when
 additional resolution no longer helps.
 
-Leduc Hold'em is the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact
+Table~\ref{tab:app-capacity} and Figure~\ref{fig:app-capacity} report the sweep. Leduc Hold'em is
+the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact
 states, and the curve is monotone over the last three points. A state-resolution bottleneck would look like that, on a single sweep
 without replication. Kuhn poker and Liar's dice are flat across the whole sweep, because both are small
 enough that two buckets already separate what matters. Dark hex on a two by two board is solved, so every arm

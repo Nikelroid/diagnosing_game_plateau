@@ -43,7 +43,7 @@ def main():
         ("Oracle observation", "does the raw hidden hand help?",
          f"{orc_vs_base['diff']:+.2f} "
          f"[{orc_vs_base['lo']:+.2f}, {orc_vs_base['hi']:+.2f}]", "no detectable gain"),
-        ("Oracle against placebo", "is any of it the wider input?",
+        ("Oracle against placebo", "does the real hand help beyond widening?",
          f"{orc_vs_plac['diff']:+.2f} "
          f"[{orc_vs_plac['lo']:+.2f}, {orc_vs_plac['hi']:+.2f}]", "no detectable gain"),
     ]
