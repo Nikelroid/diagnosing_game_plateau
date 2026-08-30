@@ -195,7 +195,7 @@ def fig_mechanism():
     y = np.arange(len(items))
     diffs = [d for d, *_ in items]
 
-    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    fig, ax = plt.subplots(figsize=(8.6, 4.4))
     for i, (d, lab, cap, gb, go) in enumerate(items):
         c, cl = (TEAL, TEAL_L) if cap > 1 else (GOLD, GOLD_L)
         ax.barh(i, d, height=0.66, color=cl, edgecolor=c, lw=1.2, zorder=3)
@@ -205,20 +205,22 @@ def fig_mechanism():
     ax.axvline(0, color=INK, lw=1.2, zorder=4)
     ax.set_yticks(y); ax.set_yticklabels([lab for _, lab, *_ in items], fontsize=9, color=INK)
     ax.set_ylim(-0.7, len(items) - 0.3)
-    span = max(abs(min(diffs)), abs(max(diffs)))
-    ax.set_xlim(-span * 1.30, span * 1.30)
+    lo, hi = min(diffs), max(diffs)
+    pad = (hi - lo) * 0.10
+    ax.set_xlim(lo - pad * 1.7, hi + pad * 2.2)
     ax.set_xlabel("how much closer the oracle arm sits to its own ceiling "
                   "($g_b - g_o$, in return)")
     # "easier to learn" asserts a cause the identity does not establish; state the relation instead
-    ax.set_title("Capture exceeds 100% exactly when the baseline arm is farther below its ceiling",
-                 pad=20)
+
     ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
-    ax.text(0.0, 1.035, "bars right of the line: the baseline arm is farther below its ceiling, "
-            "and capture reads above 100%.  Left of it: the reverse.",
-            transform=ax.transAxes, fontsize=8.2, color=MUTED)
-    fig.tight_layout(); save(fig, "fig_mechanism")
+    fig.suptitle("Capture exceeds 100% exactly when the baseline arm is farther below its ceiling",
+                 fontsize=11, fontweight="bold", color=INK, y=0.975)
+    fig.text(0.5, 0.905, "bars right of the line: the baseline arm is farther below its ceiling, "
+             "and capture reads above 100%.  Left of it: the reverse.",
+             ha="center", fontsize=8.2, color=MUTED)
+    fig.tight_layout(rect=[0, 0, 1, 0.885]); save(fig, "fig_mechanism")
 
 
 def fig_capacity():
