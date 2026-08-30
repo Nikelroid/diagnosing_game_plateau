@@ -68,26 +68,24 @@
 
 \begin{abstract}
 A reinforcement learning agent stops improving against a fixed opponent. Is the game hiding
-something the agent needs, or is the agent failing to use what it can already see? A win rate
-cannot answer that: it records where the agent stopped, not why. This paper builds a way to
-answer it. First we measure how much a game hides. At each decision we count the game histories
-that are still possible given what the player can see, and take the base-two logarithm of that
-count. We call this \emph{support bits}, and we report it for 88 game configurations, recording
-how every value was produced. That record earns its place: three of our measurements failed while
-still returning reasonable-looking numbers, and only an independent check caught them, one of the
-three in our own control. The atlas also places our case study, since Gin Rummy hides 30.1
-support bits and only one of the 18 two-player card games we can measure hides more. Second we
-test whether hidden information explains a plateau. We train one agent with the hidden state
-added to what it sees, one without it, and a third with a fake addition of the same size and
-shape. Eleven games are small enough to solve exactly, so we know the answer before we start: the
-test finds the hidden state in all eleven, worth $0.22$ to $1.07$ in expected return, while the
-fake addition leaves the score where it was. We then run the same test, unchanged, on Gin Rummy,
-which is far too large to solve. Across twenty-four training runs per arm the agent that sees the
-opponent's hand scores $0.66$ percentage points below the one that does not, with a 95 percent
-interval of $[-1.65, +0.33]$ that contains zero. That rules out any gain above about $0.3$ points.
-So for this agent and this opponent, the hidden hand is not the missing ingredient. More broadly,
-the protocol separates three things a win rate reports as one: what a game hides, what that hiding
-is worth, and how much of it a learner banks.
+something it needs, or is it failing to use what it can already see? A win rate cannot answer
+that: it says where the agent stopped, not why. First we measure how much a game hides. At
+each decision we count the game histories still possible given what the player can see, and take
+the base-two logarithm. We call this \emph{support bits}, and we report it for 88 game
+configurations, recording how every value was produced. That record matters: three of our measurements
+failed while returning plausible numbers, and only an independent check caught them, one in our
+own control. Second we test whether hidden information explains a plateau. We
+train one agent with the hidden state added to what it sees, one without, and a third with a fake
+addition of the same shape. Eleven games are small enough to solve exactly, so we know the answer
+in advance: the test finds the hidden state in all eleven, worth $0.22$ to $1.07$ in expected
+return, while every fake-addition difference stays within seed noise. We then run the same test, unchanged, on Gin
+Rummy, which is far too large to solve and whose hand-only upper bound of 30.1 support bits is
+second highest among the 18 two-player card games we measure. Across twenty-four
+runs per arm the agent that sees the opponent's hand scores $0.66$ percentage points below the one
+that does not, with a 95 percent interval of $[-1.65, +0.33]$ containing zero. That rules out any
+gain above about $0.3$ points. So for this agent and opponent, the hidden hand is not the missing
+ingredient. More broadly, the protocol separates three things a win rate reports as one:
+what a game hides, what that hiding is worth, and how much a learner banks.
 \end{abstract}
 
 \section{Introduction}
@@ -127,8 +125,8 @@ be computed. Appendix~\ref{app:related} places the work against this literature 
 We contribute two connected tools. The first is an atlas of support bits across 88 game
 configurations, with the provenance of every value and independent checks that catch three silent
 measurement failures. The second is a three-arm diagnostic validated against exact ceilings in
-eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, which has 30.1
-support bits and lies near the top of the measured two-player card games. Twenty-four seeds rule out
+eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, whose hand-only upper bound is $30.1$
+support bits, near the top of the measured two-player card games. Twenty-four seeds rule out
 gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference.
 We are not aware of another cross-game atlas that reports a per-observation
 information-set measure for 88 configurations, records every value's provenance, and uses
@@ -199,10 +197,10 @@ which grades against a fixed rule-based reference that never trains, with Pettin
 game still needs a verified oracle observation and a matched placebo.
 
 \paragraph{Why Gin Rummy.} Gin Rummy gives us a large case near the top of the measured
-two-player card games. Standard Gin Rummy has $30.1$ support bits, and only one measured game in
-that family lies higher (Section~\ref{sec:r-atlas}). Another game in the family would therefore add
-little range on this measure. Eight Gin Rummy configurations sweep $5.1$ to $30.1$ support bits
-while holding the rules fixed. The full game is too large for an exact ceiling, so it tests whether
+two-player card games. Standard Gin Rummy has a hand-only upper bound of $30.1$ support bits, and
+only one measured game in that family has a larger reported value (Section~\ref{sec:r-atlas}), so
+another game in the family would add little range on this measure. Eight Gin Rummy configurations
+sweep hand-only upper bounds from $5.1$ to $30.1$ support bits while holding the rules fixed. The full game is too large for an exact ceiling, so it tests whether
 a diagnostic validated on solvable games transfers unchanged to a much larger one.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
@@ -239,8 +237,9 @@ with a tabular learner and with a neural learner reading a fixed-width tensor, a
 learner does.
 
 \paragraph{Why these games.} A fixed screen defines the candidate games before any probe result is
-examined. The screen keeps OpenSpiel games that are two-player, zero sum, sequential, imperfect
-information, and small enough for counterfactual regret minimisation to provide a true optimum.
+examined. The screen keeps OpenSpiel games that are two-player, zero sum, sequential and imperfect
+information, and small enough that counterfactual regret minimisation can supply a fixed opponent
+policy with exact best responses to it.
 Parameter sweeps produce sixteen solvable configurations, and we run the probe on twelve of them. A
 ceiling check rejects one, leaving eleven configurations for calibration. Gin Rummy is the only
 diagnostic application without an exact ceiling. Appendix~\ref{app:axis} accounts for every unrun
@@ -279,24 +278,27 @@ identity does not explain why the gaps differ or provide a corrected capture val
 \begin{table}[t]
   \centering \small
   \input{../tables/survey_families.tex}
-  \caption{The atlas by family. \emph{Measured} counts games with any reported value or bound:
-  exact, upper or censored. The count matters because the board family's six measured games are
-  exactly its perfect-information controls. Every fog-of-war game is therefore unmeasured.}
+  \caption{The atlas by family. \emph{Measured} counts games with any reported exact value or
+  bound. Medians and ranges summarise those reported entries and inherit their provenance. The
+  board family's six measured games are exactly its perfect-information controls, so every
+  fog-of-war game is unmeasured.}
   \label{tab:families}
 \end{table}
 
-\paragraph{Two-player card games saturate.} We can measure 18 of the 23, and their median is 3.1
-bits. Only one measured two-player card game lies above standard Gin Rummy, and it exceeds it by
-only $2.8$ support bits. Switching games therefore offers little headroom above the case study,
-even though the measured family spans many lower values.
+\paragraph{Two-player card games saturate.} We can report a value or bound for 18 of the 23, and
+their median reported value is 3.1 bits. Only one measured two-player card game has a reported
+value above standard Gin Rummy's hand-only upper bound of $30.1$ support bits, and it exceeds that
+bound by only $2.8$ bits. Switching games therefore offers little additional range above the case
+study, even though the measured family spans many lower values.
 
 \paragraph{In this atlas, the extra bits come from extra players.} The three and four-handed family
 has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong. Those
 bits come with extra hands, coalitions and signalling, which is a different problem rather than a
 deeper version of the same one.
 
-\paragraph{A difficulty axis needs a dial inside one game.} Our eight Gin Rummy configurations hold
-the rules fixed, move only the deck and hand size, and sweep 5.1 to 30.1 bits.
+\paragraph{A within-game comparison needs a dial.} Our eight Gin Rummy configurations hold the
+rules fixed, change only the deck and hand size, and sweep hand-only upper bounds from $5.1$ to
+$30.1$ support bits.
 
 \paragraph{The blind spot.} Thirteen fog-of-war games, dark chess and reconnaissance blind chess
 among them, carry no number by any method: too large to enumerate, no deal to count, no resampler.
@@ -376,7 +378,8 @@ real gain, which is exactly the reading a placebo exists to rule out.
 \paragraph{Why capture can exceed one hundred percent.} Seven of the eleven games report capture
 above $100$ percent. Recall that $g_b$ and $g_o$ are the gaps between the baseline and oracle arms
 and their own ceilings. Equation~\eqref{eq:identity} makes capture exceed $100$ percent exactly
-when $g_b > g_o$. Values above $100$ percent are therefore not algebraic contradictions. The
+when $g_b > g_o$, which Figure~\ref{fig:mechanism} draws. Values above $100$ percent are therefore
+not algebraic contradictions. The
 identity establishes this relationship without explaining why the two gaps differ.
 
 \begin{figure}[t]
@@ -405,8 +408,8 @@ hidden-hand channel produces no detectable gain. We first show that the same pro
 in every tested small-game configuration.
 
 \paragraph{The sensitivity check.} Across the fourteen small-game and learner combinations that
-contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo
-arm lands on the baseline every time. These results show that the instrument works on games of this
+contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo-baseline difference stays
+within seed noise in every case. These results show that the instrument works on games of this
 size. They do not show that it fires wherever information exists.
 Figure~\ref{fig:sensitivity} in the appendix compares these effects with the large case study.
 
@@ -452,7 +455,7 @@ removes strategy fusion, so the difference remains a confounded proxy rather tha
 \FloatBarrier
 \section{Discussion}
 
-The large case study gives a direct answer. The game hides substantial information, but the subset
+The large case study gives a direct answer. The game has a large hand-only upper bound, but the subset
 argument shows that a parity-achieving policy needs only what the learner already receives. Adding
 the remaining raw hidden state produces no detectable gain, and twenty-four seeds rule out gains above
 about $0.3$ points.
@@ -869,8 +872,9 @@ result can contradict. Saturation was caught by a closed form, degeneracy by a s
 our own broken control by an exact ceiling.
 
 \textbf{4. Calibrate where ground truth exists before applying where it does not.} A null means
-nothing from an instrument that has never been shown to fire. We validate on every game an exact
-solver can reach, then run the identical procedure on the game it cannot.
+nothing from an instrument that has never been shown to fire. We validate on eleven games with exact
+ceilings, then run the identical procedure on a larger game where those ceilings cannot be
+computed.
 
 \textbf{5. Control the delivery channel, not only the information.} Adding an input changes more
 than what the learner knows. A placebo arm of the same shape prices that change. Matching shape
