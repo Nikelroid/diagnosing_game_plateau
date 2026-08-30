@@ -1,15 +1,22 @@
 ================================================================================
-PROMPT: FOUR EXPERTS, FINAL SIGN-OFF BEFORE SUBMISSION
+PROMPT: FOUR EXPERTS. HALF SIGN-OFF, HALF BRAINSTORM.
 Paste this whole block. Attach the paper PDF and REVIEW_SHEET.txt.
 Tell the model which slot it owns before it starts.
 ================================================================================
 
-You are one of four independent experts giving a workshop paper its last read before
-submission. It goes to the NeurIPS 2026 TAE workshop, "Can We Trust AI Evaluation?", in
-under a day. Eight pages excluding references and appendices, double blind, non-archival.
+You are one of four independent experts reading a workshop paper twice over. It goes to the
+NeurIPS 2026 TAE workshop, "Can We Trust AI Evaluation?", in under a day. Eight pages
+excluding references and appendices, double blind, non-archival.
 
-This is not a brainstorm and not a polish pass. The paper is written. Your job is to find
-what is still wrong, and to say plainly whether you would submit it.
+The two readings ask opposite questions and you must not mix them.
+
+  PART ONE, SIGN-OFF. The paper as it stands. Is any claim still wider than its evidence?
+  Nothing here can cost more than a few hours to fix, because there are not more than a few
+  hours. Be conservative and specific.
+
+  PART TWO, BRAINSTORM. Where this work goes. Nothing is fixed, the authors will run more
+  experiments, compute is not the constraint and time is. Be ambitious. An idea too large for
+  the deadline belongs here, not filed as a blocker it cannot be.
 
 YOUR SLOT
 You own exactly one of AI1(GEMINI), AI2(ChatGPT), AI3(GROK), AI4(PERPLEXITY). The user will
@@ -17,71 +24,130 @@ tell you which. Write only inside your slot's braces. Never edit the claim text,
 expert's slot, any CC slot, or the Nima slot.
 
 WHAT YOU ARE LOOKING AT
-REVIEW_SHEET.txt holds ten claims, C1 to C10. Each states something the paper now asserts,
-followed by the evidence under it. Every number is read from the result files rather than
-typed, so you may treat them as what the runs actually produced. C9 is the paper's own list
-of what it does not do; read it before accusing the paper of a gap it already concedes.
+REVIEW_SHEET.txt holds four kinds of item, 35 in all. Every number in it is read from the
+result files rather than typed, so you may treat them as what the runs actually produced.
+
+  C1 to C10  each state something the paper now asserts, with the evidence under it. C9 is the
+             paper's own list of what it does not do; read it before accusing the paper of a
+             gap it already concedes.
+  C11        the brainstorm.
+  T1 to T8   every table in the paper, with its caption and its full contents rendered as text.
+             What you see is what the PDF shows.
+  F1 to F7   every figure, with its caption and a description of what it draws. You cannot see
+             the image, so judge the caption, the described content, and whether the figure is
+             the right way to show that data. Say so if you cannot judge without seeing it.
+  A1 to A9   the appendix, section by section, in full prose.
 
 THIS PAPER HAS ALREADY BEEN REVIEWED ONCE
-A previous external round found real problems. All of them were fixed. Do not re-report
-them, and do not credit yourself for finding them:
+A previous external round found real problems. All of them were fixed. Do not re-report them,
+and do not credit yourself for finding them:
 
   - a summary table read a stale four-seed file while the body read twelve-seed runs
   - "bits of hidden information" implied Shannon entropy; it is log-cardinality and is now
     defined as support bits, with the sampling rule stated
-  - "this agent is learning-bound" and "effort belongs in optimisation, not belief
-    modelling" were cut as overclaims
-  - probe 1 was called a capacity probe; it varies inductive bias and compute together and
-    is now called architecture sensitivity
+  - "this agent is learning-bound" and "effort belongs in optimisation, not belief modelling"
+    were cut as overclaims
+  - probe 1 was called a capacity probe; it varies inductive bias and compute together and is
+    now called architecture sensitivity
   - probe 2 was called a value of information bound; strategy fusion confounds it and it is
     now called an oracle-search gap
   - a p-value of 9e-8 was quoted over eleven related configurations and has been dropped
   - the closest prior work, Long et al. 2010, was cited only as a search method
 
-Your value is in what that round MISSED. Assume the obvious defects are gone and hunt the
-ones that survive a careful revision.
+Your value is in what that round missed. Assume the obvious defects are gone.
 
-WHAT TO DO
+--------------------------------------------------------------------------------
+PART ONE: SIGN-OFF, claims C1 to C10
+--------------------------------------------------------------------------------
 
-For each claim C1 to C10, write one entry in your slot, in this form:
+One entry per claim, in your slot, in this form:
 
   <VERDICT> | "<verbatim quote from the paper or the sheet>" | <what is wrong> |
   FIX: <the specific change> | COSTS: <what gets cut or weakened, or none>
 
-  SOUND      the claim is supported by the evidence shown. This is a costly verdict: you
-             must also name the single strongest objection a hostile reviewer could still
-             raise, and say why it does not land.
-  TOO WIDE   the evidence supports something narrower. Give the narrower sentence.
+  SOUND       supported by the evidence shown. This is the expensive verdict: you must also
+              name the single strongest objection a hostile reviewer could still raise, and
+              say why it does not land.
+  TOO WIDE    the evidence supports something narrower. Give the narrower sentence.
   UNSUPPORTED the evidence does not support it at all. Say what would.
-  BROKEN     an internal inconsistency, a number that contradicts another number, or a
-             claim that contradicts C9.
+  BROKEN      an internal inconsistency, a number contradicting another number, or a claim
+              contradicting C9.
 
 Quote the actual words. An entry without a quotation will be ignored.
 
-THEN, FOUR THINGS THE SHEET DOES NOT ASK
+TABLES, FIGURES AND APPENDIX: T, F and A items
 
-  1. THE MISSING CLAIM. Name one thing the paper's own data supports that it does not claim.
-     Under-claiming is a defect too, with one day left.
-  2. THE KILL SHOT. If you had to reject this paper in three sentences, what would you write?
-     Then answer it as the authors would.
-  3. THE NUMBER CHAIN. Pick one number in the abstract and follow it to the table, the
-     appendix and the claim it licenses. Say whether it survives the trip.
-  4. TITLE AND ABSTRACT. The title is "Is It the Game or the Agent? Measuring What a Game
-     Hides, and Diagnosing Why an Agent Stops Improving." Does the paper deliver what that
-     promises? If not, propose either a narrower title or the sentence that would earn it.
+Use the same four verdicts, judging the artefact rather than a sentence. What to look for:
 
+  Tables    Does the caption claim what the numbers show? Is a column doing work the text does
+            not license? Are units, n, and intervals stated? Is a row missing that would change
+            the reading? Is anything in the table contradicted by another table?
+  Figures   Is this the right chart for the claim it is cited for? Does the caption assert more
+            than the described content supports? Is an axis, transform or standardisation
+            unexplained? Would the point survive being a table instead, and if so should it be?
+  Appendix  It has no page limit and reviewers need not read it, so the question is whether the
+            right things are in it. Name anything in the appendix that belongs in the body, and
+            anything in the body that should be relegated.
+
+If an artefact is fine, SOUND still costs you the strongest surviving objection.
+
+--------------------------------------------------------------------------------
+PART TWO: BRAINSTORM, claim C11
+--------------------------------------------------------------------------------
+
+Here the question is not whether the paper is defensible. It is whether this is the right
+paper, and what the next one is. Use these verdicts, as many as apply, on any part of the
+work including parts C1 to C10 already settled:
+
+  KEEP     load-bearing; say what it is carrying
+  CUT      does not earn its space; say what the space should hold instead
+  REFRAME  the finding is real but the framing is wrong; give the better framing
+  DIG      there is more here than the authors have taken; say what to measure
+  DOUBT    you do not believe it; say what would convince you
+  RISK     this is where the paper gets attacked; say by whom, and how to defend it
+
+Be concrete. "Strengthen the motivation" is not advice. "Cut the architecture probe and use
+the space for the entropy comparison, because support bits and posterior entropy diverging is
+the paper's actual thesis and nothing currently measures it" is advice.
+
+--------------------------------------------------------------------------------
 OUTPUT, IN THIS ORDER
+--------------------------------------------------------------------------------
 
   TALLY
-  One line: how many SOUND, TOO WIDE, UNSUPPORTED, BROKEN.
+  One line for claims C1 to C10, one line for T, F and A items: how many SOUND, TOO WIDE,
+  UNSUPPORTED, BROKEN.
 
   BLOCKERS
-  At most three, worst first. A blocker is something that must change before submission.
-  For each: the claim id, the quoted words, the fix, and how long the fix takes. If nothing
+  At most three, worst first. A blocker must change before submission and must be fixable in
+  hours. For each: claim id, the quoted words, the fix, and how long it takes. If nothing
   blocks it, write "nothing blocks it" and name the three claims you attacked hardest.
 
-  THE FOUR ANSWERS
-  Missing claim, kill shot, number chain, title.
+  THE MISSING CLAIM
+  One thing the paper's own data supports that it does not claim. Under-claiming is a defect
+  too, with one day left.
+
+  THE NUMBER CHAIN
+  Pick one number in the abstract. Follow it to the table, the figure, the appendix and the
+  claim it licenses. Say whether it survives the trip. A previous round found a summary table
+  that disagreed with the body by two percentage points, so this check is not ceremonial.
+
+  THE PAPER I WOULD WRITE
+  Under 200 words. Title, the one claim, and the three results that carry it. If that is the
+  paper the authors already have, say so plainly, in one line.
+
+  THE ONE EXPERIMENT
+  The single run you would do next, and precisely what result would change what the paper can
+  claim. Not a list. One. Say what it costs.
+
+  WHAT A HOSTILE REVIEWER SAYS FIRST
+  The two sentences you expect to open the first review, written in their voice. Then answer
+  them as the authors would.
+
+  TITLE
+  The title is "Is It the Game or the Agent? Measuring What a Game Hides, and Diagnosing Why
+  an Agent Stops Improving." Does the paper deliver what that promises? If not, propose either
+  a narrower title or the sentence that would earn it.
 
   RATING, 5 dimensions, 5 points each, 25 total
   Claim discipline    x/5   are claims the size of their evidence
@@ -91,13 +157,12 @@ OUTPUT, IN THIS ORDER
   Writing             x/5   can a tired reviewer follow it once, at speed
   TOTAL               xx/25
 
-  VERDICT: SUBMIT or DO NOT SUBMIT
-  One word first, then at most six sentences. SUBMIT means you would put your name on it as
-  it stands. DO NOT SUBMIT means one specific thing must change first, and the last line
-  must be that single change. Do not hedge between the two.
+  VERDICT: SUBMIT AS IS / SUBMIT AFTER ONE FIX / RETHINK THE PAPER
+  One of the three, then at most six sentences. "Submit after one fix" must name the fix on
+  the last line, in one sentence. Do not hedge between them.
 
 RULES
-Do not praise. Do not summarise the paper back to the authors. Do not propose experiments
-that take more than a day, unless you are naming one as future work rather than a blocker.
-If a claim is fine, say so and pay the SOUND cost. Agreement without an objection is not an
-answer.
+Do not praise. Do not summarise the paper back to the authors. In Part One, do not propose
+work that takes more than a day. In Part Two, ignore the deadline entirely. If you disagree
+with another expert's slot, say so by name and say why. The authors would rather be told the
+paper is wrong now than by a reviewer later.

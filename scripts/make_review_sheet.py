@@ -12,6 +12,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import re
 import statistics as st
 import sys
 from collections import Counter, defaultdict
@@ -22,9 +23,120 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import axis_data
 import gin_arms
 
+FIGURE_CONTENT = {
+    "fig1_hidden_bits.pdf":
+        "Horizontal bars, one per game, sorted by support bits, coloured by family. Hatched bars "
+        "mark resampled values, which are right-censored lower bounds rather than estimates. "
+        "88 configurations. Gin Rummy marked as the anchor at 30.1.",
+    "fig_gin_arms.pdf":
+        "Three arms on one axis: baseline, oracle, placebo. One dot per training seed (12 each), "
+        "a bar at the arm mean, and a 95 percent whisker. The three intervals overlap heavily.",
+    "fig_sensitivity.pdf":
+        "Effect of the oracle across fifteen game and learner combinations, standardised by the "
+        "seed-to-seed spread so games measured in return and in win rate share an axis. Raw "
+        "effects printed beside each point. A shaded band marks where an effect cannot be told "
+        "from none; Gin Rummy's interval is the only one inside it.",
+    "fig_mechanism.pdf":
+        "One line per game, from how far the baseline arm sits below its ceiling to how far the "
+        "oracle arm sits below its own. Lines coloured by whether capture exceeds 100 percent. "
+        "11 games. Every line for capture over 100 slopes one way and every line under it the "
+        "other; this is the figure the eleven-of-eleven claim rests on.",
+    "fig_apparatus.pdf":
+        "The same probe under two learners that share no code, a tabular one and a neural one "
+        "reading a fixed-width tensor. Gain from the hidden state on the y axis, one point per "
+        "game per learner. The two agree on which games hide something usable.",
+    "fig_budget.pdf":
+        "Worth and capture against training episodes, 25k to 1.6M on a log axis, for Kuhn and "
+        "Leduc. Worth is a flat line in both; capture rises.",
+    "fig_capacity.pdf":
+        "Exploitability against the number of buckets the learner can tell apart, log x, "
+        "rightmost point exact. One curve per game. Only Leduc descends.",
+    "fig3_gin_dial.pdf": "(generated but not currently placed in the paper)",
+    "fig2_bits_vs_cost.pdf": "(generated but not currently placed in the paper)",
+    "fig1_three_probes.pdf": "(generated but not currently placed in the paper)",
+    "fig_decomposition.pdf": "(generated but not currently placed in the paper)",
+}
+
 SLOTS = ["AI1(GEMINI)", "AI2(ChatGPT)", "AI3(GROK)", "AI4(PERPLEXITY)",
          "CC1", "CC2", "CC3", "CC4", "Nima"]
 L = []
+
+
+def latex_table_to_text(path):
+    """Render a generated tabular as aligned plain text, so a reader sees what the PDF shows."""
+    raw = open(path).read()
+    rows = []
+    for line in raw.split("\n"):
+        line = line.strip()
+        if (not line or line.startswith("%") or line.startswith("\\begin")
+                or line.startswith("\\end") or line in (r"\toprule", r"\midrule", r"\bottomrule")):
+            continue
+        line = line.rstrip("\\").strip()
+        if not line:
+            continue
+        cells = []
+        for c in line.split("&"):
+            c = re.sub(r"\\multicolumn\{\d+\}\{[^}]*\}\{([^}]*)\}", r"\1", c)
+            c = re.sub(r"\\(textbf|emph|texttt|textit)\{([^}]*)\}", r"\2", c)
+            c = c.replace(r"\%", "%").replace(r"\_", "_").replace(r"\&", "&")
+            c = c.replace("$", "").replace("{", "").replace("}", "")
+            cells.append(" ".join(c.split()))
+        rows.append(cells)
+    if not rows:
+        return "  (empty)"
+    width = max(len(r) for r in rows)
+    rows = [r + [""] * (width - len(r)) for r in rows]
+    cols = [max(len(r[i]) for r in rows) for i in range(width)]
+    out = []
+    for i, r in enumerate(rows):
+        out.append("  " + "  ".join(c.ljust(cols[j]) for j, c in enumerate(r)).rstrip())
+        if i == 0:
+            out.append("  " + "  ".join("-" * cols[j] for j in range(width)))
+    return "\n".join(out)
+
+
+def floats_from_paper():
+    """Every table and figure in the paper, with its caption, label and source."""
+    tex = open(os.path.join(HERE, "paper", "main.tex")).read()
+    out = []
+    for m in re.finditer(r"\\begin\{(table|figure)\}(.*?)\\end\{\1\}", tex, re.S):
+        kind, body = m.group(1), m.group(2)
+        cap = re.search(r"\\caption\{(.*?)\}\s*\\label", body, re.S)
+        if not cap:
+            cap = re.search(r"\\caption\{(.*?)\n\s*\\label", body, re.S)
+        caption = " ".join(cap.group(1).split()) if cap else "(no caption)"
+        caption = re.sub(r"\\(emph|textbf|texttt|textit)\{([^}]*)\}", r"\2", caption)
+        caption = re.sub(r"~?\\ref\{([^}]+)\}", r"[\1]", caption)
+        label = re.search(r"\\label\{([^}]+)\}", body)
+        src = re.search(r"\\input\{\.\./tables/([^}]+)\}", body)
+        img = re.search(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", body)
+        out.append({"kind": kind, "caption": caption,
+                    "label": label.group(1) if label else "",
+                    "table": src.group(1) if src else None,
+                    "figure": img.group(1) if img else None,
+                    "appendix": m.start() > tex.index(r"\appendix")})
+    return out
+
+
+def appendix_sections():
+    """Appendix section titles and their prose, so the sheet carries the supplement too."""
+    tex = open(os.path.join(HERE, "paper", "main.tex")).read()
+    app = tex[tex.index(r"\appendix"):]
+    app = re.sub(r"\\begin\{(figure|table)\}.*?\\end\{\1\}", "", app, flags=re.S)
+    out = []
+    parts = re.split(r"\\section\{([^}]+)\}", app)
+    for i in range(1, len(parts), 2):
+        title, body = parts[i], parts[i + 1]
+        body = re.sub(r"\\label\{[^}]+\}", "", body)
+        body = re.sub(r"\\citep?t?\{([^}]+)\}", r"[\1]", body)
+        body = re.sub(r"~?\\ref\{([^}]+)\}", r"[\1]", body)
+        body = re.sub(r"\\(emph|textbf|texttt|textit|paragraph)\{([^}]*)\}", r"\2", body)
+        body = re.sub(r"\$([^$]*)\$", r"\1", body)
+        body = re.sub(r"\\[a-zA-Z]+\*?", "", body)
+        body = re.sub(r"[{}]", "", body)
+        paras = [" ".join(x.split()) for x in re.split(r"\n\s*\n", body) if x.strip()]
+        out.append((title, [p for p in paras if len(p.split()) > 6]))
+    return out
 
 
 def claim(tag, headline, evidence):
@@ -63,7 +175,7 @@ def main():
 
     L.append("FOUR-EXPERT SIGN-OFF: IS ANY CLAIM STILL WIDER THAN ITS EVIDENCE?")
     L.append("Paper: Is It the Game or the Agent? (NeurIPS 2026 TAE workshop, 8pp + appendix)")
-    L.append("Every number below is read from the result files, not typed. Claims are C1..C10.")
+    L.append("Every number below is read from the result files, not typed. C1..C11 are claims. T are tables, F figures, A appendix sections.")
     L.append("")
     L.append("=" * 96)
     L.append("")
@@ -185,6 +297,58 @@ The paper's stated novelty is now the JOINING: a provenance-aware measurement of
 hides, used to read a specific agent's plateau, with a placebo that prices the intervention.
 """)
 
+    unmeasured = sum(1 for r in atlas if r["bits_source"] == "not measured")
+    unmeasured_board = sum(1 for r in atlas
+                           if r["bits_source"] == "not measured" and r["family"] == "board")
+
+    claim("C11", "Where this paper should go next. (Direction, not a blocker.)",
+          f"""
+This section is NOT about the submission. Answer it as if the paper is already sent.
+Assume the deadline passed and everything above shipped as it stands.
+
+What the authors think they have: a workflow that measures what a domain hides, then reads a
+specific agent's plateau against it, with a placebo that prices the intervention itself.
+
+Where they think it could go, in no order and with no commitment:
+  a. The blind spot. {unmeasured} of {len(atlas)} configurations carry no number by any method,
+     and {unmeasured_board} of those are board and fog-of-war games. Those are the games people
+     call the frontier of imperfect information, and nobody can currently size them.
+  b. The estimator. Support bits are an upper bound on posterior entropy. Measuring the entropy
+     itself, under a stated policy, would say how far apart the two really are.
+  c. The bias. Capture is biased wherever the two arms sit unequally below their ceilings, which
+     is {hi} of {len(good)} games. There is no estimator here that corrects it, only one that
+     reports its sign.
+  d. Structured privileged features instead of a raw hand plane, to separate "the information is
+     not worth much" from "this learner cannot use it in that form".
+  e. Scale. Every exactly-decomposed game is small enough to solve, which is the property that
+     makes it unlike the case study.
+
+The question: which of these is the next PAPER, and which are footnotes in this one? Name one
+you would drop entirely. If the real next step is not on the list, say what it is.
+""")
+
+    # Tables and figures, in the order the paper shows them, so the sheet carries what the PDF
+    # carries rather than only the prose about it.
+    floats = floats_from_paper()
+    for i, f in enumerate([x for x in floats if x["table"]], 1):
+        where = "Appendix" if f["appendix"] else "Main text"
+        path = os.path.join(HERE, "tables", f["table"])
+        body = (f"{where}. Source: tables/{f['table']}\n\n"
+                f"Caption: {f['caption']}\n\n"
+                f"{latex_table_to_text(path)}")
+        claim(f"T{i}", f"TABLE {f['label']}", body)
+
+    for i, f in enumerate([x for x in floats if x["figure"]], 1):
+        where = "Appendix" if f["appendix"] else "Main text"
+        body = (f"{where}. Source: figures/{f['figure']}\n\n"
+                f"Caption: {f['caption']}\n\n"
+                f"What it draws: {FIGURE_CONTENT.get(f['figure'], '(no description on file)')}")
+        claim(f"F{i}", f"FIGURE {f['label']}", body)
+
+    for i, (title, paras) in enumerate(appendix_sections(), 1):
+        body = "\n\n".join(paras) if paras else "(figures and tables only; see T and F items)"
+        claim(f"A{i}", f"APPENDIX {chr(64+i)}. {title}", body)
+
     if bad:
         L.append("REJECTED FROM ALL TABLES AND FIGURES (an arm scored above its own exact ceiling):")
         for g in sorted(bad):
@@ -194,7 +358,7 @@ hides, used to read a specific agent's plateau, with a placebo that prices the i
     out = os.path.join(HERE, "REVIEW_SHEET.txt")
     with open(out, "w") as f:
         f.write("\n".join(L) + "\n")
-    print(f"  wrote {out}: 10 claims, {len(SLOTS)} slots each")
+    print(f"  wrote {out}: {sum(1 for x in L if x.startswith(chr(91))) } items, {len(SLOTS)} slots each")
     print(f"  usable {len(good)} games / {sum(len(v) for v in good.values())} runs, "
           f"{len(bad)} rejected")
 

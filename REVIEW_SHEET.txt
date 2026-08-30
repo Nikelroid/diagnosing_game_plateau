@@ -1,6 +1,6 @@
 FOUR-EXPERT SIGN-OFF: IS ANY CLAIM STILL WIDER THAN ITS EVIDENCE?
 Paper: Is It the Game or the Agent? (NeurIPS 2026 TAE workshop, 8pp + appendix)
-Every number below is read from the result files, not typed. Claims are C1..C10.
+Every number below is read from the result files, not typed. C1..C11 are claims. T are tables, F figures, A appendix sections.
 
 ================================================================================================
 
@@ -218,6 +218,581 @@ Nima:{}
   Rebstock et al. 2019 do inference in trick-taking card games.
   The paper's stated novelty is now the JOINING: a provenance-aware measurement of what a domain
   hides, used to read a specific agent's plateau, with a placebo that prices the intervention.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[C11] Where this paper should go next. (Direction, not a blocker.)
+
+  This section is NOT about the submission. Answer it as if the paper is already sent.
+  Assume the deadline passed and everything above shipped as it stands.
+
+  What the authors think they have: a workflow that measures what a domain hides, then reads a
+  specific agent's plateau against it, with a placebo that prices the intervention itself.
+
+  Where they think it could go, in no order and with no commitment:
+    a. The blind spot. 30 of 88 configurations carry no number by any method,
+       and 13 of those are board and fog-of-war games. Those are the games people
+       call the frontier of imperfect information, and nobody can currently size them.
+    b. The estimator. Support bits are an upper bound on posterior entropy. Measuring the entropy
+       itself, under a stated policy, would say how far apart the two really are.
+    c. The bias. Capture is biased wherever the two arms sit unequally below their ceilings, which
+       is 7 of 11 games. There is no estimator here that corrects it, only one that
+       reports its sign.
+    d. Structured privileged features instead of a raw hand plane, to separate "the information is
+       not worth much" from "this learner cannot use it in that form".
+    e. Scale. Every exactly-decomposed game is small enough to solve, which is the property that
+       makes it unlike the case study.
+
+  The question: which of these is the next PAPER, and which are footnotes in this one? Name one
+  you would drop entirely. If the real next step is not on the list, say what it is.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T1] TABLE tab:families
+
+  Main text. Source: tables/survey_families.tex
+
+  Caption: The atlas by family. Measured is how many games in the family admit any estimate at all, which is as informative as the bits: the board family's six measured games are precisely its perfect-information controls, so every fog-of-war game is unmeasured.
+
+    Family                     Games  Measured  Median bits  Range
+    -------------------------  -----  --------  -----------  ------------
+    Card games, 2p             23     18        3.1          0.0 to 32.9
+    Gin Rummy dial             8      8         16.6         5.1 to 30.1
+    Card games, 3-4p           21     15        39.9         2.6 to 109.6
+    Dice games                 6      6         6.5          2.6 to 12.9
+    Bargaining and signalling  8      5         1.0          0.7 to 4.5
+    Board and fog of war       19     6         0.0          0.0 to 0.0
+    Solo against chance        3      0         n/a          n/a
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T2] TABLE tab:probes
+
+  Main text. Source: tables/probes.tex
+
+  Caption: The three probes, their measured values, and what each licenses. Read together they give a verdict no single win rate can.
+
+    Probe                     Question                                  Measured (% vs the reference, 95% CI)          Verdict
+    ------------------------  ----------------------------------------  ---------------------------------------------  ----------------------
+    Capacity                  is the network the limit?                 every encoder in 21.2 to 30.0                  not among those tested
+    Value of information      what is the hidden state worth, at most?  fair 10.3 to 25.6 vs oracle 40.7 to 85.3       confounded proxy
+    Oracle observation        information-bound or learning-bound?      26.79 vs 27.04 baseline, -0.25 [-1.78, +1.28]  no benefit detected
+    \quad net of the placebo  is any of that the wider input?           26.79 vs 27.02 placebo, -0.22 [-1.65, +1.20]   no benefit detected
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T3] TABLE tab:axis
+
+  Main text. Source: tables/app_axis.tex
+
+  Caption: The decomposition over eleven games spanning 1.00 to 3.67 bits, eight seeds each. Worth is set by the game, capture by the learner. Widening is the placebo arm minus baseline: it prices the wider observation on its own, and it is inside seed noise everywhere.
+
+    Game                Bits  n  Worth  Banked  Capture  Widening
+    ------------------  ----  -  -----  ------  -------  --------
+    Kuhn poker          1.00  8  0.388  0.347   89%      -0.002
+    Leduc suit-iso      1.40  8  1.331  1.038   78%      +0.044
+    Liar's dice 1d3     1.58  8  0.889  0.913   103%     +0.014
+    Liar's dice 1d4     2.00  8  0.937  1.014   108%     +0.000
+    Leduc poker         2.01  8  1.317  0.959   73%      +0.087
+    Liar's dice 1d4 IR  2.21  8  0.937  1.008   108%     +0.014
+    Liar's dice 1d5     2.32  8  0.991  1.026   104%     +0.011
+    Liar's dice 1d6     2.58  8  1.026  1.062   104%     +0.005
+    Liar's dice 1d5 IR  2.81  8  0.991  1.024   103%     +0.002
+    Liar's dice 1d6 IR  3.41  8  1.026  1.070   104%     -0.008
+    Leduc action-map    3.67  8  1.358  1.041   77%      +0.025
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T4] TABLE tab:app-corrections
+
+  Appendix. Source: tables/app_corrections.tex
+
+  Caption: Closed forms repaired by counting hands as multisets. The distinguishable column is what the standard formula returns, and the multiset column is what the deck actually admits.
+
+    Game        Deck  Hand  Hidden hands  Distinguishable  Multiset
+    ----------  ----  ----  ------------  ---------------  --------
+    UNO 2p      108   7     1             34.7             28.4
+    Mahjong 4p  136   13    3             176.2            109.6
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T5] TABLE tab:app-budget
+
+  Appendix. Source: tables/app_budget.tex
+
+  Caption: The decomposition at four training budgets. Worth is invariant; capture is not.
+
+    Game         Episodes   Worth  Capture  Gap with oracle
+    -----------  ---------  -----  -------  ---------------
+    Kuhn poker   25,000     0.388  97%      0.013
+    Kuhn poker   100,000    0.388  90%      0.041
+    Kuhn poker   400,000    0.388  83%      0.067
+    Kuhn poker   1,600,000  0.388  97%      0.012
+    Leduc poker  25,000     1.317  56%      0.727
+    Leduc poker  100,000    1.317  68%      0.578
+    Leduc poker  400,000    1.317  67%      0.473
+    Leduc poker  1,600,000  1.317  79%      0.412
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T6] TABLE tab:app-capacity
+
+  Appendix. Source: tables/app_capacity.tex
+
+  Caption: Exploitability against the number of buckets the learner can tell apart, lower is better. Only Leduc Hold'em is capacity bound.
+
+    Game                   2     4     8     16    32    128   512   exact
+    ---------------------  ----  ----  ----  ----  ----  ----  ----  -----
+    Dark hex 2x2 (solved)  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+    Kuhn poker             0.56  0.78  0.47  0.33  0.36  0.64  0.61  0.61
+    Leduc poker            5.58  4.26  4.31  4.54  4.43  3.59  2.78  1.55
+    Liar's dice 1d4        0.79  0.65  0.69  0.60  0.79  0.81  0.73  0.81
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T7] TABLE tab:app-gaps
+
+  Appendix. Source: tables/app_gaps.tex
+
+  Caption: How far each arm sits below its own exact ceiling, sorted by capture. The last column asks whether the sign of the gap difference predicts whether capture exceeds $100$ percent. It does, in eleven games out of eleven.
+
+    Game                Capture  Baseline gap  Oracle gap  Difference  Predicted
+    ------------------  -------  ------------  ----------  ----------  ---------
+    Leduc poker         73%      0.035         0.394       -0.358      yes
+    Leduc action-map    77%      0.072         0.389       -0.317      yes
+    Leduc suit-iso      78%      0.084         0.377       -0.293      yes
+    Kuhn poker          89%      0.015         0.055       -0.041      yes
+    Liar's dice 1d3     103%     0.025         0.000       +0.025      yes
+    Liar's dice 1d5 IR  103%     0.034         0.001       +0.033      yes
+    Liar's dice 1d5     104%     0.036         0.001       +0.035      yes
+    Liar's dice 1d6     104%     0.038         0.002       +0.036      yes
+    Liar's dice 1d6 IR  104%     0.046         0.002       +0.044      yes
+    Liar's dice 1d4 IR  108%     0.077         0.006       +0.070      yes
+    Liar's dice 1d4     108%     0.084         0.007       +0.077      yes
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[T8] TABLE tab:app-gin
+
+  Appendix. Source: tables/app_gin.tex
+
+  Caption: The three Gin Rummy arms at twelve seeds each, as win rate against the fixed expert. Intervals are 95 percent, from the $t$ distribution on eleven degrees of freedom.
+
+    Arm                                          n   Mean   SD    95% CI
+    -------------------------------------------  --  -----  ----  --------------
+    Baseline, four planes                        12  27.04  1.87  [25.86, 28.23]
+    Oracle, fifth plane is the real hand         12  26.79  1.52  [25.82, 27.76]
+    Placebo, fifth plane carries no information  12  27.02  1.65  [25.97, 28.06]
+    Contrasts, percentage points
+    oracle minus baseline                            -0.25        [-1.78, +1.28]
+    placebo minus baseline                           -0.03        [-1.61, +1.56]
+    oracle minus placebo                             -0.22        [-1.65, +1.20]
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F1] FIGURE fig:atlas
+
+  Main text. Source: figures/fig1_hidden_bits.pdf
+
+  Caption: How much the player to move cannot see, across 88 games from two engines. Two-player card games saturate early; the games clearly above Gin Rummy are seated at a larger table, where the extra bits come from extra hands rather than from a deeper duel.
+
+  What it draws: Horizontal bars, one per game, sorted by support bits, coloured by family. Hatched bars mark resampled values, which are right-censored lower bounds rather than estimates. 88 configurations. Gin Rummy marked as the anchor at 30.1.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F2] FIGURE fig:probes
+
+  Main text. Source: figures/fig_gin_arms.pdf
+
+  Caption: The oracle-observation probe on Gin Rummy at twelve seeds per arm. Dots are seeds, bars are means, whiskers are 95 percent intervals. The placebo carries a fifth plane with the same shape and no information, so it prices the widening itself.
+
+  What it draws: Three arms on one axis: baseline, oracle, placebo. One dot per training seed (12 each), a bar at the arm mean, and a 95 percent whisker. The three intervals overlap heavily.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F3] FIGURE fig:sensitivity
+
+  Main text. Source: figures/fig_sensitivity.pdf
+
+  Caption: The same probe across fifteen game and learner combinations. Effects are standardised by the seed-to-seed spread so that games measured in return and in win rate can share an axis; raw effects are printed beside each point. Gin Rummy's interval is the only one inside the band where an effect cannot be told from none.
+
+  What it draws: Effect of the oracle across fifteen game and learner combinations, standardised by the seed-to-seed spread so games measured in return and in win rate share an axis. Raw effects printed beside each point. A shaded band marks where an effect cannot be told from none; Gin Rummy's interval is the only one inside it.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F4] FIGURE fig:mechanism
+
+  Main text. Source: figures/fig_mechanism.pdf
+
+  Caption: Why capture can exceed one hundred percent. Each game is plotted by how far each arm sits below its own ceiling. The oracle does not only supply information, it also changes how hard the task is to learn, and the two effects share a denominator.
+
+  What it draws: One line per game, from how far the baseline arm sits below its ceiling to how far the oracle arm sits below its own. Lines coloured by whether capture exceeds 100 percent. 11 games. Every line for capture over 100 slopes one way and every line under it the other; this is the figure the eleven-of-eleven claim rests on.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F5] FIGURE fig:app-apparatus
+
+  Appendix. Source: figures/fig_apparatus.pdf
+
+  Caption: The same question asked of two different learners. A tabular learner and a neural learner reading a fixed-width tensor share no code and no update rule, and they agree on which games hide something the learner can use.
+
+  What it draws: The same probe under two learners that share no code, a tabular one and a neural one reading a fixed-width tensor. Gain from the hidden state on the y axis, one point per game per learner. The two agree on which games hide something usable.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F6] FIGURE fig:app-budget
+
+  Appendix. Source: figures/fig_budget.pdf
+
+  Caption: The same runs as Table[tab:app-budget], against training episodes.
+
+  What it draws: Worth and capture against training episodes, 25k to 1.6M on a log axis, for Kuhn and Leduc. Worth is a flat line in both; capture rises.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[F7] FIGURE fig:app-capacity
+
+  Appendix. Source: figures/fig_capacity.pdf
+
+  Caption: The capacity sweep. The rightmost point of each curve uses exact information states.
+
+  What it draws: Exploitability against the number of buckets the learner can tell apart, log x, rightmost point exact. One curve per game. Only Leduc descends.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A1] APPENDIX A. Reproduction
+
+  Every table and figure is generated from files in data/ by a script in scripts/. Nothing in this paper is typed by hand. The atlas comes from scripts/atlas\_tables.py, the probe tables from scripts/probe\_tables.py, and the appendix tables from scripts/make\_appendix.py. Regenerating them from a clean checkout reproduces the paper.
+
+  Ceilings are exact, not estimated. The baseline ceiling is the best response to the opponent policy, computed with OpenSpiel's BestResponsePolicy. The oracle ceiling is a memoised expectimax over the same game with the hidden state revealed. Both are closed-form values of the game, so they carry no seed noise and no confidence interval.
+
+  Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twelve. Tabular runs use data/configs/; neural runs use a fixed-width tensor observation and policy gradient, matching the encoder the Gin Rummy learner uses.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A2] APPENDIX B. The atlas in full
+
+  Table[tab:app-corrections] lists the entries whose closed form we had to repair. The naive count treats every physical card as distinguishable, which is right for a 52-card deck and wrong for a deck with identical copies. Two red sevens are the same holding whichever card you were dealt, so a hand is a multiset and not a sequence. Counting them as distinct inflates the estimate. For Mahjong it inflates it by 67 bits, and for UNO it puts the game above a ceiling it cannot reach. The repair changes one claim in the main text: before it, two of 23 two-player card games hid more than Gin Rummy, and after it, one does.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A3] APPENDIX C. What the probes measure
+
+  The placebo arm is the part of the design most easily got wrong, so it is worth stating exactly. The placebo plane has the same shape and the same sparsity as the oracle plane. It holds ten cards this player cannot see, drawn independently of the opponent's actual hand, and it is resampled once per deal rather than once per decision. Resampling per decision would not leak, because a learner could average that noise away. But it would give the placebo arm a different input distribution than the oracle arm sees. One draw per deal keeps the two arms matched.
+
+  An early version of the placebo drew from a pool of the wrong size. The plane was therefore not matched in cardinality to the oracle plane, and the arm priced something other than the widening. We fixed the pool and re-ran every affected game. The numbers reported here are from the re-run.
+
+  We also verified that the oracle plane is what we say it is. PettingZoo's opponents\_hand\_visible flag does not supply the opponent's hand. It exposes an ``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10, so a learner reading it cannot recover the hand. We built our own plane and checked it against engine ground truth at 1,200 decision points. Each curriculum opponent's input is trimmed to its own width, so the extra plane reaches the learner and nobody else.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A4] APPENDIX D. The decomposition across eleven games
+
+  The per-game numbers are in Table[tab:axis] in the main text. This section records how they were produced and what each column can carry.
+
+  Worth is the oracle ceiling minus the baseline ceiling. Both are exact values of the game, so worth has no seed noise and no interval; the eight seeds per game affect the banked column alone. Banked is what the learner gains from the hidden state, measured as the oracle arm minus the baseline arm. Capture is banked over worth. Widening is the placebo arm minus the baseline arm.
+
+  The eleven games are not eleven independent domains. Seven are Liar's dice at different die sizes and three are Leduc variants, so the spread of bits is wider than the spread of game structure. That is a deliberate choice: holding the game fixed and moving one parameter is what lets worth be compared across rows at all. It also means the seven-to-four split in Section[app:mechanism] tracks two game families, not seven independent confirmations, and we do not read it as such.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A5] APPENDIX E. Worth does not move with the training budget
+
+  If worth were a property of the learner, it would drift as the learner trained longer. It does not. Table[tab:app-budget] runs the decomposition at 25,000 to 1,600,000 episodes, a sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which is what a game property should do. Capture climbs instead, from 56 to 79 percent in Leduc Hold'em.
+
+  Kuhn poker is the useful contrast. Its capture does not climb monotonically: it dips to 83 percent at 400,000 episodes and returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling at the smallest budget. What the middle budgets show is seed noise, not a trend. We report it rather than smoothing it away.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A6] APPENDIX F. What a capacity-bound plateau looks like
+
+  The capacity probe answers a different question: not what the game hides, but whether the learner can tell enough situations apart. We fold information states into a fixed number of buckets and sweep that number. A learner that is capacity bound improves as the buckets increase and stops when it runs out of them.
+
+  Leduc Hold'em is the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact states, and the curve is monotone over the last three points. That is what being capacity bound looks like. Kuhn poker and Liar's dice are flat across the whole sweep, because both are small enough that two buckets already separate what matters. Dark hex on a two by two board is solved, so every arm reads zero. It is in the table as a control: the instrument should return zero when there is genuinely nothing to find, and it does.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A7] APPENDIX G. The rejected game
+
+  Every arm is graded against a ceiling that is a closed-form property of the game, so an arm scoring above its own ceiling is impossible rather than merely surprising. We check it automatically, and one game of twelve fails.
+
+  In liars\_dice(numdice=2,dice\_sides=3) the placebo arm returns 0.738 against a ceiling of 0.062, a violation of 0.68, consistent across all eight seeds. The placebo plane is drawn once per deal so that its input distribution matches the oracle plane's. With two dice the space it is drawn from is large enough that the draw is close to unique per deal, which turns the plane into an identifier: the learner keys on it, splits states that should share a policy, and recovers the hidden information indirectly. The recorded state count shows the split, at 4046 visited states against the baseline's 3046.
+
+  The one-die games are safe for the reason the two-dice game is not: their placebo alphabet is three to six values, far too coarse to fingerprint a deal. The fix is to match the placebo's cardinality to the hidden state rather than to its shape, which is a rerun we did not have time for. We exclude the game from every table rather than report it, and the rejection rule is in scripts/make\_appendix.py so no future run can enter a table unannounced.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A8] APPENDIX H. Capture above one hundred percent
+
+  Section[app:axis] reports capture above 100 percent in seven games. The body argues that this is a property of the denominator and not a measurement error. Table[tab:app-gaps] is the evidence, per game.
+
+  For each arm we measure how far the trained learner sits below that arm's own exact ceiling. The difference between the two gaps is what capture's denominator silently assumes to be zero. It is not zero in any of the eleven games. It is negative in the four poker variants, where the oracle arm is the harder of the two to learn. It is positive in the seven dice variants, where the oracle arm is the easier. The sign matches the direction of capture's bias in every row. The rows are sorted by capture, so the flip falls exactly where capture crosses 100 percent.
+
+  The ordering carries more than the sign does. Capture rises monotonically down the table and the gap difference rises with it, from -0.358 to +0.077. The rank correlation between the two is exactly 1.000 over all eleven games. We quote the ordering rather than a p-value: the games are related configurations and not independent draws, so any test would report a confidence the design does not support.
+
+  That ordering is what answers the obvious objection to the sign count. Eleven games are not eleven independent trials. Seven are Liar's dice at different die sizes and four are Leduc and Kuhn variants. A sign that agrees eleven times may only be agreeing twice. The rank correlation is 1.000 within each family taken alone, over the seven dice variants and over the four poker variants separately. Inside a family the games differ by one parameter, and the ordering still holds, which a two-family coincidence does not explain.
+
+  Per game the effect is smaller than that ordering suggests. In the dice variants the gap difference is 0.8 to 2.3 times the seed-to-seed spread of the banked column. No single game rules out noise on its own. The evidence is the ordering across games, not the margin within one. None of it gives the size of the correction. Knowing that capture reads high does not say by how much, and we have no estimator that recovers the unbiased value. Reporting the sign and the ordering is as far as this instrument goes.
+
+  One reading we can rule out is a bug in the oracle ceiling. If the oracle ceiling were too low, capture would exceed 100 percent everywhere, and it does not. The four poker variants run the same ceiling code and land below 100, and the ordering runs through both families continuously.
+
+AI1(GEMINI):{}
+AI2(ChatGPT):{}
+AI3(GROK):{}
+AI4(PERPLEXITY):{}
+CC1:{}
+CC2:{}
+CC3:{}
+CC4:{}
+Nima:{}
+
+------------------------------------------------------------------------------------------------
+
+[A9] APPENDIX I. The Gin Rummy arms in full
+
+  Table[tab:app-gin] is the full version of Figure[fig:probes], with the spread reported rather than drawn. All three arms overlap. The oracle arm is 0.25 points below baseline and the placebo arm is 0.03 points below, and both intervals contain zero and contain each other's means.
+
+  Twelve seeds per arm is what it took to say this. An earlier four-seed version of the same probe had an interval of [-4.5, +2.7] on the oracle arm, which could not exclude an eleven percent relative gain. A null is only as good as the seeds behind it, and four was not enough.
 
 AI1(GEMINI):{}
 AI2(ChatGPT):{}
