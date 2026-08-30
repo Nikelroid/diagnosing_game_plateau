@@ -128,7 +128,7 @@ def fig_gin():
     ax.set_xticklabels([a[0] for a in arms], color=INK, fontsize=8.8)
     ax.set_ylabel("win rate against the fixed expert (%)")
     ax.set_ylim(22, 31)
-    ax.set_title("Gin Rummy: the hidden hand changes nothing, and neither does the widening")
+    ax.set_title("Gin Rummy: no detectable gain from the hidden hand, or from the widening")
     ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
     fig.tight_layout(); save(fig, "fig_gin_arms")
 
@@ -154,7 +154,7 @@ def fig_budget():
         a2.text(eps[-1] * 1.15, cap[-1], nice(game), color=c, fontsize=8.8,
                 fontweight="bold", va="center")
     for ax, ttl, ylab in ((a1, "(a) Worth is fixed by the game", "information's worth (return)"),
-                          (a2, "(b) The share banked grows with budget", "captured (%)")):
+                          (a2, "(b) The share banked moves with budget; Leduc rises overall", "captured (%)")):
         ax.set_xscale("log"); ax.set_xlabel("training episodes")
         ax.set_ylabel(ylab); ax.set_title(ttl); ax.yaxis.grid(True)
         ax.set_xlim(2e4, 6e6)

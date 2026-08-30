@@ -67,8 +67,11 @@ def contrast(a, b, dp=2):
     se = math.sqrt(A["sd"] ** 2 / A["n"] + B["sd"] ** 2 / B["n"])
     df = (A["sd"] ** 2 / A["n"] + B["sd"] ** 2 / B["n"]) ** 2 / (
         (A["sd"] ** 2 / A["n"]) ** 2 / (A["n"] - 1) + (B["sd"] ** 2 / B["n"]) ** 2 / (B["n"] - 1))
-    tcrit = 2.201 if df >= 11 else 2.365
-    return {"diff": diff, "se": se, "df": df,
+    # The critical value must come from the Welch degrees of freedom actually computed above.
+    # An earlier version paired Welch df with t(11), which names one procedure and runs another.
+    from scipy import stats
+    tcrit = float(stats.t.ppf(0.975, df))
+    return {"diff": diff, "se": se, "df": df, "tcrit": tcrit,
             "lo": diff - tcrit * se, "hi": diff + tcrit * se}
 
 

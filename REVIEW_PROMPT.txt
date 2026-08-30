@@ -58,14 +58,26 @@ PART TWO: CONSISTENCY AND READABILITY
 
 This is the part we most want from you, and it is the part an author cannot do for himself.
 
+THE GOAL IS DELIVERABILITY. A reader should get the point on the first pass, at speed, without
+going back. Every sentence should hand over one idea cleanly. If a sentence has to be re-read to
+be parsed, it has failed, however correct it is. Judge the writing by what reaches the reader,
+not by how careful it looks.
+
 The house style, which the paper is trying to hold:
 
-  Plain words. Say what happened, in the order it happened.
+  Plain, ordinary English words. Prefer the short familiar word to the technical one wherever
+    both are exact. Do not use a long word to sound precise.
+  Say what happened, in the order it happened. Subject, verb, object. No clause stacking.
+  One idea per sentence. Two at most, and then joined by a plain connective, not by commas.
   Average sentence length between 16 and 18 words. It currently measures 16.0.
   Sentences of 20 to 25 words are welcome and give the writing rhythm. Almost nothing past 25.
   No sentence built from three or more ideas stacked with commas.
   No em dashes and no en dashes.
   No choppiness either. Six short sentences in a row is a defect, like one tangled sentence.
+  No throat-clearing. Cut "it is worth noting", "importantly", "as we have seen".
+
+You are better at this than the authors are, so do not be gentle. Where a sentence is merely
+acceptable, give the version that lands harder in fewer words.
 
 Report, in your slot, under a heading CONSISTENCY:
 
@@ -75,9 +87,12 @@ Report, in your slot, under a heading CONSISTENCY:
   B. CLAIMS NARROWED IN ONE PLACE AND WIDE IN ANOTHER. The abstract, the section text, the
      captions, the appendix and the conclusion must all say the same size of thing. Captions are
      the usual offender because they get edited last. Quote the pair.
-  C. THE TEN WORST SENTENCES. Rank them. For each, give the rewrite, not a description of what
-     is wrong. Keep the meaning exactly; if your rewrite changes what the sentence claims, say
-     so and do not use it.
+  C. THE TWENTY WORST SENTENCES FOR DELIVERABILITY. Rank them by how much work the reader has
+     to do. For each, give the rewrite in plain English, not a description of what is wrong.
+     Keep the meaning exactly; if your rewrite changes what the sentence claims, say so and do
+     not use it. We will paste your rewrites in, so give us finished sentences.
+  C2. THE HARDEST PARAGRAPH. Name the one paragraph a tired reviewer is most likely to give up
+     on, and rewrite it whole.
   D. SEAMS. Any paragraph that reads as though a different person wrote it. Quote the first
      sentence and say what marks it as different.
   E. THE OPENING AND THE CLOSING. Read the abstract and the conclusion back to back. Do they

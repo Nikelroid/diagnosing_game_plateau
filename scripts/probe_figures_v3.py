@@ -109,7 +109,7 @@ def fig_sensitivity():
     ax.set_ylim(-0.8, len(items) + 0.8)
     ax.set_xlabel("standardised effect of handing the learner the hidden state "
                   "(difference in units of seed spread)")
-    ax.set_title("The probe fires wherever the information is there, and not on Gin Rummy")
+    ax.set_title("The probe fires in every tested small game, but not detectably on Gin Rummy")
     # symlog: the poker effects are two orders of magnitude larger than Gin Rummy's, and a
     # linear axis that shows one hides the other
     ax.set_xscale("symlog", linthresh=1.0)

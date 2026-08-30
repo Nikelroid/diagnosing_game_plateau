@@ -66,7 +66,7 @@ every fog-of-war game is unmeasured. Second, three probes that turn a
 plateau against a fixed reference into a diagnosis. They do not agree, and that is the point: a determinized search handed the hidden cards gains a
 great deal. A learner handed the same cards
 gains nothing measurable, reaching \ORACLEOBSMEAN{} percent against a \textbf{27.04} baseline over
-\ORACLEOBSN{} seeds. That is $-0.25$ points, with a 95 percent interval of $[-1.78, +1.28]$, and
+\ORACLEOBSN{} seeds. That is $-0.25$ points, with a 95 percent interval of $[-1.70, +1.20]$, and
 $-0.22$ points against a matched placebo. Where a game is small enough to solve,
 exact ceilings split the plateau in two. What the information is worth is fixed by the game and the
 opponent. What the learner banks is not. Measuring the domain and diagnosing the agent
@@ -148,8 +148,8 @@ form can be cross-checked across libraries; it agrees at 30.1 bits each. Petting
 \begin{table}[t]
   \centering \small
   \input{../tables/survey_families.tex}
-  \caption{The atlas by family. \emph{Measured} is how many games in the family admit any estimate
-  at all, which is as informative as the bits: the board family's six measured games are precisely
+  \caption{The atlas by family. \emph{Measured} is how many games in the family admit any reported
+  value or bound, exact, upper or censored, which is as informative as the bits: the board family's six measured games are precisely
   its perfect-information controls, so every fog-of-war game is unmeasured.}
   \label{tab:families}
 \end{table}
@@ -261,20 +261,20 @@ inside this search protocol, not the decision-theoretic value of revealing the s
 state appended to the observation and change nothing else, putting the question to the learner
 rather than to a search agent. Handed the opponent's hand outright, it reaches $26.79$
 percent across twelve seeds against a $27.04$ baseline. That is $-0.25$ points, with a 95 percent
-interval of $[-1.78, +1.28]$ (Figure~\ref{fig:probes}). An earlier four-seed version of this probe had an
+interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed version of this probe had an
 interval of $[-4.5, +2.7]$. That could not exclude an eleven percent relative gain, and a null is only as good as the seeds
 behind it.
 
 A third arm decides what that null means, because widening an observation is not free. The network gains inputs it must learn to ignore, and that
 cost is subtracted from whatever the real plane is worth. We therefore run a \emph{placebo} plane of the same shape and sparsity, holding ten cards
 this player cannot see, drawn independently of the opponent's actual hand. It scores $27.02$
-percent, $-0.03$ points from baseline with an interval of $[-1.61, +1.56]$. There is no widening cost
-for a benefit to cancel. The contrast that isolates the information is oracle against placebo, and
+percent, which is $-0.02$ points from baseline with an interval of $[-1.51, +1.47]$. We therefore
+find no evidence that the cost of the wider input is hiding a real gain. The contrast that isolates the information is oracle against placebo, and
 it changes only whether the plane is true. It holds the shape of the
 input fixed and changes only whether the plane is true. That contrast is $-0.23$ points, with an interval of
-$[-1.66, +1.20]$, and Table~\ref{tab:probes} carries all three.
+$[-1.57, +1.11]$, and Table~\ref{tab:probes} carries all three.
 
-What the interval excludes is worth stating plainly. Twelve seeds rule out gains above about $1.3$
+What the interval excludes is worth stating plainly. Twelve seeds rule out gains above about $1.2$
 points, which is a fifth of the distance from this agent's $27$ percent to the parity its reference
 defines. Smaller gains remain possible, and we do not claim the effect is exactly zero.
 
@@ -287,9 +287,8 @@ opponent's input to its own width, so the extra plane reaches the learner alone.
 \paragraph{Does the probe work at all?} A null is worth nothing without evidence the
 instrument can fire. We ran the identical probe on every OpenSpiel game small
 enough for counterfactual regret minimisation to supply a true optimum. Two learners ran it: a
-tabular one, and a neural one reading a fixed-width tensor as the Gin Rummy learner does. In every tested configuration where the hidden state is
-present it fires, by margins of $0.22$ to $1.07$ in expected return, and the placebo lands on the
-baseline. That is evidence the instrument works on games of this size, not a proof that it fires
+tabular one, and a neural one reading a fixed-width tensor as the Gin Rummy learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
+$1.07$ in expected return, and the placebo lands on the baseline. That is evidence the instrument works on games of this size, not a proof that it fires
 wherever information exists. On Gin Rummy the same construction reads zero
 (Figure~\ref{fig:sensitivity}).
 
@@ -322,7 +321,7 @@ evaluation setting rather than for the game in the abstract. Within a setting it
 property of the game should. Worth does not move. We swept training
 budgets over a sixty-four-fold range, from 25{,}000 to 1{,}600{,}000 episodes. In both games worth
 is constant to three decimals at every budget (Appendix~\ref{app:budget}). Capture moves with the budget
-instead, climbing from $56$ to $79$ percent in Leduc Hold'em. A plateau therefore separates into a
+instead, rising from $56$ to $79$ percent in Leduc Hold'em and moving unevenly in Kuhn. A plateau therefore separates into a
 quantity set by the game and a quantity set by the agent, which is the distinction a win rate
 cannot make.
 
@@ -340,7 +339,7 @@ cannot make.
 Table~\ref{tab:axis} runs the decomposition across eleven games, eight seeds each. The widening
 column is what makes the Gin Rummy null mean anything. It is the placebo arm minus the baseline
 arm, averaged over the eight seeds of each game, and it stays inside seed noise in all eleven. In
-Gin Rummy the same contrast is $-0.02$ points, with an interval of $[-1.60, +1.56]$. We therefore
+Gin Rummy the same contrast is $-0.02$ points, with an interval of $[-1.51, +1.47]$. We therefore
 find no evidence that the cost of a wider input hides a real gain, which is the reading a placebo
 exists to rule out. That is weaker than saying widening is free, and it is what the runs support.
 
@@ -526,8 +525,9 @@ width, so the extra plane reaches the learner and nobody else.
 The per-game numbers are in Table~\ref{tab:axis} in the main text. This section records how they
 were produced and what each column can carry.
 
-Worth is the oracle ceiling minus the baseline ceiling. Both are exact values of the game, so worth
-has no seed noise and no interval; the eight seeds per game affect the banked column alone. Banked
+Worth is the oracle ceiling minus the baseline ceiling. Both are exact for the stated opponent
+policy, so worth alone carries no seed noise. The eight seeds per game reach banked and widening
+directly, and reach capture through banked. Banked
 is what the learner gains from the hidden state, measured as the oracle arm minus the baseline arm.
 Capture is banked over worth, and widening is the placebo arm minus the baseline arm.
 
@@ -543,7 +543,7 @@ tracks two game families, not seven independent confirmations, and we do not rea
 If worth were a property of the learner, it would drift as the learner trained longer. It does not.
 Table~\ref{tab:app-budget} runs the decomposition at 25,000 to 1,600,000 episodes, a
 sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which is
-what a game property should do. Capture climbs instead, from 56 to 79 percent in Leduc Hold'em.
+what a game property should do. Capture moves instead, rising from 56 to 79 percent in Leduc Hold'em. In Kuhn poker it dips at the middle budgets before returning, so the pattern is a trend in Leduc and not a law.
 
 Kuhn poker is the useful contrast. Its capture does not climb monotonically: it dips to 83 percent
 at 400,000 episodes and returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling at the smallest budget. What the middle budgets show is seed noise rather than a trend, and we report it rather than
@@ -668,8 +668,9 @@ related configurations do not supply eleven independent trials.
 \label{app:gin}
 
 Table~\ref{tab:app-gin} is the full version of Figure~\ref{fig:probes}, with the spread reported
-rather than drawn. All three arms overlap. The oracle arm is 0.25 points below baseline and the
-placebo arm is 0.03 points below, and both intervals contain zero and contain each other's means.
+rather than drawn. All three arms overlap. Each arm-mean interval contains the other two arm means, and all three
+contrast intervals contain zero. Those are different objects: an arm-mean interval sits near $27$
+and cannot contain zero, while a contrast interval is centred near zero.
 
 Twelve seeds per arm is what it took to say this. An earlier four-seed version of the same probe
 had an interval of $[-4.5, +2.7]$ on the oracle arm, which could not exclude an eleven percent
@@ -679,7 +680,8 @@ relative gain. A null is only as good as the seeds behind it, and four was not e
   \centering \small
   \input{../tables/app_gin.tex}
   \caption{The three Gin Rummy arms at twelve seeds each, as win rate against the fixed expert.
-  Intervals are 95 percent, from the $t$ distribution on eleven degrees of freedom.}
+  Arm intervals are 95 percent from $t$ on eleven degrees of freedom. Contrast intervals use
+  independent-arm standard errors with Welch degrees of freedom, about 21 here.}
   \label{tab:app-gin}
 \end{table}
 

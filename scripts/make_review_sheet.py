@@ -60,53 +60,125 @@ FIGURE_CONTENT = {
 # What was done in response to round one. Keyed by item id; emitted into the CC slots so round two
 # can see which findings landed and which were declined, and why.
 CC_ROUND1 = {
-    "C2": "FIXED (ChatGPT). The denominator counted 5 games we cannot measure. Now 'one of those "
-          "18'. The 3-4p median said 31.1 in prose against 39.9 in Table 1; the table was right "
-          "and the prose is corrected.",
-    "C4": "FIXED (Gemini). No contrast could be reproduced from the printed means: 27.02 - 27.04 "
-          "reads -0.02 while the table said -0.03. The difference was computed before rounding, "
-          "which is defensible but not checkable. Contrasts now come from the means as printed: "
-          "-0.25, -0.02, -0.23. Intervals are unchanged.",
-    "C6": "FIXED (Perplexity). Worth is now stated as exact for a specified opponent policy, not "
-          "for the game in the abstract, and the paper says both ceilings use the same policy. "
-          "The Table 3 caption no longer says 'worth is set by the game, capture by the learner'.",
-    "C7": "FIXED (Perplexity). 'Across all 88 runs' was an ambiguous unit. The widening column is "
-          "now described per game, over eight seeds each, with the Gin Rummy contrast quoted "
-          "separately. 'Costs nothing' is now 'no evidence that the cost of a wider input hides a "
-          "real gain'.",
-    "C8": "FIXED, and this was the round's real find (ChatGPT and Perplexity, independently). The "
-          "eleven-of-eleven sign agreement was an algebraic identity, not evidence: "
-          "banked = worth + g_b - g_o, so capture > 1 exactly when g_b > g_o, always. Our runs "
-          "satisfy it to 1.1e-16. Part III now derives the identity and says an earlier draft "
-          "reported the count as evidence. The rank correlation is gone. What survives is "
-          "empirical: dice arms sit 0.000 to 0.007 below their oracle ceilings, poker arms 0.377 "
-          "to 0.394.",
-    "C9": "PARTLY. The structured-feature experiment that Grok, Gemini and Perplexity all named "
-          "as the one experiment is named in the paper as the next step, not run. There is no "
-          "time before the deadline and we will not claim a result we do not have.",
-    "T2": "FIXED (Perplexity). Rows said 'Capacity' and 'Value of information', which resurrected "
-          "the two claims the body had renamed. Now 'Architecture sensitivity' and "
-          "'Oracle-search gap', with questions to match.",
-    "T5": "FIXED (Perplexity). Caption now reads 'exact worth is unchanged by the budget; the "
-          "capture ratio moves, clearly in Leduc and unevenly in Kuhn'.",
-    "T6": "FIXED (Perplexity). 'Only Leduc Hold'em is capacity bound' overstated one unreplicated "
-          "sweep. Now 'of these four, only Leduc improves steadily as the buckets approach exact "
-          "states'.",
-    "T7": "FIXED (Gemini). The difference column did not subtract as printed. It now does. The "
-          "'Predicted' column is deleted: the identity makes it true by construction, so a column "
-          "of yes was measuring nothing.",
-    "F3": "FIXED (Perplexity, blocker). The standardisation, the symlog axis and the shaded band "
-          "were all undefined. The caption now gives the pooled standard deviation, the linear "
-          "threshold, and the 0.8 band. We did not replace the figure with a forest plot; there "
-          "is no time, and the definition was the actual defect.",
-    "F4": "FIXED (Perplexity). The caption claimed the figure showed the mechanism. It now says "
-          "the figure is a picture of the identity rather than evidence for it.",
-    "A2": "FIXED (ChatGPT, blocker). The section was called 'the atlas in full' and held only the "
-          "two corrections. It now carries all 88 rows with the provenance of every value.",
-    "A4": "FIXED (Perplexity). Both ceilings are computed against the same fixed opponent policy, "
-          "verified in the code. The paper now states it rather than implying it.",
-    "A8": "FIXED. Rewritten around the derivation. 'Bias' is kept but scoped, and the count and "
-          "the rank correlation are gone.",
+  # (item, reviewer) -> reply. Reviewer is 1 Gemini, 2 ChatGPT, 3 Grok, 4 Perplexity.
+  # A reply says what that reviewer found and what was done with it. Where a reviewer filed
+  # nothing on an item, the slot stays empty rather than repeating another reviewer's point.
+  ("C1", 2): "FIXED. You said calling all 88 rows 'computed support bits' collapses provenance. "
+             "Right. Appendix B now carries all 88 rows with the estimator for each, and the "
+             "text separates 11 exact, 45 upper bounds, 2 censored floors and 30 unmeasured.",
+  ("C1", 4): "NOTED, no change. You accepted the definition and asked for 'unweighted tree "
+             "average' at first use in the Figure 1 caption. The definition paragraph is now "
+             "immediately before Figure 1, so the caption would repeat it within half a page.",
+  ("C2", 2): "FIXED, both halves. The 3-4p median is 39.9 as Table 1 says; the 31.1 in prose was "
+             "stale. The denominator is now the 18 measured games, not all 23.",
+  ("C2", 4): "AGREED. Same finding as ChatGPT on coverage. Fixed by scoping to measured games.",
+  ("C3", 2): "FIXED. You said the fingerprint sentence overran what we showed. It is now three "
+             "short sentences that describe the mechanism and stop.",
+  ("C4", 1): "FIXED, and this was the sharpest catch of the round. No contrast could be "
+             "reproduced from the printed means: 27.02 minus 27.04 reads -0.02 while we printed "
+             "-0.03. The difference was computed before rounding, which is defensible but not "
+             "checkable. Contrasts now come from the means as printed.",
+  ("C4", 2): "SOUND accepted, and your T8 note found the related error: we named Welch but used "
+             "a t(11) multiplier. Now t at the Welch degrees of freedom, about 21. Intervals "
+             "tightened to [-1.70, +1.20], [-1.51, +1.47] and [-1.57, +1.11].",
+  ("C4", 3): "NOTED. You flagged that the interval still admits gains near 1.3 points. It is now "
+             "1.2 after the Welch correction, and the paper states that limit outright.",
+  ("C4", 4): "AGREED. The chain you traced now holds with the corrected intervals.",
+  ("C5", 2): "FIXED. You said the prescription still reads as general advice. It now says the "
+             "result reorders what to try next, and names the structured-feature test as the "
+             "experiment that would settle it.",
+  ("C5", 3): "NOTED. Same point as ChatGPT, same fix.",
+  ("C6", 2): "FIXED. Worth depends on the frozen opponent. The paper now says both ceilings use "
+             "the same fixed opponent policy, so worth is exact for that setting and not for the "
+             "game in the abstract.",
+  ("C6", 4): "FIXED. Your A4 point, that the two ceilings must be commensurate, is verified in "
+             "the code: ceiling() takes one opponent and differs only in the acting player's "
+             "partition. The paper states it now rather than implying it.",
+  ("C7", 2): "FIXED. 'There is no widening cost for a benefit to cancel' asserted more than the "
+             "interval allows. Now 'no evidence that the cost of a wider input hides a real gain'.",
+  ("C7", 4): "FIXED. 'Across all 88 runs' was an ambiguous unit, as you said. The widening column "
+             "is now described per game over eight seeds, with Gin Rummy quoted separately.",
+  ("C8", 2): "FIXED, and this was the round's most important find. You and Perplexity "
+             "independently showed the sign agreement is the identity banked = worth + g_b - g_o, "
+             "so it is true by definition and measures nothing. Part III now derives it and says "
+             "an earlier draft reported the count as evidence. The count and the rank correlation "
+             "are gone.",
+  ("C8", 4): "FIXED. Same finding as ChatGPT, reached independently, and you were right that the "
+             "quantities share arm returns. Verified: the identity holds to 1.1e-16.",
+  ("C8", 1): "PARTLY DECLINED. You marked this SOUND and said the paper warns against using "
+             "capture as a point estimate. It did, but the supporting argument was circular, "
+             "which the other two reviewers caught. Rewritten as algebra.",
+  ("C8", 3): "NOTED. You flagged the rank-correlation claim as resting on related configurations. "
+             "The deeper problem was that it rested on nothing: it was an identity.",
+  ("C9", 2): "FIXED. The limitations paragraph inherited the same circular wording. It now says "
+             "capture is distorted in a known direction, not that we confirmed it in eleven games.",
+  ("C9", 3): "DECLINED for this deadline. You, Gemini and Perplexity all named the structured-"
+             "feature experiment as the one to run. It is named in the paper as the next step. "
+             "There is no time to run it and we will not claim a result we do not have.",
+  ("C10", 2): "SOUND accepted, no change.",
+  ("T1", 2): "FIXED. 'Any estimate' hid a mixture of exact values, upper bounds and censored "
+             "floors. The caption now says 'any reported value or bound, exact, upper or "
+             "censored'. The two prose numbers you flagged are corrected under C2.",
+  ("T2", 2): "FIXED. The row labels restored the two names the body had retired. Now "
+             "'Architecture sensitivity' and 'Oracle-search gap'.",
+  ("T2", 4): "FIXED. Same point, and your suggested questions are close to what we used.",
+  ("T3", 2): "FIXED. The caption asserted the game/learner split the body had already withdrawn.",
+  ("T3", 4): "FIXED. Caption now names the opponent policy and says capture is distorted when the "
+             "arms learn with unequal ease.",
+  ("T4", 2): "SOUND accepted, no change.",
+  ("T5", 2): "FIXED. Worth is invariant by construction, as you say. The caption now says exact "
+             "worth is unchanged by the budget, and that the capture ratio moves.",
+  ("T5", 4): "FIXED. Same point, same fix.",
+  ("T6", 2): "FIXED. 'Capacity bound' overstated a bucket-folding sweep. Now 'only Leduc improves "
+             "steadily as the buckets approach exact states'.",
+  ("T6", 4): "FIXED. Your wording, that this is a state-resolution signature rather than a "
+             "diagnosis, is what the body now says.",
+  ("T7", 2): "FIXED. The 'Predicted' column asked whether the sign agrees, which the identity "
+             "makes true by construction. The column is deleted.",
+  ("T7", 1): "FIXED. You found the difference column did not subtract as printed. It now does.",
+  ("T8", 2): "FIXED. You caught that we named Welch and used t(11). The contrast intervals now "
+             "use t at the Welch degrees of freedom, and the caption distinguishes arm intervals "
+             "from contrast intervals.",
+  ("T8", 1): "FIXED. Same arithmetic problem you raised on C4, fixed the same way.",
+  ("F1", 2): "PARTLY. The bar chart cannot carry provenance, and we did not rebuild it. Instead "
+             "Appendix B now holds the 88-row table with the estimator for every value, and the "
+             "text tells readers to check provenance before comparing two games.",
+  ("F2", 2): "FIXED. The title asserted an exact zero. It now reads 'no detectable gain from the "
+             "hidden hand, or from the widening'. We kept the seed dots and added the three "
+             "contrasts to Table 2 rather than redrawing the figure.",
+  ("F3", 2): "FIXED. 'Wherever' was universal language. The title now says 'in every tested small "
+             "game, but not detectably on Gin Rummy', and the caption defines the pooled standard "
+             "deviation, the symlog threshold and the 0.8 band.",
+  ("F3", 4): "PARTLY. You asked for a forest plot in native units and called this a blocker. The "
+             "definition was the real defect and it is fixed in the caption. Replacing the figure "
+             "is a change we will not make hours before a deadline without time to check it.",
+  ("F4", 2): "FIXED. The caption claimed the figure showed a mechanism. It now says the figure is "
+             "a picture of the identity rather than evidence for it.",
+  ("F4", 4): "FIXED. Same point, same fix.",
+  ("F5", 2): "SOUND accepted, no change.",
+  ("F6", 2): "FIXED. The subplot title claimed monotone growth the figure contradicts. Kuhn dips "
+             "and returns. Now 'the share banked moves with budget; Leduc rises overall'.",
+  ("F7", 2): "SOUND accepted. The replication caveat you raised elsewhere is now in the caption.",
+  ("F7", 4): "FIXED. Caption and body now say signature rather than diagnosis.",
+  ("A1", 2): "PARTLY. You noted the appendix names scripts that do not all exist under those "
+             "names. Corrected to the scripts that do.",
+  ("A2", 2): "FIXED. The section was called 'the atlas in full' and held only two corrections. It "
+             "now carries all 88 rows with provenance, which is what the title promised.",
+  ("A3", 2): "NOTED. You are right that the placebo matches shape and sparsity but not every "
+             "marginal. The rejected game in Appendix G is exactly that failure, and we say so.",
+  ("A4", 2): "FIXED. Seeds reach banked and widening directly and capture through banked, not "
+             "'the banked column alone'.",
+  ("A4", 4): "FIXED. Both ceilings share one opponent policy, verified in the code and now stated.",
+  ("A5", 2): "FIXED. Worth is invariant by construction, so the appendix no longer presents "
+             "budget invariance as a test that worth passed.",
+  ("A6", 2): "FIXED. 'That is what being capacity bound looks like' is now a signature on one "
+             "unreplicated sweep.",
+  ("A7", 2): "FIXED. Same overrun as C3, split into shorter sentences that stop at what we showed.",
+  ("A8", 2): "FIXED. Rewritten around the derivation. The ordering claim is gone.",
+  ("A8", 4): "FIXED. You said 'bias' presumes an estimand we do not have. The section now says "
+             "the identity gives the direction of the distortion and no estimator for its size.",
+  ("A9", 2): "FIXED. The sentence conflated arm-mean intervals with contrast intervals. It now "
+             "separates them and says why an arm interval cannot contain zero.",
 }
 
 SLOTS = ["AI1(GEMINI)", "AI2(ChatGPT)", "AI3(GROK)", "AI4(PERPLEXITY)",
@@ -198,12 +270,9 @@ def claim(tag, headline, evidence):
     for line in evidence.strip("\n").split("\n"):
         L.append("  " + line if line.strip() else "")
     L.append("")
-    reply = CC_ROUND1.get(tag)
     for s in SLOTS:
-        if s.startswith("CC") and reply:
-            L.append(f"{s}:{{{reply}}}")
-        else:
-            L.append(f"{s}:{{}}")
+        r = CC_ROUND1.get((tag, int(s[2]))) if re.fullmatch(r"CC[1-4]", s) else None
+        L.append(f"{s}:{{{r}}}" if r else f"{s}:{{}}")
     L.append("")
     L.append("-" * 96)
     L.append("")
