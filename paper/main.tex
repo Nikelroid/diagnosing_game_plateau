@@ -67,34 +67,31 @@
 \maketitle
 
 \begin{abstract}
-When a reinforcement learning agent stops improving against a fixed reference, a win rate shows
-where it stopped but not why. The game may hide information the agent needs, or the agent may fail
-to use what it already sees. We present an evaluation protocol that separates these explanations.
-First, we measure what each game hides. At every decision, we count the game histories consistent
-with the acting player's observation. We call the base-two logarithm of that count \emph{support
-bits}. Support bits upper-bound the player's uncertainty but say nothing about whether the hidden
-state would improve play. Our atlas covers 88 game configurations and records how every value was
-obtained. Independent bounds catch three silent measurement failures, including one in our own
-control. Among the 18 measured two-player card games, only one exceeds the case study's 30.1
-support bits. Second, we test whether hidden information explains an agent's plateau. In eleven
-games small enough to solve, exact ceilings tell us what the hidden state is \emph{worth} for a
-stated opponent policy. Seeded runs measure what the tested learners \emph{bank}, while a placebo
-arm isolates the cost of widening the observation. The probe detects gains of $0.22$ to $1.07$ in
-every tested small-game configuration, and the placebo stays at the baseline. We then apply the
-same probe unchanged to a twelfth game that is too large to solve. The oracle arm shows no
-detectable gain over the baseline arm: $-0.66$ points over twenty-four seeds, with interval
-$[-1.65, +0.33]$. It also finishes $-0.28$ points below the placebo arm. Twenty-four seeds rule out gains above about $0.3$ points. For this learner and
-reference, raw hidden-state access is not a large missing ingredient. More broadly, the protocol
-measures what a game hides, validates what that information is worth, separates information from
-input widening, and catches failures in its own instruments.
+A reinforcement learning agent stops improving against a fixed opponent. Is the game hiding
+something the agent needs, or is the agent failing to use what it can already see? A win rate
+cannot answer that: it records where the agent stopped, not why. This paper builds a way to
+answer it. First we measure how much a game hides. At each decision we count the game histories
+that are still possible given what the player can see, and take the base-two logarithm of that
+count. We call this \emph{support bits}, and we report it for 88 game configurations, recording
+how every value was produced. That record earns its place: three of our measurements failed while
+still returning reasonable-looking numbers, and only an independent check caught them, one of the
+three in our own control. Second we test whether hidden information explains a plateau. We train
+one agent with the hidden state added to what it sees, one without it, and a third with a fake
+addition of the same size and shape. Eleven games are small enough to solve exactly, so we know
+the answer before we start: the test finds the hidden state in every one of them, while the fake
+addition changes nothing. We then run the same test, unchanged, on a game far too large to solve.
+Across twenty-four training runs per arm, the agent that sees the opponent's hand does no better
+than the agent that does not, and the results rule out any gain above about $0.3$ percentage
+points. So for this agent and this opponent, the hidden hand is not the missing ingredient. More
+broadly, the protocol separates three things a win rate reports as one: what a game hides, what
+that hiding is worth, and how much of it a learner actually takes.
 \end{abstract}
 
 \section{Introduction}
 
-A plateau is an observation, not a diagnosis. A win rate against a fixed reference shows that a
-reinforcement learning agent has stopped improving, but it does not show why. Hidden information
-may limit the agent, or the agent may fail to use what it already sees. These two explanations call
-for different experiments.
+A plateau is an observation, not a diagnosis. A win rate shows that a reinforcement learning agent
+has stopped improving; it does not show whether the game hides something the agent needs, or the
+agent is failing to use what it already sees. Those two answers call for different experiments.
 
 The reference also decides what a win rate can mean. Random play produces scores near 99 percent
 that barely move. Self-play produces scores near 50 percent by construction. A pool of past
