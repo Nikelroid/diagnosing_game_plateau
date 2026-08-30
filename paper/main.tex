@@ -66,23 +66,22 @@
 \maketitle
 
 \begin{abstract}
-A win rate is only as informative as what it was measured against. Evaluations rarely report how
-much a game hides or what an agent's plateau contains. We measure both and show that they come
-apart. Across 88 game configurations from two engines, we compute \emph{support bits}, the
-log-cardinality of the acting player's information set. Support bits bound posterior entropy and
-say nothing about the value of the hidden state. Two-player card games saturate early, at a median
-of 3.1 bits. The atlas also catches three instrument failures, including one inside our apparatus.
-We then decompose a plateau against a fixed reference into \emph{worth}, the exact difference
-between two ceilings for a stated opponent policy, and \emph{banked}, the learner's observed gain
-from hidden-state access. In eleven games with known optima, exact ceilings determine worth while
-seeded runs measure banked and placebo-minus-baseline widening. Worth remains constant across a
-sixty-fourfold change in training budget, while capture does not. The same three-arm protocol then
-runs on a twelfth game that is too large to solve exactly. Handing the learner the opponent's hand
-produces no detectable gain. The oracle arm minus baseline arm difference is $-0.25$ points over
-twelve seeds with interval $[-1.70, +1.20]$, and the oracle arm minus placebo arm difference is
-$-0.23$ points. Twelve seeds rule out gains above about $1.2$ points; smaller gains remain
-possible. Support bits, worth and banked are routinely reported as one quantity. Separating them
-changes which experiment comes next. We release the code and every measurement.
+An agent stops improving against a fixed opponent. Is the game hiding too much from it, or is it
+failing to use what it can already see? The two call for opposite work, and a win rate cannot tell
+them apart. We measure both. First we ask how much a game hides. Across 88 game configurations we
+count the worlds a player cannot rule out and take the logarithm, a number we call \emph{support
+bits}. Two-player card games run out of room early, at a median of 3.1 bits, and three of our
+measurements came from instruments that failed silently. One of those instruments was our own. Then
+we ask whether the hiding is what stops the agent. We hand the learner the opponent's hidden cards,
+retrain, and see whether it does better. In eleven games small enough to solve exactly we can check
+that answer against a known optimum, which tells us what the hidden cards are \emph{worth} and how
+much of it the learner \emph{banks}. A third arm carries a fake hidden hand of the same shape, to
+price the cost of a wider input on its own. Worth holds steady across a sixty-fourfold change in
+training budget; what the learner banks does not. In a twelfth game, far too large to solve, the
+real hidden hand buys nothing we can detect: $-0.25$ points over twelve seeds, interval
+$[-1.70, +1.20]$, and $-0.23$ against the fake one. Twelve seeds rule out any gain above about
+$1.2$ points. What a game hides, what the hiding is worth, and what a learner takes from it are
+three different things, usually reported as one number.
 \end{abstract}
 
 \section{Two measurements nobody makes}
@@ -112,22 +111,22 @@ unchanged on a twelfth that is far too large.
 
 
 
-\paragraph{What is and is not new here.} Measurement work separates a construct from the protocol
-that operationalises it \citep{measurementfairness}, while benchmark critiques ask whether narrow
-test coverage supports broad claims \citep{wholeworld}. Neither support bits nor a privileged-state
+\paragraph{What is and is not new here.} Other fields have asked our two questions already. Measurement work asks whether a test really
+measures the thing it names \citep{measurementfairness}, and benchmark critiques ask whether a
+narrow test supports a broad claim \citep{wholeworld}. Neither support bits nor a privileged-state
 intervention is new. \citet{pimc} measured related information-set structure,
 \citet{rbccomplexity} sized one game, and \citet{ggpii} studied the same uncertainty from the
 planning side. Privileged state is also standard \citep{policyinference,ismcts}. Our contribution
-is the validation design. We attach provenance and independent bounds to the atlas, validate a
-three-arm diagnostic against exact ceilings, and then carry the same protocol to a game whose
-ceilings cannot be computed. The originality lies in that sequence and its licensed inference, not
-in a new uncertainty measure.
+is the validation design. Every number in the atlas says how it was obtained. Every arm is
+checked against a bound we can compute independently. We test the three arms on games where the
+right answer is known, and only then use them on a game where it is not. That order is the
+contribution, not a new way to measure uncertainty.
 
 \section{Part I: an atlas of what is hidden}
 
-Hidden information at a decision is $\log_2$ of the number of histories consistent with the acting
-player's information state. Zero means perfect information, and each further bit doubles the worlds the player must
-consider. We compute it three ways and always report which.
+At any decision, some complete histories of the game are still consistent with everything the
+acting player has seen. Hidden information is $\log_2$ of how many. Zero means the player can see
+everything, and each further bit doubles the worlds still in play. We compute it three ways and always report which.
 
 \paragraph{What this number is, and what it is not.} We call this number \emph{support bits}, and
 three quantities are easy to confuse here, so we name all three and keep them apart. Write $o$ for
@@ -153,15 +152,15 @@ them would make the number describe the policy as much as the game.
 
 \textbf{Exact} enumeration walks the tree and groups histories by information state. Enumeration returns the true value, and we can afford it on 11 of our 88 rows.
 
-\textbf{Closed form} counts the ways the hidden hands could have been dealt. For one hidden hand of
-$k$ cards drawn from $u$ the player cannot see, that count is $\log_2\binom{u}{k}$, and a full
-table needs the multinomial, because it matters which opponent holds which cards.
+\textbf{Closed form} counts the ways the hidden hands could have been dealt. If one opponent holds $k$ cards drawn from
+the $u$ the player cannot see, that count is $\log_2\binom{u}{k}$. A full table needs the
+multinomial instead, because it matters which opponent holds which cards.
 
 \textbf{Resampling} draws worlds consistent with the information state and counts the distinct
 ones, censored at the sample count. Resampling needs no closed form, and it is the only method that can fail without saying so.
 
-The closed form is exact arithmetic for the deal. But it counts hands only and ignores what the
-public cards rule out, so against the information-set definition it is an upper bound. Leduc measures that gap at 2.01 bits under exact enumeration and 2.30 under the closed form. One row
+The closed form is exact arithmetic for the deal. But it counts hands only and ignores what the face-up cards
+already rule out, so it is an upper bound rather than an estimate. Leduc measures that gap at 2.01 bits under exact enumeration and 2.30 under the closed form. One row
 does not establish that the gap is small in games with richer public histories, and we do not claim
 it does.
 
@@ -223,8 +222,8 @@ puts Hearts at 56.2, nearly nine times higher.
 
 \textbf{Degeneracy.} Degeneracy is the worse failure, because it looks like a clean result. Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back the same world
 on every draw. A survey trusting that column alone would file a 30-bit game beside Connect Four.
-Neither failure is visible without a second estimator to disagree with, which is the practical case
-for reporting provenance in every row, as our released table does.
+Neither failure is visible without a second method to disagree with. That is the practical case
+for saying, in every row, how the number was obtained.
 
 \paragraph{And a third failure, in our own instrument.} The two above are failures of an estimator we did
 not write. A twelfth game caught one in a control we did. In Liar's dice with two dice per player,
@@ -432,8 +431,8 @@ the stated diagnostic in these settings, not a universal ranking of plateau caus
 
 Choosing a domain is a measurement problem and reading a plateau is a diagnostic one. Both are
 usually settled by tradition, and this paper is an argument for measuring them instead. The measuring is harder than it looks. We could put a number on 58 of 88 configurations, and the
-instruments lied three times. Every row therefore carries its provenance, and an arm that scored
-above a ceiling no policy can pass was thrown out rather than explained.
+instruments lied three times. Every row therefore says how its number was obtained, and an arm
+that scored above a ceiling no policy can pass was thrown out rather than explained.
 
 In the large case study, the raw hidden-hand channel produces no detectable gain for the tested
 learner and reference. Twelve seeds rule out gains above about $1.2$ points, and no more than that;
