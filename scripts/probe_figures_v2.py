@@ -50,11 +50,17 @@ SHORT = {"kuhn_poker": "Kuhn poker", "leduc_poker": "Leduc poker",
          "leduc_poker(action_mapping=true)": "Leduc (action map)",
          "leduc_poker(players=2,suit_isomorphism=true)": "Leduc (suit-iso)"}
 def nice(g):
-    if g in SHORT: return SHORT[g]
+    """Figure labels. Falls back to the shared table labels so no raw game string ever ships.
+
+    dark_hex(board_size=2) was reaching a figure axis verbatim, underscore and all, while the
+    tables named it properly.
+    """
+    if g in SHORT:
+        return SHORT[g]
     if g.startswith("liars_dice"):
         n = g.split("dice_sides=")[1].rstrip(")")
         return f"Liar's dice, {n} sides" + (" (IR)" if "_ir" in g else "")
-    return g
+    return axis_data.nice(g)
 
 
 def save(fig, name):
@@ -153,7 +159,7 @@ def fig_budget():
         a2.plot(eps, cap, "o", color="white", mec=c, mew=1.5, ms=5, zorder=4)
         a2.text(eps[-1] * 1.15, cap[-1], nice(game), color=c, fontsize=8.8,
                 fontweight="bold", va="center")
-    for ax, ttl, ylab in ((a1, "(a) Worth is fixed by the game", "information's worth (return)"),
+    for ax, ttl, ylab in ((a1, "(a) Worth is fixed by the evaluation setting", "information's worth (return)"),
                           (a2, "(b) The share banked moves with budget; Leduc rises overall", "captured (%)")):
         ax.set_xscale("log"); ax.set_xlabel("training episodes")
         ax.set_ylabel(ylab); ax.set_title(ttl); ax.yaxis.grid(True)

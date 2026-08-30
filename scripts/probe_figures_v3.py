@@ -116,7 +116,8 @@ def fig_sensitivity():
     ax.set_xticks([-1, 0, 1, 10, 100])
     ax.set_xticklabels(["-1", "0", "1", "10", "100"])
     ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
-    ax.text(1.05, len(items) + 0.6, "shaded band: too small to tell from no effect",
+    # sit the note over the band it names, not at the far right of the axes
+    ax.text(0.0, len(items) + 0.6, "shaded band: too small to tell from no effect",
             fontsize=8.0, color=MUTED, ha="left", va="center")
     for c, lab in ((TEAL, "tabular learner"), (GOLD, "neural learner")):
         ax.plot([], [], "o", color="white", mec=c, mew=1.6, ms=6, label=lab)
@@ -147,15 +148,18 @@ def fig_apparatus():
         ax.bar(x + off, vals, w, color=cl, edgecolor=c, lw=1.2, label=lab, zorder=3)
         ax.errorbar(x + off, vals, yerr=errs, fmt="none", ecolor=c, elinewidth=1.2,
                     capsize=3, capthick=1.1, zorder=4)
-        for xx, v in zip(x + off, vals):
-            ax.text(xx, v + 0.04, f"{v:.2f}", ha="center", fontsize=8.4,
+        # Clear the whisker, not the bar: the label used to sit just above the bar top and the
+        # error bar drew straight through every number.
+        for xx, v, e in zip(x + off, vals, errs):
+            ax.text(xx, v + e + 0.045, f"{v:.2f}", ha="center", fontsize=8.4,
                     fontweight="bold", color=c)
     ax.set_xticks(x); ax.set_xticklabels([nice(g) for g in shared], color=INK, fontsize=8.8)
     ax.set_ylabel("gain from the hidden state (return)")
     ax.set_title("Different learner, different mechanism, same answer")
     ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
     ax.legend(loc="upper left", handlelength=1.2)
-    ax.set_ylim(0, max(max(tab), max(neu)) * 1.3)
+    top = max(v + e for v, e in list(zip(tab, tab_e)) + list(zip(neu, neu_e)))
+    ax.set_ylim(0, top * 1.22)
     fig.tight_layout(); save(fig, "fig_apparatus")
 
 
@@ -191,9 +195,10 @@ def fig_mechanism():
     ax.set_xlim(-0.08, 1.95); ax.set_ylim(-0.02, lim * 1.22)
     ax.set_xticks([0, 1]); ax.set_xticklabels(["without the oracle", "with the oracle"], color=INK)
     ax.set_ylabel("how far the learner sits below its own ceiling")
-    ax.set_title("The oracle also changes how hard the task is to learn")
+    ax.set_title("Why capture can exceed one hundred percent", pad=22)
     ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
-    ax.text(0.02, lim * 1.08, "down = easier to learn with the oracle (capture above 100%)",
+    ax.text(0.0, 1.045, "a line sloping down means the oracle arm is closer to its own ceiling, "
+            "which is exactly when capture reads above 100%", transform=ax.transAxes,
             fontsize=8.2, color=MUTED)
     fig.tight_layout(); save(fig, "fig_mechanism")
 
@@ -225,7 +230,7 @@ def fig_capacity():
     ax.set_xscale("log")
     ax.set_xlabel("situations the learner can tell apart (log; rightmost point is exact)")
     ax.set_ylabel("exploitability (lower is better)")
-    ax.set_title("What a capacity-bound plateau looks like")
+    ax.set_title("Only Leduc improves as the buckets approach exact states")
     ax.yaxis.grid(True); ax.set_xlim(1.6, 6000)
     fig.tight_layout(); save(fig, "fig_capacity")
 

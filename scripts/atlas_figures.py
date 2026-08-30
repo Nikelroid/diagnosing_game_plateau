@@ -120,7 +120,7 @@ def fig_hidden_bits(rows, out_dir):
                 tick.set_fontweight("bold")
         ax.set_ylim(len(chunk) - 0.5, -0.5)  # rank 1 at the top, no blank rows
         ax.set_xlim(0, xmax)
-        ax.set_xlabel("bits of hidden information")
+        ax.set_xlabel("support bits ($\\log_2$ of the histories still possible)")
         ax.xaxis.grid(True, zorder=0)
         ax.set_axisbelow(True)
         ax.tick_params(axis="y", length=0)
@@ -133,12 +133,12 @@ def fig_hidden_bits(rows, out_dir):
             for f in families
         ]
         + [Line2D([], [], marker="s", linestyle="none", markersize=5, markerfacecolor="none",
-                  markeredgecolor=MUTED, label="hatched: resampled floor")],
+                  markeredgecolor=MUTED, label="hatched: censored floor")],
         loc="lower right",
         ncol=1,
         fontsize=6.8,
     )
-    axes[0].set_title("How much the player to move cannot see", loc="left", color=INK)
+    axes[0].set_title("Support bits: how much the player to move cannot see", loc="left", color=INK)
     finish(fig, os.path.join(out_dir, "fig1_hidden_bits"))
 
 
@@ -195,7 +195,7 @@ def fig_bits_vs_cost(rows, out_dir):
         )
 
     ax.set_yscale("log")
-    ax.set_xlabel("bits of hidden information")
+    ax.set_xlabel("support bits ($\\log_2$ of the histories still possible)")
     ax.set_ylabel("learner input size (floats, log scale)")
     ax.set_xlim(-6, max(r["bits"] for r in data) * 1.08)
     ax.grid(True, which="major", zorder=0)
@@ -247,7 +247,7 @@ def fig_gin_dial(rows, out_dir):
         )
 
     ax.set_xlabel("deck size (hand size grows with it)")
-    ax.set_ylabel("bits of hidden information")
+    ax.set_ylabel("support bits ($\\log_2$ of the histories still possible)")
     ax.set_ylim(0, max(bits) * 1.25)
     ax.yaxis.grid(True, zorder=0)
     ax.set_axisbelow(True)
