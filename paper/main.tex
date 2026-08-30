@@ -117,9 +117,10 @@ learners trained with and without that state.
 We contribute two connected tools. The first is an atlas of support bits across 88 game
 configurations, with the provenance of every value and independent bounds that catch three silent
 measurement failures. The second is a three-arm diagnostic validated against exact ceilings in
-eleven solvable games. We then apply the same diagnostic unchanged to a twelfth game that cannot be
-solved, where twelve seeds rule out gains above about $1.2$ points from the raw hidden-hand channel
-for this learner and reference. Together, these tools turn a plateau from an unexplained win rate
+eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, a two-player card
+game whose average decision leaves about a billion possible worlds open and which is far too large
+to solve exactly. There, twelve seeds rule out gains above about $1.2$ points from the raw
+hidden-hand channel for this learner and reference. Together, these tools turn a plateau from an unexplained win rate
 into a measurement of both what the game hides and what the learner gains from it.
 
 \section{Related work}
@@ -193,9 +194,21 @@ information-state strings and world resampling, and 9 from RLCard \citep{rlcard}
 
 The atlas says what a domain can hide, not whether that hiding limits a particular agent. Our large
 case reuses the setting of a recent study of lightweight card-game agents \citep{goldstandard},
-which grades against a fixed rule-based reference that never trains. The reference plays 600 games in about two minutes, and PettingZoo
-\citep{pettingzoo} supplies the environment API. The three contrasts apply across games, but each
+which grades against a fixed rule-based reference that never trains, with PettingZoo
+\citep{pettingzoo} supplying the environment API. The three contrasts apply across games, but each
 game still needs a verified oracle observation and a matched placebo.
+
+\paragraph{Why Gin Rummy.} The large case is Gin Rummy, and we chose it because it is hard in the
+way this paper is about. Its average decision leaves about $2^{30}$ worlds consistent with what the
+player has seen, and only one measured two-player card game hides more
+(Section~\ref{sec:r-atlas}), so switching games would buy almost no extra difficulty. It is also
+far too large for counterfactual regret minimisation, so no exact ceiling exists and worth cannot
+be computed. That is precisely the regime a diagnostic has to survive. The two tools a practitioner
+would reach for instead both mislead here: the engine's world resampler reports \emph{0.00} bits
+for every Gin Rummy configuration (Section~\ref{sec:r-failures}), and determinized search gains
+from oracle access partly because that access removes strategy fusion rather than because the
+hidden cards are worth something. The game also supplies its own dial, since eight configurations
+move hidden information from 5.1 to 30.1 bits with the rules unchanged.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
 learner's four observation planes, so it sees a strict subset of what the learner sees, and it
@@ -420,15 +433,12 @@ agent's $27$ percent to the parity its reference defines. Smaller gains remain p
 not claim that the effect is exactly zero. An earlier four-seed version gave an interval of
 $[-4.5, +2.7]$, which excluded almost nothing.
 
-\paragraph{The supporting probes.} Probe~1 asks whether a different encoder changes the plateau. A
-plain MLP averages 25.5 percent over four seeds and a self-attention encoder 25.7, with all eight
-seeds between 21.2 and 30.0. No tested encoder improves mean performance, and attention changes the
-variance at roughly twelve times the wall-clock cost.
-
-Probe~2 asks what privileged state buys inside determinized search. Fair search reaches 10.3
-percent at 10 rollouts and 25.6 at 120, against 40.7 and 85.3 for the oracle variant on the same
-budgets. Oracle access also removes strategy fusion, so this gap remains a confounded proxy rather
-than worth.
+\paragraph{The supporting probes.} Probe~1 varies the encoder. A plain MLP averages 25.5 percent
+over four seeds and a self-attention encoder 25.7, with all eight seeds between 21.2 and 30.0, so
+no tested encoder improves mean performance and attention costs roughly twelve times the wall-clock
+time. Probe~2 measures what privileged state buys inside determinized search: fair search reaches
+10.3 percent at 10 rollouts and 25.6 at 120, against 40.7 and 85.3 for the oracle variant. Oracle
+access also removes strategy fusion, so that gap stays a confounded proxy rather than worth.
 
 \FloatBarrier
 \section{Discussion}
