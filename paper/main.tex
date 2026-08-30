@@ -348,7 +348,8 @@ the control after seeing the result (Appendix~\ref{app:reject}).
 
 All three failures produce plausible headline numbers. In each case, information outside that
 number exposes the problem. The practical lesson is simple: every measurement should record how it
-was produced and which independent check it must satisfy.
+was produced and which independent check it must satisfy. Appendix~\ref{app:checklist} states the
+protocol as a checklist for use elsewhere.
 
 \subsection{The decomposition across eleven games}
 \label{sec:r-decomp}
@@ -667,6 +668,11 @@ Capture is banked over worth, and widening is the placebo arm minus the baseline
 
 The eleven games are not eleven independent domains. Seven are Liar's dice at different die sizes
 and three are Leduc variants, so the spread of bits is wider than the spread of game structure.
+This is a property of the supply rather than of our effort. The only non-poker, non-dice family the
+screen returns is Dark hex on a two by two board, and both its variants are won outright by the
+first player: the baseline and oracle ceilings are both $+1.0000$, so worth is exactly zero and
+capture is undefined. No third family is available under the constraint that an exact optimum must
+exist.
 We chose that deliberately. Holding the game fixed and moving one parameter is what lets worth be
 compared across rows at all. It also means the seven-to-four split in Section~\ref{app:mechanism}
 tracks two game families, not seven independent confirmations, and we do not read it as such.
@@ -839,6 +845,41 @@ out a game-specific ceiling error. A second concern is that each difference may 
 trust on its own. The per-game gap is $0.8$ to $2.3$ times the seed spread of the banked column, so
 we report the two-family pattern rather than treating eleven related configurations as eleven
 independent trials.
+
+\section{The protocol as a checklist}
+\label{app:checklist}
+
+The protocol is not specific to card games. Applying it elsewhere needs six steps, and this
+paper supplies a worked failure for most of them.
+
+\textbf{1. State the construct, and state what it is not.} Support bits count the worlds an
+observation leaves open. They are not the player's posterior uncertainty, which is lower whenever
+the posterior is not uniform, and they are not the value of the hidden state, which can be zero
+while the count is large. Naming the three separately is what makes the rest of the protocol
+possible.
+
+\textbf{2. Record how every value was produced.} Exact enumeration, a closed form and a censored
+estimator are not interchangeable, and a table that mixes them without saying so invites
+comparisons that the numbers cannot support.
+
+\textbf{3. Give every measurement an independent bound it must satisfy.} Not a plausibility
+check, which all three of our failures passed, but a quantity computed another way that the
+result can contradict. Saturation was caught by a closed form, degeneracy by a second engine, and
+our own broken control by an exact ceiling.
+
+\textbf{4. Calibrate where ground truth exists before applying where it does not.} A null means
+nothing from an instrument that has never been shown to fire. We validate on every game an exact
+solver can reach, then run the identical procedure on the game it cannot.
+
+\textbf{5. Control the delivery channel, not only the information.} Adding an input changes more
+than what the learner knows. A placebo arm of the same shape prices that change. Matching shape
+alone is not enough: our rejected game shows that a control drawn from a large enough space
+becomes an identifier for the episode and leaks what it was built to withhold. Match the
+cardinality of the control to the hidden state, not its geometry.
+
+\textbf{6. Report the exclusion, not the point estimate.} A null is a claim about what the data
+rule out, so it is only as strong as the interval behind it. Ours moved from $[-4.5, +2.7]$ at
+four seeds, which excluded almost nothing, to a bound worth stating at twelve.
 
 \section{The Gin Rummy arms in full}
 \label{app:gin}
