@@ -46,10 +46,9 @@
 % swap left them printed hard against the bottom rule. Give the gap back.
 \makeatletter
 \renewenvironment{table}
-  {\setlength{\abovecaptionskip}{10\p@}%
+{\setlength{\abovecaptionskip}{10\p@}%
    \setlength{\belowcaptionskip}{\z@}%
-   \@float{table}}
-  {\end@float}
+\@float{table}} {\end@float}
 % longtable centres its caption in a box of width \LTcapwidth. \textwidth overshoots the
 % body measure in this class and pushed the caption past the right margin, so keep the
 % default 4in, which also sits close to the atlas table's own width.
@@ -59,7 +58,7 @@
 \newcommand{\ORACLEOBSN}{twenty-four}
 
 \title{Is It the Game or the Agent?\\
-       Measuring What Games Hide, Diagnosing a Plateau}
+Measuring What Games Hide, Diagnosing a Plateau}
 \author{Anonymous submission}
 \date{}
 
@@ -92,49 +91,20 @@ game hides, what that hiding is worth, and how much a learner banks.
 
 \section{Introduction}
 
-A plateau is an observation, not a diagnosis. A win rate shows that a reinforcement learning agent
-has stopped improving. It cannot tell whether the game hides something the agent needs or whether
-the agent is failing to use what it already sees. Those two answers call for different
-experiments.
+A plateau is an observation, not a diagnosis. A win rate shows that a reinforcement learning agent has stopped improving. It cannot tell whether the game hides something the agent needs or whether the agent is failing to use what it already sees. Those two answers call for different experiments.
 
-The reference also decides what a win rate can mean. Random play produces scores near 99 percent
-that barely move. Self-play produces scores near 50 percent by construction. A pool of past
-checkpoints changes as the agent changes. We therefore fix the reference and ask two questions.
+The reference also decides what a win rate can mean. Random play produces scores near 99 percent that barely move. Self-play produces scores near 50 percent by construction. A pool of past checkpoints changes as the agent changes. We therefore fix the reference and ask two questions.
 
-\textbf{How much does the game hide?} Games are usually chosen by reputation: poker is hard, Hanabi
-is cooperative, Stratego is large. The amount of hidden information is rarely measured, so
-comparisons across games rest largely on convention.
+\textbf{How much does the game hide?} Games are usually chosen by reputation: poker is hard, Hanabi is cooperative, Stratego is large. The amount of hidden information is rarely measured, so comparisons across games rest largely on convention.
 
-\textbf{Does that hidden information explain the plateau?} A game can hide many possible states
-without hiding anything that would change the best action. Even valuable hidden information may
-fail to help a particular learner. A win rate alone cannot separate these cases.
+\textbf{Does that hidden information explain the plateau?} A game can hide many possible states without hiding anything that would change the best action. Even valuable hidden information may fail to help a particular learner. A win rate alone cannot separate these cases.
 
-This paper separates three quantities that evaluations routinely report as one. Support bits
-measure what the game hides. Worth measures how much the hidden state can improve the best
-achievable return against a stated opponent policy. Banked measures the observed difference between
-learners trained with and without that state.
+This paper separates three quantities that evaluations routinely report as one. Support bits measure what the game hides. Worth measures how much the hidden state can improve the best achievable return against a stated opponent policy. Banked measures the observed difference between learners trained with and without that state.
 
 \label{sec:related}
-Three lines of work meet here, and they are usually kept apart. Measurement research asks whether
-an evaluation measures the construct it names \citep{measurementfairness}, and benchmark critiques
-ask whether limited domain coverage supports broad conclusions \citep{wholeworld}. Research on
-imperfect-information games measures related information-set structure
-\citep{pimc,rbccomplexity,ggpii}, and privileged-state interventions test what hidden information
-can buy \citep{policyinference,ismcts}. What joins them here is a validation chain: every atlas
-value carries its provenance, independent bounds expose silent failures, exact ceilings validate
-the diagnostic where answers are known, and the same protocol then runs where those ceilings cannot
-be computed. Appendix~\ref{app:related} places the work against this literature in full.
+Three lines of work meet here, and they are usually kept apart. Measurement research asks whether an evaluation measures the construct it names \citep{measurementfairness}, and benchmark critiques ask whether limited domain coverage supports broad conclusions \citep{wholeworld}. Research on imperfect-information games measures related information-set structure \citep{pimc,rbccomplexity,ggpii}, and privileged-state interventions test what hidden information can buy \citep{policyinference,ismcts}. What joins them here is a validation chain: every atlas value carries its provenance, independent bounds expose silent failures, exact ceilings validate the diagnostic where answers are known, and the same protocol then runs where those ceilings cannot be computed. Appendix~\ref{app:related} places the work against this literature in full.
 
-We contribute two connected tools. The first is an atlas of support bits across 88 game
-configurations, with the provenance of every value and independent checks that catch three silent
-measurement failures. The second is a three-arm diagnostic validated against exact ceilings in
-eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, whose hand-only upper bound is $30.1$
-support bits, near the top of the measured two-player card games. Twenty-four seeds rule out
-gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference.
-We are not aware of another cross-game atlas that reports a per-observation
-information-set measure for 88 configurations, records every value's provenance, and uses
-independent checks to expose estimator failure. Together, these tools turn an unexplained plateau into separate
-measurements of what the game hides, what that information is worth, and what the learner banks.
+We contribute two connected tools. The first is an atlas of support bits across 88 game configurations, with the provenance of every value and independent checks that catch three silent measurement failures. The second is a three-arm diagnostic validated against exact ceilings in eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, whose hand-only upper bound is $30.1$ support bits, near the top of the measured two-player card games. Twenty-four seeds rule out gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference. We are not aware of another cross-game atlas that reports a per-observation information-set measure for 88 configurations, records every value's provenance, and uses independent checks to expose estimator failure. Together, these tools turn an unexplained plateau into separate measurements of what the game hides, what that information is worth, and what the learner banks.
 
 \section{Method}
 \label{sec:method}
@@ -142,12 +112,7 @@ measurements of what the game hides, what that information is worth, and what th
 \subsection{Measuring what a game hides}
 \label{sec:m-atlas}
 
-At any decision, some complete game histories remain consistent with everything the acting player
-has seen. We measure the size of that remaining set by its base-two logarithm. Write $O$ for the
-player's observation as a random variable and $o$ for one realised observation. Write $I(o)$ for
-the set of complete histories consistent with observing $o$, and write $Z$ for the hidden state.
-Write $H$ for Shannon entropy. For a fixed opponent policy $\pi$, let $V^\star_\pi(\cdot)$ be the
-best expected return achievable against that policy from a given observation. Then
+At any decision, some complete game histories remain consistent with everything the acting player has seen. We measure the size of that remaining set by its base-two logarithm. Write $O$ for the player's observation as a random variable and $o$ for one realised observation. Write $I(o)$ for the set of complete histories consistent with observing $o$, and write $Z$ for the hidden state. Write $H$ for Shannon entropy. For a fixed opponent policy $\pi$, let $V^\star_\pi(\cdot)$ be the best expected return achievable against that policy from a given observation. Then
 %
 \begin{align}
   b(o) &\;=\; \log_2 |I(o)| &&\text{support bits, what we measure,}
@@ -159,117 +124,48 @@ best expected return achievable against that policy from a given observation. Th
   \label{eq:worth}
 \end{align}
 %
-Equation~\eqref{eq:bound} separates support bits from uncertainty. It is the standard
-maximum-entropy bound for a variable on a finite support \citep{coverthomas}: support bits weight
-every possible history equally, so they upper-bound the player's uncertainty, and the bound is
-tight only when every history is equally likely. A player can therefore be nearly certain about one
-hand even when a thousand hands remain possible. Worth is different again. Equation~\eqref{eq:worth} can be
-zero while $b(o)$ is large if the same action is best across many hidden hands. We compute worth
-exactly wherever an optimum is available.
+Equation~\eqref{eq:bound} separates support bits from uncertainty. It is the standard maximum-entropy bound for a variable on a finite support \citep{coverthomas}: support bits weight every possible history equally, so they upper-bound the player's uncertainty, and the bound is tight only when every history is equally likely. A player can therefore be nearly certain about one hand even when a thousand hands remain possible. Worth is different again. Equation~\eqref{eq:worth} can be zero while $b(o)$ is large if the same action is best across many hidden hands. We compute worth exactly wherever an optimum is available.
 
-We report the mean support bits over every distinct information state in the tree, pooled across
-both seats. Every state counts once, however often play reaches it, so a game with rare huge
-information sets and common small ones reads higher than a player would feel. We count states
-equally because that needs no policy, while weighting them by how often play reaches them would
-make the number describe the policy as much as the game.
+We report the mean support bits over every distinct information state in the tree, pooled across both seats. Every state counts once, however often play reaches it, so a game with rare huge information sets and common small ones reads higher than a player would feel. We count states equally because that needs no policy, while weighting them by how often play reaches them would make the number describe the policy as much as the game.
 
-We compute support bits three ways and always report which. \textbf{Exact} enumeration walks the
-tree and groups histories by information state. Enumeration returns the true value, and we can
-afford it on 11 of our 88 rows.
+We compute support bits three ways and always report which. \textbf{Exact} enumeration walks the tree and groups histories by information state. Enumeration returns the true value, and we can afford it on 11 of our 88 rows.
 
-\textbf{Closed form} counts the ways the hidden hands could have been dealt. If one opponent holds
-$k$ cards drawn from the $u$ the player cannot see, that count is $\log_2\binom{u}{k}$. A full
-table needs the multinomial instead, because it matters which opponent holds which cards. The
-closed form is exact arithmetic for the deal, but it counts hands only and ignores what the face-up
-cards already rule out, so it is an upper bound rather than an estimate.
+\textbf{Closed form} counts the ways the hidden hands could have been dealt. If one opponent holds $k$ cards drawn from the $u$ the player cannot see, that count is $\log_2\binom{u}{k}$. A full table needs the multinomial instead, because it matters which opponent holds which cards. The closed form is exact arithmetic for the deal, but it counts hands only and ignores what the face-up cards already rule out, so it is an upper bound rather than an estimate.
 
-\textbf{Resampling} draws worlds consistent with the information state and counts the distinct
-ones, censored at the sample count. Resampling can fail silently when its samples saturate or
-collapse, so every resampled value must carry its censoring and diversity diagnostics.
+\textbf{Resampling} draws worlds consistent with the information state and counts the distinct ones, censored at the sample count. Resampling can fail silently when its samples saturate or collapse, so every resampled value must carry its censoring and diversity diagnostics.
 
-The catalog spans 79 games from OpenSpiel \citep{openspiel}, the only engine here exposing
-information-state strings and world resampling, and 9 from RLCard \citep{rlcard}.
+The catalog spans 79 games from OpenSpiel \citep{openspiel}, the only engine here exposing information-state strings and world resampling, and 9 from RLCard \citep{rlcard}.
 
 \subsection{Diagnosing a plateau: three probes}
 \label{sec:m-probes}
 
-The atlas says what a domain can hide, not whether that hiding limits a particular agent. Our large
-case reuses the setting of a recent study of lightweight card-game agents \citep{goldstandard},
-which grades against a fixed rule-based reference that never trains, with PettingZoo
-\citep{pettingzoo} supplying the environment API. The three contrasts apply across games, but each
-game still needs a verified oracle observation and a matched placebo.
+The atlas says what a domain can hide, not whether that hiding limits a particular agent. Our large case reuses the setting of a recent study of lightweight card-game agents \citep{goldstandard}, which grades against a fixed rule-based reference that never trains, with PettingZoo \citep{pettingzoo} supplying the environment API. The three contrasts apply across games, but each game still needs a verified oracle observation and a matched placebo.
 
-\paragraph{Why Gin Rummy.} Gin Rummy gives us a large case near the top of the measured
-two-player card games. Standard Gin Rummy has a hand-only upper bound of $30.1$ support bits, and
-only one measured game in that family has a larger reported value (Section~\ref{sec:r-atlas}), so
-another game in the family would add little range on this measure. Eight Gin Rummy configurations
-sweep hand-only upper bounds from $5.1$ to $30.1$ support bits while holding the rules fixed. The full game is too large for an exact ceiling, so it tests whether
-a diagnostic validated on solvable games transfers unchanged to a much larger one.
+\paragraph{Why Gin Rummy.} Gin Rummy gives us a large case near the top of the measured two-player card games. Standard Gin Rummy has a hand-only upper bound of $30.1$ support bits, and only one measured game in that family has a larger reported value (Section~\ref{sec:r-atlas}), so another game in the family would add little range on this measure. Eight Gin Rummy configurations sweep hand-only upper bounds from $5.1$ to $30.1$ support bits while holding the rules fixed. The full game is too large for an exact ceiling, so it tests whether a diagnostic validated on solvable games transfers unchanged to a much larger one.
 
-\paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
-learner's four observation planes, so it sees a strict subset of what the learner sees, and it
-scores about 50 percent against itself. Parity is therefore well defined, and any policy reaching
-it is a function of information the learner already receives. This transfers to any domain where
-the reference restricts the learner.
+\paragraph{The subset argument, which needs no experiment.} Our reference reads two of the learner's four observation planes, so it sees a strict subset of what the learner sees, and it scores about 50 percent against itself. Parity is therefore well defined, and any policy reaching it is a function of information the learner already receives. This transfers to any domain where the reference restricts the learner.
 
-\paragraph{Probe 1: architecture sensitivity.} Train the same recipe with different encoders, as in
-the architecture sweep of \citet{goldstandard}. This changes inductive bias and compute together,
-so it is an architecture-sensitivity check rather than a controlled capacity sweep.
-Appendix~\ref{app:capacity} provides the controlled version by folding information states into a
-fixed number of buckets.
+\paragraph{Probe 1: architecture sensitivity.} Train the same recipe with different encoders, as in the architecture sweep of \citet{goldstandard}. This changes inductive bias and compute together, so it is an architecture-sensitivity check rather than a controlled capacity sweep. Appendix~\ref{app:capacity} provides the controlled version by folding information states into a fixed number of buckets.
 
-\paragraph{Probe 2: the oracle-search gap.} Run a determinized search \citep{pimc,ismcts} graded
-fairly, then as an oracle handed the true hidden cards, following \citet{goldstandard}. The gap is
-not a clean value of information, because oracle access removes strategy fusion
-\citep{strategyfusion,rebel} as well as uncertainty. The gap therefore bounds the benefit available
-inside this search protocol, not the decision-theoretic value of revealing the state. We reserve
-the word \emph{worth} for the exact quantity defined below.
+\paragraph{Probe 2: the oracle-search gap.} Run a determinized search \citep{pimc,ismcts} graded fairly, then as an oracle handed the true hidden cards, following \citet{goldstandard}. The gap is not a clean value of information, because oracle access removes strategy fusion \citep{strategyfusion,rebel} as well as uncertainty. The gap therefore bounds the benefit available inside this search protocol, not the decision-theoretic value of revealing the state. We reserve the word \emph{worth} for the exact quantity defined below.
 
-\paragraph{Probe 3: the oracle-observation learner.} Retrain the identical recipe with the hidden
-state appended to the observation and change nothing else. This puts the question to the learner
-rather than to a search agent. A third arm separates the information from the cost of widening the
-observation. It is a negative control on the observation channel: the placebo plane matches the
-oracle plane in shape and sparsity, but carries ten cards the player cannot see, drawn
-independently of the opponent's hand. PettingZoo's
-\texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand, so we built our
-own plane and verified it against engine ground truth (Appendix~\ref{app:apparatus}).
+\paragraph{Probe 3: the oracle-observation learner.} Retrain the identical recipe with the hidden state appended to the observation and change nothing else. This puts the question to the learner rather than to a search agent. A third arm separates the information from the cost of widening the observation. It is a negative control on the observation channel: the placebo plane matches the oracle plane in shape and sparsity, but carries ten cards the player cannot see, drawn independently of the opponent's hand. PettingZoo's \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand, so we built our own plane and verified it against engine ground truth (Appendix~\ref{app:apparatus}).
 
-Before interpreting a null, we test whether the probe can detect an effect where exact ceilings
-are available,
-with a tabular learner and with a neural learner reading a fixed-width tensor, as the case-study
-learner does.
+Before interpreting a null, we test whether the probe can detect an effect where exact ceilings are available, with a tabular learner and with a neural learner reading a fixed-width tensor, as the case-study learner does.
 
-\paragraph{Why these games.} A fixed screen defines the candidate games before any probe result is
-examined. The screen keeps OpenSpiel games that are two-player, zero sum, sequential and imperfect
-information, and small enough that counterfactual regret minimisation can supply a fixed opponent
-policy with exact best responses to it.
-Parameter sweeps produce sixteen solvable configurations, and we run the probe on twelve of them. A
-ceiling check rejects one, leaving eleven configurations for calibration. Gin Rummy is the only
-diagnostic application without an exact ceiling. Appendix~\ref{app:axis} accounts for every unrun
-and excluded configuration.
+\paragraph{Why these games.} A fixed screen defines the candidate games before any probe result is examined. The screen keeps OpenSpiel games that are two-player, zero sum, sequential and imperfect information, and small enough that counterfactual regret minimisation can supply a fixed opponent policy with exact best responses to it. Parameter sweeps produce sixteen solvable configurations, and we run the probe on twelve of them. A ceiling check rejects one, leaving eleven configurations for calibration. Gin Rummy is the only diagnostic application without an exact ceiling. Appendix~\ref{app:axis} accounts for every unrun and excluded configuration.
 
 \subsection{Decomposing a plateau: worth, banked and capture}
 \label{sec:decomp}
 
-Where exact optima are available, the probe decomposes the plateau into worth, banked and capture.
-Worth is the best return achievable with the hidden state minus the best achievable without it. It
-is a fixed-policy, sequential analogue of the expected value of perfect information
-\citep{voi}: the same quantity that decision analysis prices, but held to one stated opponent.
-Banked is the oracle arm's observed return minus the baseline arm's observed return, and capture is
-banked divided by worth. Both ceilings use the same fixed opponent policy and differ only in
-whether the learner sees the hidden state, so worth is exact for that evaluation setting rather
-than for the game in the abstract. Unequal gaps between the trained arms and their own ceilings can
-place capture above or below one. Write $g_b$ for how far the baseline arm sits below its own ceiling, and $g_o$ for the
-same quantity in the oracle arm. Then banked, worth and those two gaps are not independent:
+Where exact optima are available, the probe decomposes the plateau into worth, banked and capture. Worth is the best return achievable with the hidden state minus the best achievable without it. It is a fixed-policy, sequential analogue of the expected value of perfect information \citep{voi}: the same quantity that decision analysis prices, but held to one stated opponent. Banked is the oracle arm's observed return minus the baseline arm's observed return, and capture is banked divided by worth. Both ceilings use the same fixed opponent policy and differ only in whether the learner sees the hidden state, so worth is exact for that evaluation setting rather than for the game in the abstract. Unequal gaps between the trained arms and their own ceilings can place capture above or below one. Write $g_b$ for how far the baseline arm sits below its own ceiling, and $g_o$ for the same quantity in the oracle arm. Then banked, worth and those two gaps are not independent:
 %
 \begin{equation}
 \text{banked} \;=\; \text{worth} \;+\; g_b \;-\; g_o .
 \label{eq:identity}
 \end{equation}
 %
-Equation~\eqref{eq:identity} is an identity, not a finding. It follows directly from the
-definitions. Dividing by worth shows that capture exceeds $1$ exactly when $g_b > g_o$. The
-identity does not explain why the gaps differ or provide a corrected capture value.
+Equation~\eqref{eq:identity} is an identity, not a finding. It follows directly from the definitions. Dividing by worth shows that capture exceeds $1$ exactly when $g_b > g_o$. The identity does not explain why the gaps differ or provide a corrected capture value.
 
 \FloatBarrier
 \section{Results}
@@ -288,25 +184,13 @@ identity does not explain why the gaps differ or provide a corrected capture val
   \label{tab:families}
 \end{table}
 
-\paragraph{Two-player card games saturate.} We can report a value or bound for 18 of the 23, and
-their median reported value is 3.1 bits (Table~\ref{tab:families}). Only one measured two-player card game has a reported
-value above standard Gin Rummy's hand-only upper bound of $30.1$ support bits, and it exceeds that
-bound by only $2.8$ bits. Switching games therefore offers little additional range above the case
-study, even though the measured family spans many lower values.
+\paragraph{Two-player card games saturate.} We can report a value or bound for 18 of the 23, and their median reported value is 3.1 bits (Table~\ref{tab:families}). Only one measured two-player card game has a reported value above standard Gin Rummy's hand-only upper bound of $30.1$ support bits, and it exceeds that bound by only $2.8$ bits. Switching games therefore offers little additional range above the case study, even though the measured family spans many lower values.
 
-\paragraph{In this atlas, the extra bits come from extra players.} The three and four-handed family
-has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong. Those
-bits come with extra hands, coalitions and signalling, which is a different problem rather than a
-deeper version of the same one.
+\paragraph{In this atlas, the extra bits come from extra players.} The three and four-handed family has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong. Those bits come with extra hands, coalitions and signalling, which is a different problem rather than a deeper version of the same one.
 
-\paragraph{A within-game comparison needs a dial.} Our eight Gin Rummy configurations hold the
-rules fixed, change only the deck and hand size, and sweep hand-only upper bounds from $5.1$ to
-$30.1$ support bits.
+\paragraph{A within-game comparison needs a dial.} Our eight Gin Rummy configurations hold the rules fixed, change only the deck and hand size, and sweep hand-only upper bounds from $5.1$ to $30.1$ support bits.
 
-\paragraph{The blind spot.} Thirteen fog-of-war games, dark chess and reconnaissance blind chess
-among them, carry no number by any method: too large to enumerate, no deal to count, no resampler.
-The games most often called the frontier of imperfect information are exactly the ones nobody can
-currently size.
+\paragraph{The blind spot.} Thirteen fog-of-war games, dark chess and reconnaissance blind chess among them, carry no number by any method: too large to enumerate, no deal to count, no resampler. The games most often called the frontier of imperfect information are exactly the ones nobody can currently size.
 
 \begin{figure}[t]
   \centering
@@ -321,38 +205,17 @@ currently size.
 \subsection{Catching silent measurement failures}
 \label{sec:r-failures}
 
-Silent failures are dangerous because their outputs look ordinary. Resampling is a natural choice
-when a game is too large to enumerate, but its headline value can saturate or collapse while still
-looking plausible. Independent checks catch three such failures in our study.
+Silent failures are dangerous because their outputs look ordinary. Resampling is a natural choice when a game is too large to enumerate, but its headline value can saturate or collapse while still looking plausible. Independent checks catch three such failures in our study.
 
-Agreement or disagreement between methods does not by itself indicate failure. OpenSpiel and RLCard
-both return the same hand-only closed form of 30.1 bits for Gin Rummy, which cross-checks that
-arithmetic across libraries. Leduc
-measures 2.01 bits under exact enumeration and 2.30 under the closed form, though one row does not
-show the gap stays small in games with richer public histories.
+Agreement or disagreement between methods does not by itself indicate failure. OpenSpiel and RLCard both return the same hand-only closed form of 30.1 bits for Gin Rummy, which cross-checks that arithmetic across libraries. Leduc measures 2.01 bits under exact enumeration and 2.30 under the closed form, though one row does not show the gap stays small in games with richer public histories.
 
-\textbf{Saturation.} Hearts, Euchre and contract bridge each return exactly 6.32 bits, which is
-$\log_2 80$, the sample count. All sampled points are censored. The estimator has exhausted its samples rather than the
-possible worlds. The closed form places Hearts at 56.2 bits, $49.9$ bits above the saturated
-estimate.
+\textbf{Saturation.} Hearts, Euchre and contract bridge each return exactly 6.32 bits, which is $\log_2 80$, the sample count. All sampled points are censored. The estimator has exhausted its samples rather than the possible worlds. The closed form places Hearts at 56.2 bits, $49.9$ bits above the saturated estimate.
 
-\textbf{Degeneracy.} Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring.
-The engine's resampler returns the same world on every draw, so a survey trusting the reported
-value would place a 30-bit game beside Connect Four. Neither failure is visible from the bit value
-alone. The censoring and diversity diagnostics expose the estimator's behaviour, and the second
-method shows that the result cannot be trusted.
+\textbf{Degeneracy.} Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring. The engine's resampler returns the same world on every draw, so a survey trusting the reported value would place a 30-bit game beside Connect Four. Neither failure is visible from the bit value alone. The censoring and diversity diagnostics expose the estimator's behaviour, and the second method shows that the result cannot be trusted.
 
-\paragraph{The check is strong enough to catch us.} In Liar's dice with two dice per player, the
-placebo arm returns $0.738$ against its exact ceiling of $0.062$, which no policy can exceed. The
-fake plane is drawn once per deal from a space in which nearly every draw is unique, so it becomes
-a fingerprint of the deal rather than noise. A tabular learner can key on that fingerprint and
-recover the information the placebo was meant to withhold. We reject the game rather than repairing
-the control after seeing the result (Appendix~\ref{app:reject}).
+\paragraph{The check is strong enough to catch us.} In Liar's dice with two dice per player, the placebo arm returns $0.738$ against its exact ceiling of $0.062$, which no policy can exceed. The fake plane is drawn once per deal from a space in which nearly every draw is unique, so it becomes a fingerprint of the deal rather than noise. A tabular learner can key on that fingerprint and recover the information the placebo was meant to withhold. We reject the game rather than repairing the control after seeing the result (Appendix~\ref{app:reject}).
 
-All three failures produce plausible headline numbers. In each case, information outside that
-number exposes the problem. The practical lesson is simple: every measurement should record how it
-was produced and which independent check it must satisfy. Appendix~\ref{app:checklist} states the
-protocol as a checklist for use elsewhere.
+All three failures produce plausible headline numbers. In each case, information outside that number exposes the problem. The practical lesson is simple: every measurement should record how it was produced and which independent check it must satisfy. Appendix~\ref{app:checklist} states the protocol as a checklist for use elsewhere.
 
 \subsection{The decomposition across eleven games}
 \label{sec:r-decomp}
@@ -368,46 +231,21 @@ protocol as a checklist for use elsewhere.
   \label{tab:axis}
 \end{table}
 
-The decomposition separates a fixed property of the evaluation setting from an outcome that changes
-with the learner. We sweep the training budget from 25{,}000 to 1{,}600{,}000 episodes, a
-sixty-fourfold range. Exact worth stays constant to three decimals in both games
-(Appendix~\ref{app:budget}). Capture changes with the budget instead, rising from $56$ to $79$
-percent in Leduc Hold'em and moving unevenly in Kuhn. A win rate alone cannot reveal this
-separation between worth and banked.
+The decomposition separates a fixed property of the evaluation setting from an outcome that changes with the learner. We sweep the training budget from 25{,}000 to 1{,}600{,}000 episodes, a sixty-fourfold range. Exact worth stays constant to three decimals in both games (Appendix~\ref{app:budget}). Capture changes with the budget instead, rising from $56$ to $79$ percent in Leduc Hold'em and moving unevenly in Kuhn. A win rate alone cannot reveal this separation between worth and banked.
 
-Across the eleven decomposed games in Table~\ref{tab:axis}, placebo-minus-baseline widening stays
-inside seed noise in every row. These runs therefore give no evidence that the wider input hides a
-real gain, which is exactly the reading a placebo exists to rule out.
+Across the eleven decomposed games in Table~\ref{tab:axis}, placebo-minus-baseline widening stays inside seed noise in every row. These runs therefore give no evidence that the wider input hides a real gain, which is exactly the reading a placebo exists to rule out.
 
-\paragraph{Why capture can exceed one hundred percent.} Seven of the eleven games report capture
-above $100$ percent. Recall that $g_b$ and $g_o$ are the gaps between the baseline and oracle arms
-and their own ceilings. Equation~\eqref{eq:identity} makes capture exceed $100$ percent exactly
-when $g_b > g_o$. Values above $100$ percent are therefore
-not algebraic contradictions. The
-identity establishes this relationship without explaining why the two gaps differ.
+\paragraph{Why capture can exceed one hundred percent.} Seven of the eleven games report capture above $100$ percent. Recall that $g_b$ and $g_o$ are the gaps between the baseline and oracle arms and their own ceilings. Equation~\eqref{eq:identity} makes capture exceed $100$ percent exactly when $g_b > g_o$. Values above $100$ percent are therefore not algebraic contradictions. The identity establishes this relationship without explaining why the two gaps differ.
 
-The empirical result is where each family lands. In the four poker variants the oracle arm ends
-further below its ceiling, and capture lies between $73$ and $78$ percent. In the seven dice
-variants it is the baseline arm that trails, so capture exceeds $100$ percent.
-These are observed gap differences, not evidence that either arm was causally easier to learn. We
-report them without a corrected capture value because the identity supplies no such correction.
-None of this reaches the case-study null in Section~\ref{sec:r-case}, which never divides by
-worth.
+The empirical result is where each family lands. In the four poker variants the oracle arm ends further below its ceiling, and capture lies between $73$ and $78$ percent. In the seven dice variants it is the baseline arm that trails, so capture exceeds $100$ percent. These are observed gap differences, not evidence that either arm was causally easier to learn. We report them without a corrected capture value because the identity supplies no such correction. None of this reaches the case-study null in Section~\ref{sec:r-case}, which never divides by worth.
 
 \FloatBarrier
 \subsection{The large case study: no detectable gain}
 \label{sec:r-case}
 
-The large case study tests the calibrated diagnostic where exact ceilings are unavailable. For this
-learner and reference, adding the raw hidden-hand channel produces no detectable gain. We first show that the same probe detects effects
-in every tested small-game configuration, and Table~\ref{tab:probes} states what each licenses.
+The large case study tests the calibrated diagnostic where exact ceilings are unavailable. For this learner and reference, adding the raw hidden-hand channel produces no detectable gain. We first show that the same probe detects effects in every tested small-game configuration, and Table~\ref{tab:probes} states what each licenses.
 
-\paragraph{The sensitivity check.} Across the fourteen small-game and learner combinations that
-contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo-baseline difference stays
-within seed noise in every case. These results show that the instrument works on games of this
-size. They do not show that it fires wherever information exists.
-Figure~\ref{fig:sensitivity} compares these effects with the large case study on a common
-standardised scale.
+\paragraph{The sensitivity check.} Across the fourteen small-game and learner combinations that contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo-baseline difference stays within seed noise in every case. These results show that the instrument works on games of this size. They do not show that it fires wherever information exists. Figure~\ref{fig:sensitivity} compares these effects with the large case study on a common standardised scale.
 
 \begin{figure}[htbp]
   \centering
@@ -439,55 +277,25 @@ standardised scale.
   \label{fig:probes}
 \end{figure}
 
-\paragraph{The direct test.} Probe~3 adds the opponent's hand to the learner's observation. The
-oracle arm reaches $26.37$ percent across twenty-four seeds, against $27.03$ for the baseline arm. The
-difference is $-0.66$ points, with a 95 percent interval of $[-1.65, +0.33]$
-(Figure~\ref{fig:probes}). The placebo arm reaches $26.65$ percent, $-0.38$ points from baseline,
-with an interval of $[-1.45, +0.69]$.
+\paragraph{The direct test.} Probe~3 adds the opponent's hand to the learner's observation. The oracle arm reaches $26.37$ percent across twenty-four seeds, against $27.03$ for the baseline arm. The difference is $-0.66$ points, with a 95 percent interval of $[-1.65, +0.33]$ (Figure~\ref{fig:probes}). The placebo arm reaches $26.65$ percent, $-0.38$ points from baseline, with an interval of $[-1.45, +0.69]$.
 
-The oracle-placebo contrast holds the input shape fixed and changes only whether the added plane
-carries the true hand. That contrast is $-0.28$ points, with interval $[-1.17, +0.61]$. All three
-contrast intervals contain zero, so no contrast shows detectable improvement or deterioration. The
-oracle-baseline interval rules out gains above about $0.3$ points. That bound is about one
-seventieth of the distance from this agent's $27$ percent to the parity its reference defines. An
-earlier four-seed version gave an interval of $[-4.5, +2.7]$, which excluded almost nothing.
+The oracle-placebo contrast holds the input shape fixed and changes only whether the added plane carries the true hand. That contrast is $-0.28$ points, with interval $[-1.17, +0.61]$. All three contrast intervals contain zero, so no contrast shows detectable improvement or deterioration. The oracle-baseline interval rules out gains above about $0.3$ points. That bound is about one seventieth of the distance from this agent's $27$ percent to the parity its reference defines. An earlier four-seed version gave an interval of $[-4.5, +2.7]$, which excluded almost nothing.
 
 \FloatBarrier
-\paragraph{The supporting probes.} Probe~1 varies the encoder. A plain MLP averages 25.5 percent,
-while self-attention averages 25.7, and all eight seeds lie between 21.2 and 30.0. No tested
-encoder improves mean performance, while attention costs roughly twelve times more wall-clock time.
-Probe~2 tests privileged state inside determinized search. Fair search reaches 10.3 percent at 10
-rollouts and 25.6 at 120, compared with 40.7 and 85.3 for the oracle variant. Oracle access also
-removes strategy fusion, so the difference remains a confounded proxy rather than worth.
+\paragraph{The supporting probes.} Probe~1 varies the encoder. A plain MLP averages 25.5 percent, while self-attention averages 25.7, and all eight seeds lie between 21.2 and 30.0. No tested encoder improves mean performance, while attention costs roughly twelve times more wall-clock time. Probe~2 tests privileged state inside determinized search. Fair search reaches 10.3 percent at 10 rollouts and 25.6 at 120, compared with 40.7 and 85.3 for the oracle variant. Oracle access also removes strategy fusion, so the difference remains a confounded proxy rather than worth.
 
 \FloatBarrier
 \section{Discussion}
 
-The large case study gives a direct answer. The game has a large hand-only upper bound, but the subset
-argument shows that a parity-achieving policy needs only what the learner already receives. Adding
-the remaining raw hidden state produces no detectable gain, and twenty-four seeds rule out gains above
-about $0.3$ points.
+The large case study gives a direct answer. The game has a large hand-only upper bound, but the subset argument shows that a parity-achieving policy needs only what the learner already receives. Adding the remaining raw hidden state produces no detectable gain, and twenty-four seeds rule out gains above about $0.3$ points.
 
-For this learner and reference, the raw hidden-hand channel is therefore not a large missing
-ingredient. The protocol has removed one plausible explanation for this plateau without claiming
-which remaining intervention should come next.
+For this learner and reference, the raw hidden-hand channel is therefore not a large missing ingredient. The protocol has removed one plausible explanation for this plateau without claiming which remaining intervention should come next.
 
-\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference.
-Its interval leaves gains of about $0.3$ points or less unresolved, and a structured encoding of
-the same information could still produce a smaller gain. The eleven calibration games cover two
-families rather than eleven independent domains. The application demonstrates the protocol without
-establishing a domain-general cause of plateaus.
-Appendix~\ref{app:scope} lists the other conclusions the evidence does not support.
+\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference. Its interval leaves gains of about $0.3$ points or less unresolved, and a structured encoding of the same information could still produce a smaller gain. The eleven calibration games cover two families rather than eleven independent domains. The application demonstrates the protocol without establishing a domain-general cause of plateaus. Appendix~\ref{app:scope} lists the other conclusions the evidence does not support.
 
 \section{Conclusion}
 
-The main contribution is a self-checking evaluation protocol. It separates what a game hides, what
-the hidden state is worth, and what a learner banks. The atlas applies the first across 88 game
-configurations with the provenance of every value, and independent checks catch three silent
-failures, one of them in our own apparatus. Exact ceilings validate the three-arm diagnostic on
-eleven solvable games, and it then runs unchanged on Gin Rummy, where it rules out gains above
-about $0.3$ points from the raw hidden-hand channel for this learner and reference. That is the
-difference between reporting a plateau and diagnosing one.
+The main contribution is a self-checking evaluation protocol. It separates what a game hides, what the hidden state is worth, and what a learner banks. The atlas applies the first across 88 game configurations with the provenance of every value, and independent checks catch three silent failures, one of them in our own apparatus. Exact ceilings validate the three-arm diagnostic on eleven solvable games, and it then runs unchanged on Gin Rummy, where it rules out gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference. That is the difference between reporting a plateau and diagnosing one.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
@@ -496,98 +304,42 @@ difference between reporting a plateau and diagnosing one.
 \section*{Appendix}
 \addcontentsline{toc}{section}{Appendix}
 
-The main text carries the claims and the numbers that support them. The appendix provides the
-material needed to check those claims: the fuller placement of this work in the literature, the
-full tables, the measurement apparatus, and the two results we can describe but cannot correct for.
+The main text carries the claims and the numbers that support them. The appendix provides the material needed to check those claims: the fuller placement of this work in the literature, the full tables, the measurement apparatus, and the two results we can describe but cannot correct for.
 
 \section{Related work in full}
 \label{app:related}
 
 The introduction states the connection in brief. This section gives the longer version.
 
-\paragraph{Agents for imperfect-information games.} The landmark results in this area are agents
-rather than measurements. Libratus and then Pluribus took heads-up and six-player no-limit poker
-\citep{libratus,pluribus}, Suphx reached expert level at Mahjong \citep{suphx}, DouZero learned
-DouDizhu from self-play \citep{douzero}, and Cicero paired a planner with language in Diplomacy
-\citep{cicero}. Each reports how well its agent plays. None reports how much its game hides, so the
-difficulty of the domain is asserted rather than measured. The perfect-information contrast is
-instructive: AlphaZero \citep{alphazero} reaches superhuman play in chess, shogi and Go with no
-hidden state at all, which is the variable our atlas puts on an axis.
+\paragraph{Agents for imperfect-information games.} The landmark results in this area are agents rather than measurements. Libratus and then Pluribus took heads-up and six-player no-limit poker \citep{libratus,pluribus}, Suphx reached expert level at Mahjong \citep{suphx}, DouZero learned DouDizhu from self-play \citep{douzero}, and Cicero paired a planner with language in Diplomacy \citep{cicero}. Each reports how well its agent plays. None reports how much its game hides, so the difficulty of the domain is asserted rather than measured. The perfect-information contrast is instructive: AlphaZero \citep{alphazero} reaches superhuman play in chess, shogi and Go with no hidden state at all, which is the variable our atlas puts on an axis.
 
-\paragraph{Measuring what a game hides.} Prior work measures related structure. Perfect-information
-Monte Carlo analysis characterises how determinization behaves and why \citep{pimc}, reconnaissance
-blind chess has been sized directly \citep{rbccomplexity}, and general game playing with imperfect
-information formalises the observation model \citep{ggpii}. Our atlas differs in coverage and in
-provenance: 88 configurations from two engines, every value tagged with the method that produced it
-and the independent bound it must satisfy.
+\paragraph{Measuring what a game hides.} Prior work measures related structure. Perfect-information Monte Carlo analysis characterises how determinization behaves and why \citep{pimc}, reconnaissance blind chess has been sized directly \citep{rbccomplexity}, and general game playing with imperfect information formalises the observation model \citep{ggpii}. Our atlas differs in coverage and in provenance: 88 configurations from two engines, every value tagged with the method that produced it and the independent bound it must satisfy.
 
-\paragraph{Privileged-state interventions.} Handing an agent the hidden state is a standard probe.
-Determinized and information-set search use it \citep{ismcts,pimc}, policy inference uses it to
-bound what belief modelling could buy \citep{policyinference}, and strategy fusion names the reason
-the resulting gap is not a value of information \citep{strategyfusion,rebel}. Our three-arm
-protocol adds the matched placebo, which prices the widened observation, and the exact ceiling,
-which says what the intervention could have bought.
+\paragraph{Privileged-state interventions.} Handing an agent the hidden state is a standard probe. Determinized and information-set search use it \citep{ismcts,pimc}, policy inference uses it to bound what belief modelling could buy \citep{policyinference}, and strategy fusion names the reason the resulting gap is not a value of information \citep{strategyfusion,rebel}. Our three-arm protocol adds the matched placebo, which prices the widened observation, and the exact ceiling, which says what the intervention could have bought.
 
-\paragraph{Evaluation as measurement.} The framing comes from outside games. Measurement theory
-asks whether a test measures the construct it names \citep{measurementfairness}, benchmark critique
-asks whether narrow coverage supports broad claims \citep{wholeworld}, and reliable reporting asks
-for intervals and honest seed counts rather than point estimates \citep{rliable}. The twenty-four-seed Gin Rummy intervals and the
-four-seed comparison in Appendix~\ref{app:gin} follow that last recommendation directly.
+\paragraph{Evaluation as measurement.} The framing comes from outside games. Measurement theory asks whether a test measures the construct it names \citep{measurementfairness}, benchmark critique asks whether narrow coverage supports broad claims \citep{wholeworld}, and reliable reporting asks for intervals and honest seed counts rather than point estimates \citep{rliable}. The twenty-four-seed Gin Rummy intervals and the four-seed comparison in Appendix~\ref{app:gin} follow that last recommendation directly.
 
-\paragraph{What we hold fixed rather than study.} The Gin Rummy learner is PPO \citep{ppo} with a
-shaped reward that adds knock and gin bonuses, a step penalty and a deadwood term. Those terms are
-not potential-based, so they do not carry the policy-invariance guarantee of \citet{shaping} and
-could in principle change which policy is optimal. Every arm uses the identical reward, so the
-contrast between arms is unaffected; what the shaping would change is the ceiling a single arm
-could reach, which is why we never compare a Gin Rummy arm against an absolute standard.
+\paragraph{What we hold fixed rather than study.} The Gin Rummy learner is PPO \citep{ppo} with a shaped reward that adds knock and gin bonuses, a step penalty and a deadwood term. Those terms are not potential-based, so they do not carry the policy-invariance guarantee of \citet{shaping} and could in principle change which policy is optimal. Every arm uses the identical reward, so the contrast between arms is unaffected; what the shaping would change is the ceiling a single arm could reach, which is why we never compare a Gin Rummy arm against an absolute standard.
 
 \section{Reproduction}
 \label{app:repro}
 
-Every table and figure is generated from files in \texttt{data/} by a script in \texttt{scripts/}.
-No value in a table or figure is typed by hand. The atlas comes from \texttt{scripts/atlas\_tables.py},
-the probe tables from \texttt{scripts/probe\_tables.py}, and the appendix tables from
-\texttt{scripts/make\_appendix.py}. Regenerating them from a clean checkout reproduces the paper.
+Every table and figure is generated from files in \texttt{data/} by a script in \texttt{scripts/}. No value in a table or figure is typed by hand. The atlas comes from \texttt{scripts/atlas\_tables.py}, the probe tables from \texttt{scripts/probe\_tables.py}, and the appendix tables from \texttt{scripts/make\_appendix.py}. Regenerating them from a clean checkout reproduces the paper.
 
-Ceilings are exact rather than estimated. The baseline ceiling is the best response to the opponent
-policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. Section~\ref{sec:r-failures} reports
-that the same library's world resampler fails on Gin Rummy, so it is fair to ask why we trust its
-solver. Two reasons: the resampler and the solver are separate code paths, and unlike the
-resampler the ceilings carry a check that can contradict them, since an arm scoring above its own
-ceiling is impossible. That check is what caught the game we reject in Appendix~\ref{app:reject},
-and it is one-sided: it would expose a ceiling that is too low, not one that is too high. The oracle ceiling is a memoised
-expectimax over the same game with the hidden state revealed. Both are exact deterministic values
-for the stated game and opponent policy, so they carry no seed noise and no confidence interval.
+Ceilings are exact rather than estimated. The baseline ceiling is the best response to the opponent policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. Section~\ref{sec:r-failures} reports that the same library's world resampler fails on Gin Rummy, so it is fair to ask why we trust its solver. Two reasons: the resampler and the solver are separate code paths, and unlike the resampler the ceilings carry a check that can contradict them, since an arm scoring above its own ceiling is impossible. That check is what caught the game we reject in Appendix~\ref{app:reject}, and it is one-sided: it would expose a ceiling that is too low, not one that is too high. The oracle ceiling is a memoised expectimax over the same game with the hidden state revealed. Both are exact deterministic values for the stated game and opponent policy, so they carry no seed noise and no confidence interval.
 
-Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twenty-four.
-Tabular runs use \texttt{data/configs/}; neural runs use a fixed-width tensor observation and
-policy gradient, matching the encoder the Gin Rummy learner uses.
+Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twenty-four. Tabular runs use \texttt{data/configs/}; neural runs use a fixed-width tensor observation and policy gradient, matching the encoder the Gin Rummy learner uses.
 
 \section{The atlas in full}
 \label{app:atlas}
 
-Support bits are conservative twice over. Equation~\eqref{eq:bound} is loose whenever the
-posterior is not uniform, and $|I(o)|$ counts complete histories rather than distinct hidden
-states, so several histories that leave the opponent's hand identical are counted separately. A
-reader comparing our numbers against a hand-count for the same game should expect ours to be the
-larger of the two.
+Support bits are conservative twice over. Equation~\eqref{eq:bound} is loose whenever the posterior is not uniform, and $|I(o)|$ counts complete histories rather than distinct hidden states, so several histories that leave the opponent's hand identical are counted separately. A reader comparing our numbers against a hand-count for the same game should expect ours to be the larger of the two.
 
-Table~\ref{tab:app-atlas} is the atlas itself, all 88 rows, with the provenance of every value.
-The table does what Figure~\ref{fig:atlas} cannot. A bar chart cannot show which numbers are exact, which are upper bounds, and which are floors from
-an estimator that ran out of samples. Readers
-comparing two games should check that both come from the same estimator before reading the
-difference.
+Table~\ref{tab:app-atlas} is the atlas itself, all 88 rows, with the provenance of every value. The table does what Figure~\ref{fig:atlas} cannot. A bar chart cannot show which numbers are exact, which are upper bounds, and which are floors from an estimator that ran out of samples. Readers comparing two games should check that both come from the same estimator before reading the difference.
 
-Table~\ref{tab:app-corrections} lists the entries whose closed form we had to repair. The naive
-count treats every physical card as distinguishable, which is right for a 52-card deck and wrong
-for a deck with identical copies. Two red sevens are the same holding whichever card you were
-dealt, so a hand is a multiset and not a sequence. Counting them as distinct inflates the estimate.
-For Mahjong it inflates it by 67 bits, and for UNO it puts the game above a ceiling it cannot
-reach. The repair changes one claim in the main text. Before it, two measured two-player card games hid
-more than Gin Rummy. After it, one does.
+Table~\ref{tab:app-corrections} lists the entries whose closed form we had to repair. The naive count treats every physical card as distinguishable, which is right for a 52-card deck and wrong for a deck with identical copies. Two red sevens are the same holding whichever card you were dealt, so a hand is a multiset and not a sequence. Counting them as distinct inflates the estimate. For Mahjong it inflates it by 67 bits, and for UNO it puts the game above a ceiling it cannot reach. The repair changes one claim in the main text. Before it, two measured two-player card games hid more than Gin Rummy. After it, one does.
 
-{\scriptsize\setlength{\arrayrulewidth}{0.4pt}
-\input{../tables/app_atlas.tex}}
+{\scriptsize\setlength{\arrayrulewidth}{0.4pt} \input{../tables/app_atlas.tex}}
 
 \begin{table}[h]
   \centering \small
@@ -600,25 +352,11 @@ more than Gin Rummy. After it, one does.
 \section{What the probes measure}
 \label{app:apparatus}
 
-The placebo arm is the easiest part of the design to get wrong, so we state its construction
-exactly.
-The placebo plane has the same shape and the same sparsity as the oracle plane. It holds ten cards
-this player cannot see, drawn independently of the opponent's actual hand, and it is resampled once
-per deal rather than once per decision. Resampling per decision would not leak, because a learner could average that noise away. But it
-would give the placebo arm a different input distribution than the oracle arm sees. One draw per deal keeps the two arms matched.
+The placebo arm is the easiest part of the design to get wrong, so we state its construction exactly. The placebo plane has the same shape and the same sparsity as the oracle plane. It holds ten cards this player cannot see, drawn independently of the opponent's actual hand, and it is resampled once per deal rather than once per decision. Resampling per decision would not leak, because a learner could average that noise away. But it would give the placebo arm a different input distribution than the oracle arm sees. One draw per deal keeps the two arms matched.
 
-An early version of the placebo drew from a pool of the wrong size. The plane was therefore not
-matched in cardinality to the oracle plane, and the arm priced something other than the widening.
-We fixed the pool and re-ran every affected game, so the numbers reported here are from the
-re-run.
+An early version of the placebo drew from a pool of the wrong size. The plane was therefore not matched in cardinality to the oracle plane, and the arm priced something other than the widening. We fixed the pool and re-ran every affected game, so the numbers reported here are from the re-run.
 
-We also verified that the oracle plane is what we say it is. PettingZoo's
-\texttt{opponents\_hand\_visible} flag does not supply the opponent's hand. It exposes an
-``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10, so a
-learner reading it cannot recover the hand (Figure~\ref{fig:app-apparatus}). We built our own
-plane and checked it against engine
-ground truth at 1,200 decision points. Each curriculum opponent's input is trimmed to its own
-width, so the extra plane reaches the learner and nobody else.
+We also verified that the oracle plane is what we say it is. PettingZoo's \texttt{opponents\_hand\_visible} flag does not supply the opponent's hand. It exposes an ``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10, so a learner reading it cannot recover the hand (Figure~\ref{fig:app-apparatus}). We built our own plane and checked it against engine ground truth at 1,200 decision points. Each curriculum opponent's input is trimmed to its own width, so the extra plane reaches the learner and nobody else.
 
 \begin{figure}[h]
   \centering
@@ -642,62 +380,22 @@ width, so the extra plane reaches the learner and nobody else.
 \section{The decomposition across eleven games}
 \label{app:axis}
 
-The per-game numbers are in Table~\ref{tab:axis} in the main text. This section records how the
-games were chosen, how the numbers were produced, and what each column can carry.
+The per-game numbers are in Table~\ref{tab:axis} in the main text. This section records how the games were chosen, how the numbers were produced, and what each column can carry.
 
-\texttt{scripts/screen\_games.py} walks every game \texttt{pyspiel} registers as loadable and keeps
-those that are two-player, zero sum, sequential, imperfect information and not sampled-stochastic,
-with at most 60{,}000 information states. This limit lets counterfactual regret
-minimisation produce the fixed opponent policy within the 20-second screen and keeps exact best
-responses to that policy tractable. Five base games clear it: Kuhn poker, Leduc poker, Liar's dice,
-Liar's dice with imperfect recall, and universal poker.
+\texttt{scripts/screen\_games.py} walks every game \texttt{pyspiel} registers as loadable and keeps those that are two-player, zero sum, sequential, imperfect information and not sampled-stochastic, with at most 60{,}000 information states. This limit lets counterfactual regret minimisation produce the fixed opponent policy within the 20-second screen and keeps exact best responses to that policy tractable. Five base games clear it: Kuhn poker, Leduc poker, Liar's dice, Liar's dice with imperfect recall, and universal poker.
 
-\texttt{scripts/screen\_variants.py} then sweeps size parameters across those families and the
-other parameterised imperfect-information games OpenSpiel ships, since shrinking a game keeps its
-rules and changes only how much it hides. Sixteen configurations come back solvable
-(\texttt{data/variants.json}) and twelve of them carry the probe. We account for the other four
-here rather than leave them implicit. \texttt{kuhn\_poker(players=2)} is a duplicate spec of
-\texttt{kuhn\_poker}. Dark hex on a two by two board is solved outright, so worth is zero and
-capture is undefined; it appears instead as the zero control in Appendix~\ref{app:capacity}, where
-the instrument correctly returns nothing. The remaining two, Dark hex with imperfect recall on the
-same board and \texttt{liars\_dice\_ir(numdice=1,dice\_sides=8)}, we did not run. Universal poker
-clears the base filter but was never swept.
+\texttt{scripts/screen\_variants.py} then sweeps size parameters across those families and the other parameterised imperfect-information games OpenSpiel ships, since shrinking a game keeps its rules and changes only how much it hides. Sixteen configurations come back solvable (\texttt{data/variants.json}) and twelve of them carry the probe. We account for the other four here rather than leave them implicit. \texttt{kuhn\_poker(players=2)} is a duplicate spec of \texttt{kuhn\_poker}. Dark hex on a two by two board is solved outright, so worth is zero and capture is undefined; it appears instead as the zero control in Appendix~\ref{app:capacity}, where the instrument correctly returns nothing. The remaining two, Dark hex with imperfect recall on the same board and \texttt{liars\_dice\_ir(numdice=1,dice\_sides=8)}, we did not run. Universal poker clears the base filter but was never swept.
 
-Of the twelve that ran, the ceiling check in \texttt{scripts/axis\_data.py} rejected
-\texttt{liars\_dice(numdice=2,dice\_sides=3)} (Appendix~\ref{app:reject}), leaving eleven. That is
-the only exclusion made after seeing a number, and it tests an arm against its own ceiling rather
-than against the result we wanted.
+Of the twelve that ran, the ceiling check in \texttt{scripts/axis\_data.py} rejected \texttt{liars\_dice(numdice=2,dice\_sides=3)} (Appendix~\ref{app:reject}), leaving eleven. That is the only exclusion made after seeing a number, and it tests an arm against its own ceiling rather than against the result we wanted.
 
-Worth is the oracle ceiling minus the baseline ceiling. Both are exact for the stated opponent
-policy, so worth alone carries no seed noise. The eight seeds per game reach banked and widening
-directly, and reach capture through banked. Banked
-is the oracle arm's observed return minus the baseline arm's observed return.
-Capture is banked over worth, and widening is the placebo arm minus the baseline arm.
+Worth is the oracle ceiling minus the baseline ceiling. Both are exact for the stated opponent policy, so worth alone carries no seed noise. The eight seeds per game reach banked and widening directly, and reach capture through banked. Banked is the oracle arm's observed return minus the baseline arm's observed return. Capture is banked over worth, and widening is the placebo arm minus the baseline arm.
 
-The eleven games are not eleven independent domains. Seven are Liar's dice variants at different die sizes, and
-four are poker variants, three of them Leduc. The spread of bits is therefore wider than the
-spread of game structure.
-This is a property of the supply rather than of our effort. The only non-poker, non-dice family the
-screen returns is Dark hex on a two by two board, and both its variants are won outright by the
-first player: the baseline and oracle ceilings are both $+1.0000$, so worth is exactly zero and
-capture is undefined. No third family is available under the constraint that an exact optimum must
-exist.
-Within that supply, holding the game fixed and changing one parameter
-lets worth be compared across rows. It also means the seven-to-four split in Section~\ref{app:mechanism}
-tracks two game families, not seven independent confirmations, and we do not read it as such.
+The eleven games are not eleven independent domains. Seven are Liar's dice variants at different die sizes, and four are poker variants, three of them Leduc. The spread of bits is therefore wider than the spread of game structure. This is a property of the supply rather than of our effort. The only non-poker, non-dice family the screen returns is Dark hex on a two by two board, and both its variants are won outright by the first player: the baseline and oracle ceilings are both $+1.0000$, so worth is exactly zero and capture is undefined. No third family is available under the constraint that an exact optimum must exist. Within that supply, holding the game fixed and changing one parameter lets worth be compared across rows. It also means the seven-to-four split in Section~\ref{app:mechanism} tracks two game families, not seven independent confirmations, and we do not read it as such.
 
 \section{Worth does not move with the training budget}
 \label{app:budget}
 
-Worth is defined by the two exact ceilings, so changing the learner's training budget should not
-change it. Table~\ref{tab:app-budget} and Figure~\ref{fig:app-budget} check this implementation
-from 25,000 to 1,600,000 episodes,
-a sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which
-is what an exact property of the evaluated game and opponent should do. Capture moves instead,
-rising from 56 to 79 percent in Leduc Hold'em. Kuhn poker is the useful contrast. Its capture dips to 83 percent at 400,000 episodes, then
-returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling
-at the smallest budget, so the middle budgets show seed noise rather than a trend. We report it
-rather than smoothing it away.
+Worth is defined by the two exact ceilings, so changing the learner's training budget should not change it. Table~\ref{tab:app-budget} and Figure~\ref{fig:app-budget} check this implementation from 25,000 to 1,600,000 episodes, a sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which is what an exact property of the evaluated game and opponent should do. Capture moves instead, rising from 56 to 79 percent in Leduc Hold'em. Kuhn poker is the useful contrast. Its capture dips to 83 percent at 400,000 episodes, then returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling at the smallest budget, so the middle budgets show seed noise rather than a trend. We report it rather than smoothing it away.
 
 \begin{table}[h]
   \centering \small
@@ -717,18 +415,9 @@ rather than smoothing it away.
 \section{What a capacity-bound plateau looks like}
 \label{app:capacity}
 
-The capacity probe asks whether the learner can distinguish enough situations, not how much the
-game hides. We fold information states into a fixed number of buckets and sweep that number. A
-learner limited by state resolution improves as the number of buckets increases, then stops when
-additional resolution no longer helps.
+The capacity probe asks whether the learner can distinguish enough situations, not how much the game hides. We fold information states into a fixed number of buckets and sweep that number. A learner limited by state resolution improves as the number of buckets increases, then stops when additional resolution no longer helps.
 
-Table~\ref{tab:app-capacity} and Figure~\ref{fig:app-capacity} report the sweep. Leduc Hold'em is
-the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact
-states, and the curve is monotone over the last three points. A state-resolution bottleneck would look like that, on a single sweep
-without replication. Kuhn poker and Liar's dice stay flat across the sweep, so these runs
-show no state-resolution benefit beyond two buckets. Dark hex on a two by two board is solved, so every arm
-reads zero. The game sits in the table as a control. The instrument should return zero when there is
-genuinely nothing to find, and it does.
+Table~\ref{tab:app-capacity} and Figure~\ref{fig:app-capacity} report the sweep. Leduc Hold'em is the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact states, and the curve is monotone over the last three points. A state-resolution bottleneck would look like that, on a single sweep without replication. Kuhn poker and Liar's dice stay flat across the sweep, so these runs show no state-resolution benefit beyond two buckets. Dark hex on a two by two board is solved, so every arm reads zero. The game sits in the table as a control. The instrument should return zero when there is genuinely nothing to find, and it does.
 
 \begin{table}[h]
   \centering \small
@@ -747,100 +436,48 @@ genuinely nothing to find, and it does.
 
 \section{Choosing a reference when no expert exists}
 
-Our case study had a hand-codable reference. Most domains do not, and the choice of what to grade
-against decides what a win rate can mean, so it is worth stating what we would do instead.
+Our case study had a hand-codable reference. Most domains do not, and the choice of what to grade against decides what a win rate can mean, so it is worth stating what we would do instead.
 
-The best substitute is a reference built on a strict subset of the learner's observation. The learner can then reach parity by construction, which is what let our subset argument work
-without an experiment. Failing that, freeze the strongest heuristic available and report where it saturates, so a reader
-knows where the scale stops being informative. A frozen pool with a fixed
-Elo anchor is next, and a snapshotted checkpoint promoted to reference and never updated is last,
-because it moves with whatever produced it.
+The best substitute is a reference built on a strict subset of the learner's observation. The learner can then reach parity by construction, which is what let our subset argument work without an experiment. Failing that, freeze the strongest heuristic available and report where it saturates, so a reader knows where the scale stops being informative. A frozen pool with a fixed Elo anchor is next, and a snapshotted checkpoint promoted to reference and never updated is last, because it moves with whatever produced it.
 
-Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference wherever the game is
-small enough to solve, and that is what we use for the eleven decomposed games. The reason we
-cannot use one on Gin Rummy is the reason the case study needs a reference at all.
+Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference wherever the game is small enough to solve, and that is what we use for the eleven decomposed games. The reason we cannot use one on Gin Rummy is the reason the case study needs a reference at all.
 
 \section{What the evidence does not carry}
 \label{app:scope}
 
-The large application has one learner, one recipe and one fixed reference. It tests the protocol
-rather than establishing a domain-general cause of plateaus, and a second frozen reference would
-be the first thing to add.
+The large application has one learner, one recipe and one fixed reference. It tests the protocol rather than establishing a domain-general cause of plateaus, and a second frozen reference would be the first thing to add.
 
-The eleven exactly solved games calibrate the instrument, but seven are Liar's dice variants and
-four are poker, so they are not eleven independent confirmations. Wider coverage in bits did not
-buy wider coverage in structure.
+The eleven exactly solved games calibrate the instrument, but seven are Liar's dice variants and four are poker, so they are not eleven independent confirmations. Wider coverage in bits did not buy wider coverage in structure.
 
-\paragraph{What would overturn the case-study null.} The claim is bounded, so it has a clear
-falsifier. A structured encoding of the same hidden state, a belief head rather than a raw plane,
-or a different learner that reaches parity with the oracle observation and not without it would
-each show that the channel carries information this recipe could not use. So would a larger
-training budget at which the oracle arm separates from both the baseline and the placebo. The
-protocol is built to catch exactly that: because the placebo holds the input width fixed, such a
-separation could not be explained away by the wider observation.
+\paragraph{What would overturn the case-study null.} The claim is bounded, so it has a clear falsifier. A structured encoding of the same hidden state, a belief head rather than a raw plane, or a different learner that reaches parity with the oracle observation and not without it would each show that the channel carries information this recipe could not use. So would a larger training budget at which the oracle arm separates from both the baseline and the placebo. The protocol is built to catch exactly that: because the placebo holds the input width fixed, such a separation could not be explained away by the wider observation.
 
-The oracle-search gap is confounded with strategy fusion, so it bounds the benefit available inside
-that search protocol rather than the decision-theoretic value of revealing the state. The
-architecture probe varies inductive bias and compute together, and neither it nor the bucket sweep
-tests capacity a network loses during training \citep{capacityloss}. Closed forms count hands and
-ignore what public cards rule out. Support bits describe the game rather than the difficulty of
-learning it: we claim the two are routinely conflated, not that they are unrelated.
+The oracle-search gap is confounded with strategy fusion, so it bounds the benefit available inside that search protocol rather than the decision-theoretic value of revealing the state. The architecture probe varies inductive bias and compute together, and neither it nor the bucket sweep tests capacity a network loses during training \citep{capacityloss}. Closed forms count hands and ignore what public cards rule out. Support bits describe the game rather than the difficulty of learning it: we claim the two are routinely conflated, not that they are unrelated.
 
 \section{The rejected game}
 \label{app:reject}
 
-Every arm is graded against a ceiling that is a closed-form property of the game. An arm scoring
-above its own ceiling is therefore impossible, not merely surprising. We check it automatically, and
-one of the twelve screened configurations fails.
+Every arm is graded against a ceiling that is a closed-form property of the game. An arm scoring above its own ceiling is therefore impossible, not merely surprising. We check it automatically, and one of the twelve screened configurations fails.
 
-In \texttt{liars\_dice(numdice=2,dice\_sides=3)} the placebo arm returns $0.738$ against a ceiling
-of $0.062$, a violation of $0.68$, consistent across all eight seeds. The placebo plane is drawn
-once per deal so that its input distribution matches the oracle plane's. With two dice the space it is drawn
-from is large enough that each draw is close to unique. The plane then acts as an identifier. The
-learner keys on it, splits states that should share a policy, and recovers the hidden information
-indirectly. The recorded state count shows the split, at 4046 visited states
-against the baseline's 3046.
+In \texttt{liars\_dice(numdice=2,dice\_sides=3)} the placebo arm returns $0.738$ against a ceiling of $0.062$, a violation of $0.68$, consistent across all eight seeds. The placebo plane is drawn once per deal so that its input distribution matches the oracle plane's. With two dice the space it is drawn from is large enough that each draw is close to unique. The plane then acts as an identifier. The learner keys on it, splits states that should share a policy, and recovers the hidden information indirectly. The recorded state count shows the split, at 4046 visited states against the baseline's 3046.
 
-The one-die games avoid this failure because their placebo alphabet contains only three to six
-values, far too few to fingerprint a deal. The fix is to match the placebo's cardinality to
-the hidden state rather than to its shape, which is a rerun we did not have time for. We exclude the
-game from every table rather than report it, and the rejection rule is in
-\texttt{scripts/make\_appendix.py} so no future run can enter a table unannounced.
+The one-die games avoid this failure because their placebo alphabet contains only three to six values, far too few to fingerprint a deal. The fix is to match the placebo's cardinality to the hidden state rather than to its shape, which is a rerun we did not have time for. We exclude the game from every table rather than report it, and the rejection rule is in \texttt{scripts/make\_appendix.py} so no future run can enter a table unannounced.
 
 \section{Capture above one hundred percent}
 \label{app:mechanism}
 
-Section~\ref{app:axis} reports capture above $100$ percent in seven games, and the body derives
-why.
-This section gives the derivation in full and the per-game numbers behind it.
+Section~\ref{app:axis} reports capture above $100$ percent in seven games, and the body derives why. This section gives the derivation in full and the per-game numbers behind it.
 
-\paragraph{The identity.} Let $c_b$ and $c_o$ be the exact baseline and oracle ceilings, and let
-$r_b$ and $r_o$ be what the trained arms actually score. Worth is $c_o - c_b$ and banked is
-$r_o - r_b$. Each arm's gap below its own ceiling is $g_b = c_b - r_b$ and $g_o = c_o - r_o$.
-Substituting gives
+\paragraph{The identity.} Let $c_b$ and $c_o$ be the exact baseline and oracle ceilings, and let $r_b$ and $r_o$ be what the trained arms actually score. Worth is $c_o - c_b$ and banked is $r_o - r_b$. Each arm's gap below its own ceiling is $g_b = c_b - r_b$ and $g_o = c_o - r_o$. Substituting gives
 %
-\[
-g_b - g_o \;=\; (c_b - r_b) - (c_o - r_o) \;=\; (r_o - r_b) - (c_o - c_b)
-           \;=\; \text{banked} - \text{worth},
-\]
+\[ g_b - g_o \;=\; (c_b - r_b) - (c_o - r_o) \;=\; (r_o - r_b) - (c_o - c_b) \;=\; \text{banked} - \text{worth}, \]
 %
-which rearranges to Equation~\eqref{eq:identity}. Our runs satisfy it with a maximum residual of
-$1.1 \times 10^{-16}$, which is floating point and nothing else.
+which rearranges to Equation~\eqref{eq:identity}. Our runs satisfy it with a maximum residual of $1.1 \times 10^{-16}$, which is floating point and nothing else.
 
-Two things follow from that. First, capture exceeds $1$ if and only if $g_b > g_o$. Second, and this matters
-for how the result is read, that equivalence is guaranteed by the definitions. Counting how many
-games obey it would measure nothing. An earlier draft of this paper reported the count as though it
-were evidence, and it is not.
+Two things follow from that. First, capture exceeds $1$ if and only if $g_b > g_o$. Second, and this matters for how the result is read, that equivalence is guaranteed by the definitions. Counting how many games obey it would measure nothing. An earlier draft of this paper reported the count as though it were evidence, and it is not.
 
 Figure~\ref{fig:mechanism} draws $g_b - g_o$ for each game with its capture beside it.
 
-\paragraph{What is empirical.} The identity says the two quantities move together. It does not say
-which side of $100$ percent any game lands on, or by how much. Those are facts about our runs, and
-Table~\ref{tab:app-gaps} reports them. The dice variants sit close to their oracle ceilings, with
-$g_o$ between $0.000$ and $0.007$, because with the opponent's die revealed the game is nearly
-solved. The poker variants sit far from theirs, with $g_o$ between $0.377$ and $0.394$, because the
-oracle ceiling is much higher and the learner does not reach it. The split into two families is the
-result; the sign agreement is arithmetic.
+\paragraph{What is empirical.} The identity says the two quantities move together. It does not say which side of $100$ percent any game lands on, or by how much. Those are facts about our runs, and Table~\ref{tab:app-gaps} reports them. The dice variants sit close to their oracle ceilings, with $g_o$ between $0.000$ and $0.007$, because with the opponent's die revealed the game is nearly solved. The poker variants sit far from theirs, with $g_o$ between $0.377$ and $0.394$, because the oracle ceiling is much higher and the learner does not reach it. The split into two families is the result; the sign agreement is arithmetic.
 
 \begin{table}[h]
   \centering \small
@@ -851,61 +488,31 @@ result; the sign agreement is arithmetic.
   \label{tab:app-gaps}
 \end{table}
 
-\paragraph{What we can rule out.} One possible explanation is a systematic downward error in every
-oracle ceiling. Such an error would push capture upward across the games, but the four poker
-variants use the same ceiling code and remain below $100$ percent. This comparison does not rule
-out a game-specific ceiling error. A second concern is that each difference may be too small to
-trust on its own. The per-game gap is $0.8$ to $2.3$ times the seed spread of the banked column, so
-we report the two-family pattern rather than treating eleven related configurations as eleven
-independent trials.
+\paragraph{What we can rule out.} One possible explanation is a systematic downward error in every oracle ceiling. Such an error would push capture upward across the games, but the four poker variants use the same ceiling code and remain below $100$ percent. This comparison does not rule out a game-specific ceiling error. A second concern is that each difference may be too small to trust on its own. The per-game gap is $0.8$ to $2.3$ times the seed spread of the banked column, so we report the two-family pattern rather than treating eleven related configurations as eleven independent trials.
 
 \section{The protocol as a checklist}
 \label{app:checklist}
 
-The protocol is not specific to card games. Applying it elsewhere needs six steps, and this
-paper supplies a worked failure for most of them.
+The protocol is not specific to card games. Applying it elsewhere needs six steps, and this paper supplies a worked failure for most of them.
 
-\textbf{1. State the construct, and state what it is not.} Support bits count the worlds an
-observation leaves open. They are not the player's posterior uncertainty, which is lower whenever
-the posterior is not uniform, and they are not the value of the hidden state, which can be zero
-while the count is large. Naming the three separately is what makes the rest of the protocol
-possible.
+\textbf{1. State the construct, and state what it is not.} Support bits count the worlds an observation leaves open. They are not the player's posterior uncertainty, which is lower whenever the posterior is not uniform, and they are not the value of the hidden state, which can be zero while the count is large. Naming the three separately is what makes the rest of the protocol possible.
 
-\textbf{2. Record how every value was produced.} Exact enumeration, a closed form and a censored
-estimator are not interchangeable, and a table that mixes them without saying so invites
-comparisons that the numbers cannot support.
+\textbf{2. Record how every value was produced.} Exact enumeration, a closed form and a censored estimator are not interchangeable, and a table that mixes them without saying so invites comparisons that the numbers cannot support.
 
-\textbf{3. Give every measurement an independent bound it must satisfy.} Not a plausibility
-check, which all three of our failures passed, but a quantity computed another way that the
-result can contradict. Saturation was caught by a closed form, degeneracy by a second engine, and
-our own broken control by an exact ceiling.
+\textbf{3. Give every measurement an independent bound it must satisfy.} Not a plausibility check, which all three of our failures passed, but a quantity computed another way that the result can contradict. Saturation was caught by a closed form, degeneracy by a second engine, and our own broken control by an exact ceiling.
 
-\textbf{4. Calibrate where ground truth exists before applying where it does not.} A null means
-nothing from an instrument that has never been shown to fire. We validate on eleven games with exact
-ceilings, then run the identical procedure on a larger game where those ceilings cannot be
-computed.
+\textbf{4. Calibrate where ground truth exists before applying where it does not.} A null means nothing from an instrument that has never been shown to fire. We validate on eleven games with exact ceilings, then run the identical procedure on a larger game where those ceilings cannot be computed.
 
-\textbf{5. Control the delivery channel, not only the information.} Adding an input changes more
-than what the learner knows. A placebo arm of the same shape prices that change. Matching shape
-alone is not enough: our rejected game shows that a control drawn from a large enough space
-becomes an identifier for the episode and leaks what it was built to withhold. Match the
-cardinality of the control to the hidden state, not its geometry.
+\textbf{5. Control the delivery channel, not only the information.} Adding an input changes more than what the learner knows. A placebo arm of the same shape prices that change. Matching shape alone is not enough: our rejected game shows that a control drawn from a large enough space becomes an identifier for the episode and leaks what it was built to withhold. Match the cardinality of the control to the hidden state, not its geometry.
 
-\textbf{6. Report the exclusion, not the point estimate.} A null is a claim about what the data
-rule out, so it is only as strong as the interval behind it. Ours moved from $[-4.5, +2.7]$ at
-four seeds, which excluded almost nothing, to a bound worth stating at twenty-four.
+\textbf{6. Report the exclusion, not the point estimate.} A null is a claim about what the data rule out, so it is only as strong as the interval behind it. Ours moved from $[-4.5, +2.7]$ at four seeds, which excluded almost nothing, to a bound worth stating at twenty-four.
 
 \section{The Gin Rummy arms in full}
 \label{app:gin}
 
-Table~\ref{tab:app-gin} is the full version of Figure~\ref{fig:probes}, with the spread reported
-rather than drawn. All three arms overlap. Each arm-mean interval contains the other two arm means, and all three
-contrast intervals contain zero. Those are different objects: an arm-mean interval sits near $27$
-and cannot contain zero, while a contrast interval is centred near zero.
+Table~\ref{tab:app-gin} is the full version of Figure~\ref{fig:probes}, with the spread reported rather than drawn. All three arms overlap. Each arm-mean interval contains the other two arm means, and all three contrast intervals contain zero. Those are different objects: an arm-mean interval sits near $27$ and cannot contain zero, while a contrast interval is centred near zero.
 
-Twenty-four seeds per arm is what it took to say this. An earlier four-seed version of the same probe
-gave an oracle-minus-baseline interval of $[-4.5, +2.7]$, which could not exclude an eleven percent
-relative gain. A null is only as good as the seeds behind it, and four was not enough.
+Twenty-four seeds per arm is what it took to say this. An earlier four-seed version of the same probe gave an oracle-minus-baseline interval of $[-4.5, +2.7]$, which could not exclude an eleven percent relative gain. A null is only as good as the seeds behind it, and four was not enough.
 
 \begin{table}[h]
   \centering \small
