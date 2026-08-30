@@ -153,8 +153,21 @@ def table_atlas():
             return (0, -float(r["bits"]))
         except (TypeError, ValueError):
             return (1, 0)
-    L = [r"\begin{tabular}{l l l r l}", r"\toprule",
-         r"Game & Engine & Family & Bits & Provenance \\", r"\midrule"]
+    # 88 rows cannot fit a float, and a tabular inside one silently overflows the page: the
+    # caption disappeared entirely from the built PDF. longtable breaks across pages instead and
+    # repeats the header, so it carries its own caption rather than sitting in a table float.
+    head = (r"Game & Engine & Family & Bits & Provenance \\" "\n" r"\midrule")
+    L = [r"\begin{longtable}{l l l r l}",
+         r"\caption{The full atlas, all 88 configurations. \emph{closed} is exact arithmetic for "
+         r"the deal and an upper bound on the information set. \emph{exact} enumerates the tree. "
+         r"\emph{censored floor} is a lower bound that exhausted its sample budget. "
+         r"\emph{none} means no method applies. Compare two games only when their provenance "
+         r"matches.}\label{tab:app-atlas}\\",
+         r"\toprule", head, r"\endfirsthead",
+         r"\multicolumn{5}{l}{\emph{The full atlas, continued}}\\",
+         r"\toprule", head, r"\endhead",
+         r"\midrule", r"\multicolumn{5}{r}{\emph{continued on the next page}}\\",
+         r"\endfoot", r"\bottomrule", r"\endlastfoot"]
     for r in sorted(rows, key=sortkey):
         try:
             bits = f"{float(r['bits']):.2f}"
@@ -169,7 +182,7 @@ def table_atlas():
                 pass
         L.append(f"{esc(r['label'])} & {esc(r['engine'])} & {fam.get(r['family'], r['family'])} "
                  f"& {bits} & {note} \\\\")
-    L += [r"\bottomrule", r"\end{tabular}"]
+    L += [r"\end{longtable}"]
     open(os.path.join(OUT, "app_atlas.tex"), "w").write("\n".join(L) + "\n")
     return len(rows)
 

@@ -30,6 +30,7 @@
 \workshoptitle{TAE (Trust-AI-Eval): Can We Trust AI Evaluation?}
 \usepackage{amsmath}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{natbib}
@@ -37,6 +38,20 @@
 \usepackage{url}
 \graphicspath{{../figures/}}
 \renewcommand{\arraystretch}{1.05}
+
+% neurips_2026.sty swaps abovecaptionskip and belowcaptionskip inside a table, on the assumption
+% that a table caption sits above the tabular. Every caption in this paper sits below it, so that
+% swap left them printed hard against the bottom rule. Give the gap back.
+\makeatletter
+\renewenvironment{table}
+  {\setlength{\abovecaptionskip}{10\p@}%
+   \setlength{\belowcaptionskip}{\z@}%
+   \@float{table}}
+  {\end@float}
+% longtable centres its caption in a box of width \LTcapwidth. \textwidth overshoots the
+% body measure in this class and pushed the caption past the right margin, so keep the
+% default 4in, which also sits close to the atlas table's own width.
+\makeatother
 
 \newcommand{\ORACLEOBSMEAN}{26.79}
 \newcommand{\ORACLEOBSN}{twelve}
@@ -223,7 +238,7 @@ information the learner already receives. This transfers to any domain where the
 restriction of the learner.
 
 \begin{table}[t]
-  \centering \small
+  \centering \footnotesize
   \input{../tables/probes.tex}
   \caption{The three probes, their measured values, and what each licenses. Read together they give
   a verdict no single win rate can.}
@@ -472,14 +487,8 @@ For Mahjong it inflates it by 67 bits, and for UNO it puts the game above a ceil
 reach. The repair changes one claim in the main text. Before it, two measured two-player card games hid
 more than Gin Rummy. After it, one does.
 
-\begin{table}[h]
-  \centering \scriptsize
-  \input{../tables/app_atlas.tex}
-  \caption{The full atlas. \emph{closed} is exact arithmetic for the deal and an upper bound on
-  the information set. \emph{exact} enumerates the tree. \emph{censored floor} is a lower bound
-  that exhausted its sample budget. \emph{none} means no method applies.}
-  \label{tab:app-atlas}
-\end{table}
+{\scriptsize\setlength{\arrayrulewidth}{0.4pt}
+\input{../tables/app_atlas.tex}}
 
 \begin{table}[h]
   \centering \small

@@ -1,7 +1,19 @@
-\begin{tabular}{l l l r l}
+\begin{longtable}{l l l r l}
+\caption{The full atlas, all 88 configurations. \emph{closed} is exact arithmetic for the deal and an upper bound on the information set. \emph{exact} enumerates the tree. \emph{censored floor} is a lower bound that exhausted its sample budget. \emph{none} means no method applies. Compare two games only when their provenance matches.}\label{tab:app-atlas}\\
 \toprule
 Game & Engine & Family & Bits & Provenance \\
 \midrule
+\endfirsthead
+\multicolumn{5}{l}{\emph{The full atlas, continued}}\\
+\toprule
+Game & Engine & Family & Bits & Provenance \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\emph{continued on the next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
 Mahjong 4p & rlcard & 3-4p card & 109.56 & closed \\
 Crazy eights 5p & openspiel & 3-4p card & 75.80 & closed \\
 Crazy eights 4p & openspiel & 3-4p card & 58.43 & closed \\
@@ -90,5 +102,4 @@ Goofspiel-8 (hidden bids) & openspiel & 2p card & n/a & none \\
 Blackjack (solo vs deck) & openspiel & solo & n/a & none \\
 Klondike solitaire & openspiel & solo & n/a & none \\
 Blackjack (RLCard) & rlcard & solo & n/a & none \\
-\bottomrule
-\end{tabular}
+\end{longtable}
