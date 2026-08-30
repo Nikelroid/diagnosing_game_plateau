@@ -68,22 +68,21 @@
 \begin{abstract}
 A reinforcement learning agent stops improving against a fixed reference in an
 imperfect-information game. Is the game hiding information the agent needs, or is the agent failing
-to use what it already sees? These call for different experiments, and a win rate cannot tell
-them apart. We build an instrument that can. First, we measure how much each game hides. At each
+to use what it already sees? These call for different experiments, and a win rate cannot tell them
+apart. We build an instrument that can. First, we measure how much each game hides: at each
 decision we count the game histories still possible from the acting player's observation and take
 the base-two logarithm, a quantity we call \emph{support bits}. It upper-bounds the player's
-uncertainty but does not say whether the hidden state would improve play.
+uncertainty but says nothing about whether the hidden state would improve play.
 Across 88 game configurations, every atlas entry records how it was obtained, and independent
-bounds catch three measurement failures, one of them in our own control. Of the 18 measured
-two-player card games, only one exceeds the case study's 30.1 support bits. Second, we test whether hidden information explains an agent's
+bounds catch three measurement failures, one in our own control. Of the 18 measured two-player card
+games, only one exceeds the case study's 30.1 support bits. Second, we test whether hidden information explains an agent's
 plateau, by adding the hidden state to the learner's observation and retraining. In eleven games small
 enough to solve, the exact ceilings give what that state is \emph{worth} for a stated opponent
 policy, seeded runs measure how much the tested learners \emph{bank}, and a placebo arm prices the
 wider observation. The probe fires in every one, with
-gains of $0.22$ to $1.07$, while the placebo stays at the baseline. Applied unchanged to a twelfth game too large to solve exactly, the
-oracle arm shows no detectable gain over the baseline arm: $-0.25$ points over twelve seeds,
-interval $[-1.70, +1.20]$, and $-0.23$ below the placebo arm. Twelve seeds rule out gains above about $1.2$ points, while smaller gains remain
-possible. The diagnosis is concrete: raw hidden-state access is not a large missing ingredient for this
+gains of $0.22$ to $1.07$, while the placebo stays at the baseline. Applied unchanged to a twelfth game too large to solve, the oracle arm shows no detectable gain
+over the baseline arm: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$
+below the placebo arm, ruling out gains above about $1.2$ points. The diagnosis is concrete: raw hidden-state access is not a large missing ingredient for this
 learner and reference. More broadly, the instrument separates what a game hides, what that
 information is worth, what a learner banks, and when the measurement itself has failed.
 \end{abstract}
@@ -118,14 +117,14 @@ solve.
 
 
 \paragraph{Contribution and relation to prior work.} Our contribution is a validation design that
-connects domain measurement to plateau diagnosis. Every atlas entry records how it was obtained,
-and independent bounds make silent instrument failures visible. Exact ceilings then validate a
-three-arm diagnostic before the same protocol is applied where those ceilings cannot be computed.
-Measurement work asks whether a test measures the construct it names \citep{measurementfairness},
-while benchmark critiques ask whether narrow coverage supports broad claims \citep{wholeworld}.
-Prior game research measures related information-set structure \citep{pimc,rbccomplexity,ggpii},
-and privileged-state interventions are standard \citep{policyinference,ismcts}. The individual
-quantities are not new. Their provenance-aware connection and validation sequence are.
+connects domain measurement to plateau diagnosis: every atlas entry records how it was obtained,
+independent bounds make silent instrument failures visible, and exact ceilings validate a three-arm
+diagnostic before the same protocol runs where those ceilings cannot be computed. Measurement work
+asks whether a test measures the construct it names \citep{measurementfairness}, and benchmark
+critiques ask whether narrow coverage supports broad claims \citep{wholeworld}. Prior game research
+measures related information-set structure \citep{pimc,rbccomplexity,ggpii}, and privileged-state
+interventions are standard \citep{policyinference,ismcts}. The individual quantities are not new;
+their provenance-aware connection and validation sequence are.
 
 \section{Measuring what a game hides}
 
@@ -220,28 +219,31 @@ currently size.
   \label{fig:atlas}
 \end{figure}
 
-\section{Three measurement failures}
+\section{Catching silent measurement failures}
 
-Resampling is what a practitioner reaches for when a game is too large to enumerate. In our data it
-fails silently in both directions, and returns a plausible number each time.
+A measurement that fails loudly is not dangerous. Three of ours failed quietly, returning ordinary
+looking numbers, and an independent bound caught all three. Resampling is what a practitioner
+reaches for when a game is too large to enumerate, and here it fails both ways.
 
 \textbf{Saturation.} Hearts, Euchre and contract bridge each returned exactly 6.32 bits, which is
 $\log_2 80$, the sample count, with 100 percent of sampled points censored. The estimator had exhausted its samples rather than the possible worlds, and the closed form
 puts Hearts at 56.2, nearly nine times higher.
 
-\textbf{Degeneracy.} Degeneracy is the worse failure, because it looks like a clean result. Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back the same world
-on every draw. A survey trusting that column alone would file a 30-bit game beside Connect Four.
-Neither failure is visible without a second method to disagree with. That is the practical case
-for saying, in every row, how the number was obtained.
+\textbf{Degeneracy} is the worse failure, because it looks like a clean result. Every Gin Rummy
+configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back
+the same world on every draw, and a survey trusting that column would file a 30-bit game beside
+Connect Four. Neither is visible without a second method to disagree with, which is the practical
+case for recording in every row how the number was obtained.
 
-\paragraph{And a third failure, in our own instrument.} The two above are failures of an estimator we did
-not write. A twelfth game caught one in a control we did. In Liar's dice with two dice per player,
-the placebo arm scored $0.67$ above its own exact ceiling, which no policy can do. The cause is the mechanism the placebo exists to avoid. The
-fake plane is drawn once per deal, from a space large enough that the draw is nearly unique. The plane therefore stopped being noise and became a fingerprint of the deal. A tabular learner could key on
-it and recover exactly what the plane was built to withhold. We report the game as rejected rather than fixing it after the fact
-(Appendix~\ref{app:reject}).
+\paragraph{The check also catches our own control.} The two above are failures of an estimator we
+did not write; the same bound caught one in a control we did. In Liar's dice with two dice per
+player, the placebo arm scored $0.67$ above its own exact ceiling, which no policy can do. The
+cause is the mechanism the placebo exists to avoid. Drawn once per deal from a space large enough
+that each draw is nearly unique, the fake plane stopped being noise and became a fingerprint of the
+deal, which a tabular learner could key on to recover what the plane was built to withhold. We
+report the game as rejected rather than fixing it after the fact (Appendix~\ref{app:reject}).
 
-All three failures were caught the same way, and it is the lesson of this section. The alarm was
+All three were caught the same way, which is the lesson of this section. The alarm was
 never that a number looked wrong. The alarm was that it broke a bound we could compute
 independently.
 
@@ -403,7 +405,7 @@ learn.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{fig_mechanism.pdf}
+  \includegraphics[width=0.88\linewidth]{fig_mechanism.pdf}
   \caption{One bar per game for $g_b - g_o$, with capture at the end of each. Equation
   \eqref{eq:identity} makes the side of zero and the side of $100$ percent the same fact, so this
   is a picture of the identity rather than evidence for it.}
@@ -421,19 +423,18 @@ reaches the case-study null, which never divides by worth.
 
 We entered with the hypothesis that this agent had stalled because the game hid too much from it.
 Three results narrow that explanation. The atlas places the case study at 30.1 support bits, so the
-game does hide substantial information. The subset argument shows that a parity-achieving policy
-can use only information the learner already receives. The probe then finds no detectable gain from
-the raw hidden-hand channel, with twelve seeds ruling out gains above about $1.2$ points.
+game does hide substantial information. The subset argument shows a parity-achieving policy can use
+only information the learner already receives. The probe finds no detectable gain from the raw
+hidden-hand channel, with twelve seeds ruling out gains above about $1.2$ points.
 
 The result is actionable and bounded. It does not show that the hidden hand has zero worth or that
 belief modelling cannot help. The raw channel is an observation intervention, and a structured
 encoding of the same information might still produce a smaller gain.
 
-\paragraph{Scope.} The large-case result above is for one learner, one recipe and one fixed
-reference, so it tests the protocol rather than establishing a domain-general cause of plateaus. The eleven exactly
-solved games calibrate the instrument but come from two families, and capacity lost during training
-\citep{capacityloss} is a rival explanation we do not test. Appendix~\ref{app:scope} lists what else
-the evidence does not carry.
+\paragraph{Scope.} The large-case result is for one learner, one recipe and one fixed reference, so
+it tests the protocol rather than establishing a domain-general cause of plateaus.
+Appendix~\ref{app:scope} lists what else the evidence does not carry, including capacity lost
+during training \citep{capacityloss}.
 
 \section{Conclusion}
 
@@ -441,11 +442,10 @@ One win rate cannot separate what a game hides, what that information is worth, 
 banks. The atlas measures the first across 88 game configurations while recording the provenance of
 every value, and independent bounds catch three instrument failures, one in our own apparatus.
 Exact ceilings then validate the three-arm diagnostic across eleven solvable games. Applied
-unchanged to the large case study, it finds no detectable gain from the raw hidden-hand channel and
-rules out gains above about $1.2$ points, so raw hidden-state access is not a large missing
-ingredient for this learner and reference. The broader result is a protocol that turns an informal
-explanation for a plateau into a checkable measurement, and that detects when its own instruments
-fail.
+unchanged to the large case study, it rules out gains above about $1.2$ points from the raw
+hidden-hand channel, so raw hidden-state access is not a large missing ingredient for this learner
+and reference. The protocol turns an informal explanation for a plateau into a checkable
+measurement, and detects when its own instruments fail.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
