@@ -82,9 +82,10 @@ A placebo arm receives a fake hidden hand of the same shape, isolating the cost 
 input. Worth holds steady across a sixty-fourfold change in training budget; what the learners bank
 does not. We then apply the same three arms to a twelfth game far too large to solve. The oracle
 arm shows no detectable gain over the baseline arm: $-0.25$ points over twelve seeds, interval
-$[-1.70, +1.20]$, and $-0.23$ against the placebo arm. Twelve seeds rule out gains above about
-$1.2$ points. What a game hides, what that hiding is worth, and what a learner banks are three
-different quantities that one win rate cannot separate.
+$[-1.70, +1.20]$, and $-0.23$ against the placebo arm. Twelve seeds rule out gains above about $1.2$ points.
+So the hidden cards were not what held this agent back: it could already reach parity on what it
+saw, and was not doing so. What a game hides, what that hiding is worth, and what a learner banks
+are three different things, and one win rate reports them as one number.
 \end{abstract}
 
 \section{Two measurements nobody makes}
@@ -107,10 +108,10 @@ learner banks of it are three different quantities, routinely reported as one. W
 instrument that separates them.
 
 We answer the first by measurement and the second by decomposition, and the two belong together.
-Without the atlas a plateau invites the excuse that the game hides too much. Without the
+Without the atlas a plateau invites the excuse that the game hides too much; without the
 decomposition the atlas is a table nobody acts on. We first test the instrument on eleven games
-small enough to solve exactly, where a known optimum checks every number it reports, then run it
-unchanged on a twelfth that is far too large.
+small enough to solve exactly, where a known optimum checks every number, then run it unchanged on
+a twelfth that is far too large.
 
 
 
@@ -414,35 +415,29 @@ reaches the case-study null, which never divides by worth.
 
 \section{Reading both halves together}
 
-The atlas places the case study at 30.1 support bits, within 4 bits of the largest measured
-two-player card game. No tested encoder performs better, and the subset argument puts parity within
-the learner's existing information. The oracle-observation probe finds no detectable gain from the
-raw hidden-hand channel, for this learner, this recipe and this reference. Twelve seeds rule out
-gains above about $1.2$ points, and smaller gains remain possible.
+We came in with a hypothesis: this agent has stalled because the game hides too much from it.
+Three results reject it. The atlas puts the case study at 30.1 support bits, so the game is not a
+thin one and the hypothesis had a fair chance. The subset argument puts parity inside the
+information the learner already receives. The oracle-observation probe hands over the hidden cards
+and finds no detectable gain. The information was there and the learning was not using it.
 
-Three readings would be wrong. The hand is not worthless, belief modelling is not ruled out, and
-optimisation and reward are not thereby the things to try first. The raw channel is an observation
-intervention, not a belief model, and a structured encoding of the same information might still
-pay.
+Rejecting that hypothesis is not the same as three other claims. The hand is not worthless, belief
+modelling is not ruled out, and optimisation and reward are not thereby the things to try first.
+The raw channel is an observation intervention, not a belief model, and a structured encoding of
+the same information might still pay.
 
-\paragraph{Scope.} The large application contains one learner, one recipe and one fixed reference,
-so it tests the protocol rather than establishing a domain-general cause of plateaus. The eleven
-exactly solved games calibrate the instrument, but they come from two families and do not provide
-eleven independent confirmations. The search gap is confounded with strategy fusion. The
-architecture probe varies inductive bias and compute together, and neither it nor the bucket sweep
-tests capacity lost during training \citep{capacityloss}. Closed forms count hands and ignore public
-information. Support bits describe the game rather than learning difficulty. The evidence supports
-the stated diagnostic in these settings, not a universal ranking of plateau causes.
+\paragraph{Scope.} The rejection above is for one learner, one recipe and one fixed reference, so it
+tests the protocol rather than establishing a domain-general cause of plateaus. The eleven exactly
+solved games calibrate the instrument but come from two families, and capacity lost during training
+\citep{capacityloss} is a rival explanation we do not test. Appendix~\ref{app:scope} lists what else
+the evidence does not carry.
 
 \section{Conclusion}
 
-Choosing a domain is a measurement problem and reading a plateau is a diagnostic one. Both are
-usually settled by tradition, and this paper is an argument for measuring them instead. The measuring is harder than it looks. We could put a number on 58 of 88 configurations, and the
-instruments lied three times. Every row therefore says how its number was obtained, and an arm
-that scored above a ceiling no policy can pass was thrown out rather than explained.
-
-The protocol separates the three quantities exactly where an optimum exists, and reports only the
-contrast the runs support where none does.
+Choosing a domain is a measurement problem and reading a plateau is a diagnostic one, and both are
+usually settled by tradition. Measuring them changed the answer here. The hypothesis that this
+agent stalled because the game hides too much is rejected: the information was there and unused,
+which is a different problem from a hard game.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
@@ -555,11 +550,10 @@ If worth were a property of the learner, it would drift as the learner trained l
 Table~\ref{tab:app-budget} runs the decomposition at 25,000 to 1,600,000 episodes, a
 sixty-four-fold range. Worth is constant to three decimals at every budget in both games, which is
 what an exact property of the evaluated game and opponent should do. Capture moves instead,
-rising from 56 to 79 percent in Leduc Hold'em. In Kuhn poker it dips at the middle budgets before returning, so the pattern is a trend in Leduc and not a law.
-
-Kuhn poker is the useful contrast. Its capture does not climb steadily. Capture dips to 83 percent at 400,000 episodes, then returns
-to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling at the smallest budget. What the middle budgets show is seed noise rather than a trend, and we report it rather than
-smoothing it away.
+rising from 56 to 79 percent in Leduc Hold'em. Kuhn poker is the useful contrast. Its capture dips to 83 percent at 400,000 episodes, then
+returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling
+at the smallest budget, so the middle budgets show seed noise rather than a trend. We report it
+rather than smoothing it away.
 
 \begin{table}[h]
   \centering \small
@@ -620,6 +614,24 @@ because it moves with whatever produced it.
 Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference wherever the game is
 small enough to solve, and that is what we use for the eleven decomposed games. The reason we
 cannot use one on Gin Rummy is the reason the case study needs a reference at all.
+
+\section{What the evidence does not carry}
+\label{app:scope}
+
+The large application has one learner, one recipe and one fixed reference. It tests the protocol
+rather than establishing a domain-general cause of plateaus, and a second frozen reference would
+be the first thing to add.
+
+The eleven exactly solved games calibrate the instrument, but seven are Liar's dice variants and
+four are poker, so they are not eleven independent confirmations. Wider coverage in bits did not
+buy wider coverage in structure.
+
+The oracle-search gap is confounded with strategy fusion, so it bounds the benefit available inside
+that search protocol rather than the decision-theoretic value of revealing the state. The
+architecture probe varies inductive bias and compute together, and neither it nor the bucket sweep
+tests capacity a network loses during training \citep{capacityloss}. Closed forms count hands and
+ignore what public cards rule out. Support bits describe the game rather than the difficulty of
+learning it: we claim the two are routinely conflated, not that they are unrelated.
 
 \section{The rejected game}
 \label{app:reject}
