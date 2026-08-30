@@ -72,8 +72,8 @@ something it needs, or is the agent failing to use what it can already see? A wi
 the agent stopped, not why. We present a self-checking evaluation protocol that separates these
 explanations. First, we measure what games hide. At each decision, we count the game histories
 consistent with the player's observation and take the base-two logarithm. We call this
-\emph{support bits}. Support bits bound uncertainty but do not say whether the hidden state would
-improve play. Our atlas covers 88 game configurations and records how every value was produced.
+\emph{support bits}. Support bits upper-bound the player's uncertainty but do not say whether the
+hidden state would improve play. Our atlas covers 88 game configurations and records how every value was produced.
 Independent checks catch three failures that produced plausible headline numbers, including one
 in our own control. Second, we test whether hidden information explains a plateau. We train a
 baseline arm, an oracle arm that sees the hidden state, and a placebo arm with a fake addition of
@@ -288,10 +288,8 @@ identity does not explain why the gaps differ or provide a corrected capture val
   \label{tab:families}
 \end{table}
 
-Table~\ref{tab:families} gives the atlas by family.
-
 \paragraph{Two-player card games saturate.} We can report a value or bound for 18 of the 23, and
-their median reported value is 3.1 bits. Only one measured two-player card game has a reported
+their median reported value is 3.1 bits (Table~\ref{tab:families}). Only one measured two-player card game has a reported
 value above standard Gin Rummy's hand-only upper bound of $30.1$ support bits, and it exceeds that
 bound by only $2.8$ bits. Switching games therefore offers little additional range above the case
 study, even though the measured family spans many lower values.
@@ -334,9 +332,9 @@ measures 2.01 bits under exact enumeration and 2.30 under the closed form, thoug
 show the gap stays small in games with richer public histories.
 
 \textbf{Saturation.} Hearts, Euchre and contract bridge each return exactly 6.32 bits, which is
-$\log_2 80$, the sample count. All sampled points are censored. The estimator has exhausted its
-samples rather than the possible worlds, and the closed form places Hearts at 56.2 bits, nearly
-nine times higher.
+$\log_2 80$, the sample count. All sampled points are censored. The estimator has exhausted its samples rather than the
+possible worlds. The closed form places Hearts at 56.2 bits, $49.9$ bits above the saturated
+estimate.
 
 \textbf{Degeneracy.} Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring.
 The engine's resampler returns the same world on every draw, so a survey trusting the reported
@@ -384,18 +382,9 @@ real gain, which is exactly the reading a placebo exists to rule out.
 \paragraph{Why capture can exceed one hundred percent.} Seven of the eleven games report capture
 above $100$ percent. Recall that $g_b$ and $g_o$ are the gaps between the baseline and oracle arms
 and their own ceilings. Equation~\eqref{eq:identity} makes capture exceed $100$ percent exactly
-when $g_b > g_o$, which Figure~\ref{fig:mechanism} draws. Values above $100$ percent are therefore
+when $g_b > g_o$. Values above $100$ percent are therefore
 not algebraic contradictions. The
 identity establishes this relationship without explaining why the two gaps differ.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.88\linewidth]{fig_mechanism.pdf}
-  \caption{One bar per game for $g_b - g_o$, with capture at the end of each. Equation
-  \eqref{eq:identity} makes the side of zero and the side of $100$ percent the same fact, so this
-  is a picture of the identity rather than evidence for it.}
-  \label{fig:mechanism}
-\end{figure}
 
 The empirical result is where each family lands. In the four poker variants the oracle arm ends
 further below its ceiling, and capture lies between $73$ and $78$ percent. In the seven dice
@@ -410,15 +399,27 @@ worth.
 \label{sec:r-case}
 
 The large case study tests the calibrated diagnostic where exact ceilings are unavailable. For this
-learner and reference, adding the raw hidden-hand channel produces no detectable gain. Table~\ref{tab:probes} states what each probe
-licenses. We first show that the same probe detects effects in every tested small-game
-configuration.
+learner and reference, adding the raw hidden-hand channel produces no detectable gain. We first show that the same probe detects effects
+in every tested small-game configuration, and Table~\ref{tab:probes} states what each licenses.
 
 \paragraph{The sensitivity check.} Across the fourteen small-game and learner combinations that
 contain hidden state, oracle-minus-baseline margins range from $0.22$ to $1.07$ in expected return. The placebo-baseline difference stays
 within seed noise in every case. These results show that the instrument works on games of this
 size. They do not show that it fires wherever information exists.
-Figure~\ref{fig:sensitivity} in the appendix compares these effects with the large case study.
+Figure~\ref{fig:sensitivity} compares these effects with the large case study on a common
+standardised scale.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{fig_sensitivity.pdf}
+  \caption{The oracle-observation probe across fifteen game and learner combinations: fourteen
+  small-game combinations and the large case study. Each effect is the oracle arm minus the
+  baseline arm, divided by the pooled standard deviation across seeds, so games scored in return
+  and win rate share one axis. Raw effects appear beside each point. The shaded band marks
+  $\pm 0.8$ pooled standard deviations as a visual reference, not a significance threshold.
+  Statistical conclusions come from the intervals.}
+  \label{fig:sensitivity}
+\end{figure}
 
 \begin{table}[htbp]
   \centering \footnotesize
@@ -631,16 +632,11 @@ width, so the extra plane reaches the learner and nobody else.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\linewidth]{fig_sensitivity.pdf}
-  \caption{The same probe across fifteen game and learner combinations: the fourteen small games
-  and the large case study. Each effect is the oracle
-  arm minus the baseline arm, divided by the pooled standard deviation of the two arms across
-  seeds, so that games scored in return and in win rate share one axis. Raw effects are printed
-  beside each point. The axis is symmetric log, linear inside $\pm 1$ and logarithmic outside. The
-  shaded band marks $\pm 0.8$ pooled standard deviations as a visual reference, not a significance
-  threshold. Statistical conclusions come from the intervals. The large case study's interval is
-  the only one inside the band.}
-  \label{fig:sensitivity}
+  \includegraphics[width=0.88\linewidth]{fig_mechanism.pdf}
+  \caption{One bar per game for $g_b - g_o$, with capture at the end of each. Equation
+  \eqref{eq:identity} makes the side of zero and the side of $100$ percent the same fact, so this
+  is a picture of the identity rather than evidence for it.}
+  \label{fig:mechanism}
 \end{figure}
 
 \section{The decomposition across eleven games}
@@ -729,8 +725,8 @@ additional resolution no longer helps.
 Table~\ref{tab:app-capacity} and Figure~\ref{fig:app-capacity} report the sweep. Leduc Hold'em is
 the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact
 states, and the curve is monotone over the last three points. A state-resolution bottleneck would look like that, on a single sweep
-without replication. Kuhn poker and Liar's dice are flat across the whole sweep, because both are small
-enough that two buckets already separate what matters. Dark hex on a two by two board is solved, so every arm
+without replication. Kuhn poker and Liar's dice stay flat across the sweep, so these runs
+show no state-resolution benefit beyond two buckets. Dark hex on a two by two board is solved, so every arm
 reads zero. The game sits in the table as a control. The instrument should return zero when there is
 genuinely nothing to find, and it does.
 
@@ -835,6 +831,8 @@ Two things follow from that. First, capture exceeds $1$ if and only if $g_b > g_
 for how the result is read, that equivalence is guaranteed by the definitions. Counting how many
 games obey it would measure nothing. An earlier draft of this paper reported the count as though it
 were evidence, and it is not.
+
+Figure~\ref{fig:mechanism} draws $g_b - g_o$ for each game with its capture beside it.
 
 \paragraph{What is empirical.} The identity says the two quantities move together. It does not say
 which side of $100$ percent any game lands on, or by how much. Those are facts about our runs, and
