@@ -109,7 +109,8 @@ def fig_sensitivity():
     ax.set_ylim(-0.8, len(items) + 0.8)
     ax.set_xlabel("standardised effect of handing the learner the hidden state "
                   "(difference in units of seed spread)")
-    ax.set_title("The probe fires in every tested small game, and not on the large one")
+    ax.set_title("The probe detects effects in every tested small game; the large case shows no "
+                 "detectable gain", fontsize=10.5)
     # symlog: the poker effects are two orders of magnitude larger than Gin Rummy's, and a
     # linear axis that shows one hides the other
     ax.set_xscale("symlog", linthresh=1.0)
@@ -117,7 +118,7 @@ def fig_sensitivity():
     ax.set_xticklabels(["-1", "0", "1", "10", "100"])
     ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
     # sit the note over the band it names, not at the far right of the axes
-    ax.text(0.0, len(items) + 0.6, "shaded band: too small to tell from no effect",
+    ax.text(0.0, len(items) + 0.6, "shaded band: 0.8 pooled standard deviations, visual reference only",
             fontsize=8.0, color=MUTED, ha="left", va="center")
     for c, lab in ((TEAL, "tabular learner"), (GOLD, "neural learner")):
         ax.plot([], [], "o", color="white", mec=c, mew=1.6, ms=6, label=lab)
