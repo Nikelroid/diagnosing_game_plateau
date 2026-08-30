@@ -55,8 +55,8 @@
 % default 4in, which also sits close to the atlas table's own width.
 \makeatother
 
-\newcommand{\ORACLEOBSMEAN}{26.79}
-\newcommand{\ORACLEOBSN}{twelve}
+\newcommand{\ORACLEOBSMEAN}{26.37}
+\newcommand{\ORACLEOBSN}{twenty-four}
 
 \title{Is It the Game or the Agent?\\
        Measuring What Games Hide, Diagnosing a Plateau}
@@ -82,9 +82,9 @@ stated opponent policy. Seeded runs measure what the tested learners \emph{bank}
 arm isolates the cost of widening the observation. The probe detects gains of $0.22$ to $1.07$ in
 every tested small-game configuration, and the placebo stays at the baseline. We then apply the
 same probe unchanged to a twelfth game that is too large to solve. The oracle arm shows no
-detectable gain over the baseline arm: $-0.25$ points over twelve seeds, with interval
-$[-1.70, +1.20]$. It also finishes $-0.23$ points below the placebo arm. Twelve seeds rule out
-gains above about $1.2$ points, while smaller gains remain possible. For this learner and
+detectable gain over the baseline arm: $-0.66$ points over twenty-four seeds, with interval
+$[-1.65, +0.33]$. It also finishes $-0.28$ points below the placebo arm. Twenty-four seeds rule out
+gains above about $0.3$ points, while smaller gains remain possible. For this learner and
 reference, raw hidden-state access is not a large missing ingredient. More broadly, the protocol
 measures what a game hides, validates what that information is worth, separates information from
 input widening, and catches failures in its own instruments.
@@ -129,8 +129,8 @@ We contribute two connected tools. The first is an atlas of support bits across 
 configurations, with the provenance of every value and independent checks that catch three silent
 measurement failures. The second is a three-arm diagnostic validated against exact ceilings in
 eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, which has 30.1
-support bits and lies near the top of the measured two-player card games. Twelve seeds rule out
-gains above about $1.2$ points from the raw hidden-hand channel for this learner and reference.
+support bits and lies near the top of the measured two-player card games. Twenty-four seeds rule out
+gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference.
 We are not aware of a prior cross-game atlas of this kind, reporting a per-observation
 information-set measure at this scale with the provenance of every value and diagnostics that
 expose a failed estimator. Together, these tools turn an unexplained plateau into separate
@@ -425,22 +425,26 @@ Figure~\ref{fig:sensitivity} in the appendix compares these effects with the lar
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\linewidth]{fig_gin_arms.pdf}
-  \caption{The oracle-observation probe on Gin Rummy at twelve seeds per arm. Dots are seeds, bars
+  \caption{The oracle-observation probe on Gin Rummy at twenty-four seeds per arm. Dots are seeds, bars
   are means, whiskers are 95 percent intervals. The placebo carries a fifth plane of the same shape
   with no information, so it prices the widening itself.}
   \label{fig:probes}
 \end{figure}
 
 \paragraph{The direct test.} Probe~3 adds the opponent's hand to the learner's observation. The
-oracle arm reaches $26.79$ percent across twelve seeds, against $27.04$ for the baseline arm. The
-difference is $-0.25$ points, with a 95 percent interval of $[-1.70, +1.20]$
-(Figure~\ref{fig:probes}). The placebo arm reaches $27.02$ percent, $-0.02$ points from baseline
-with an interval of $[-1.51, +1.47]$.
+oracle arm reaches $26.37$ percent across twenty-four seeds, against $27.03$ for the baseline arm. The
+difference is $-0.66$ points, with a 95 percent interval of $[-1.65, +0.33]$
+(Figure~\ref{fig:probes}). The placebo arm reaches $26.65$ percent, $-0.38$ points from baseline
+with an interval of $[-1.45, +0.69]$. Both widened arms sit a little below the baseline and every
+interval contains zero, so what separation there is tracks the wider input rather than the hand it
+carries.
 
 Oracle against placebo holds the input shape fixed and changes only whether the added plane carries
-the true hand. That contrast is $-0.23$ points, with interval $[-1.57, +1.11]$. Twelve seeds rule
-out gains above about $1.2$ points. That limit is about one twentieth of the distance from this
-agent's $27$ percent to the parity its reference defines. Smaller gains remain possible, and we do
+the true hand. That contrast is $-0.28$ points, with interval $[-1.17, +0.61]$. Twenty-four seeds rule
+out gains above about $0.3$ points. That limit is about one seventieth of the distance from this
+agent's $27$ percent to the parity its reference defines, and it is tighter than the smallest
+margin the same probe detects in the tested small games, $0.22$. An effect of the size it finds
+there would not have been missed here. Smaller gains remain possible, and we do
 not claim that the effect is exactly zero. An earlier four-seed version gave an interval of
 $[-4.5, +2.7]$, which excluded almost nothing.
 
@@ -457,8 +461,8 @@ removes strategy fusion, so the difference remains a confounded proxy rather tha
 
 The large case study gives a direct answer. The game hides substantial information, but the subset
 argument shows that a parity-achieving policy needs only what the learner already receives. Adding
-the remaining raw hidden state produces no detectable gain, and twelve seeds rule out gains above
-about $1.2$ points.
+the remaining raw hidden state produces no detectable gain, and twenty-four seeds rule out gains above
+about $0.3$ points.
 
 For this learner and reference, the raw hidden-hand channel is therefore not a large missing
 ingredient. The protocol has removed one plausible explanation for this plateau without claiming
@@ -479,7 +483,7 @@ the hidden state is worth, and what a learner banks. The atlas applies the first
 configurations with the provenance of every value, and independent checks catch three silent
 failures, one of them in our own apparatus. Exact ceilings validate the three-arm diagnostic on
 eleven solvable games, and it then runs unchanged on Gin Rummy, where it rules out gains above
-about $1.2$ points from the raw hidden-hand channel for this learner and reference. That is the
+about $0.3$ points from the raw hidden-hand channel for this learner and reference. That is the
 difference between reporting a plateau and diagnosing one.
 
 \bibliographystyle{plainnat}
@@ -524,7 +528,7 @@ which says what the intervention could have bought.
 \paragraph{Evaluation as measurement.} The framing comes from outside games. Measurement theory
 asks whether a test measures the construct it names \citep{measurementfairness}, benchmark critique
 asks whether narrow coverage supports broad claims \citep{wholeworld}, and reliable reporting asks
-for intervals and honest seed counts rather than point estimates \citep{rliable}. The twelve-seed
+for intervals and honest seed counts rather than point estimates \citep{rliable}. The twenty-four-seed
 intervals throughout this paper, and the four-seed comparison in Appendix~\ref{app:gin}, follow
 that last recommendation directly.
 
@@ -548,7 +552,7 @@ policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. The oracle ceilin
 expectimax over the same game with the hidden state revealed. Both are exact deterministic values
 for the stated game and opponent policy, so they carry no seed noise and no confidence interval.
 
-Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twelve.
+Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twenty-four.
 Tabular runs use \texttt{data/configs/}; neural runs use a fixed-width tensor observation and
 policy gradient, matching the encoder the Gin Rummy learner uses.
 
@@ -879,7 +883,7 @@ cardinality of the control to the hidden state, not its geometry.
 
 \textbf{6. Report the exclusion, not the point estimate.} A null is a claim about what the data
 rule out, so it is only as strong as the interval behind it. Ours moved from $[-4.5, +2.7]$ at
-four seeds, which excluded almost nothing, to a bound worth stating at twelve.
+four seeds, which excluded almost nothing, to a bound worth stating at twenty-four.
 
 \section{The Gin Rummy arms in full}
 \label{app:gin}
@@ -889,16 +893,16 @@ rather than drawn. All three arms overlap. Each arm-mean interval contains the o
 contrast intervals contain zero. Those are different objects: an arm-mean interval sits near $27$
 and cannot contain zero, while a contrast interval is centred near zero.
 
-Twelve seeds per arm is what it took to say this. An earlier four-seed version of the same probe
+Twenty-four seeds per arm is what it took to say this. An earlier four-seed version of the same probe
 gave an oracle-minus-baseline interval of $[-4.5, +2.7]$, which could not exclude an eleven percent
 relative gain. A null is only as good as the seeds behind it, and four was not enough.
 
 \begin{table}[h]
   \centering \small
   \input{../tables/app_gin.tex}
-  \caption{The three Gin Rummy arms at twelve seeds each, as win rate against the reference.
-  Arm intervals are 95 percent from $t$ on eleven degrees of freedom. Contrast intervals use
-  independent-arm standard errors with Welch degrees of freedom, about 21 here.}
+  \caption{The three Gin Rummy arms at twenty-four seeds each, as win rate against the reference.
+  Arm intervals are 95 percent from $t$ on twenty-three degrees of freedom. Contrast intervals use
+  independent-arm standard errors with Welch degrees of freedom, about 41 here.}
   \label{tab:app-gin}
 \end{table}
 
