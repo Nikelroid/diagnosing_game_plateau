@@ -66,27 +66,7 @@ Measuring What Games Hide, Diagnosing a Plateau}
 \maketitle
 
 \begin{abstract}
-A reinforcement learning agent stops improving against a fixed opponent. Is the game hiding
-something it needs, or is the agent failing to use what it can already see? A win rate shows where
-the agent stopped, not why. We present a self-checking evaluation protocol that separates these
-explanations. First, we measure what games hide. At each decision, we count the game histories
-consistent with the player's observation and take the base-two logarithm. We call this
-\emph{support bits}. Support bits upper-bound the player's uncertainty but do not say whether the
-hidden state would improve play. Our atlas covers 88 game configurations and records how every value was produced.
-Independent checks catch three failures that produced plausible headline numbers, including one
-in our own control. Second, we test whether hidden information explains a plateau. We train a
-baseline arm, an oracle arm that sees the hidden state, and a placebo arm with a fake addition of
-the same shape. Eleven games have exact ceilings, which tell us what the hidden state is
-\emph{worth} for a stated opponent policy. Across fourteen tested small-game and learner
-combinations, oracle-minus-baseline gains range from $0.22$ to $1.07$ in expected return. Every
-placebo-baseline difference remains within seed noise. We then run the same test unchanged on Gin
-Rummy, which is too large for an exact ceiling. Its hand-only upper bound of $30.1$ support bits is
-the second-highest reported value among the 18 measured two-player card games. Across twenty-four
-seeds per arm, the oracle scores $0.66$ percentage points below the baseline, with a 95 percent
-interval of $[-1.65, +0.33]$. The oracle also shows no detectable advantage over the placebo.
-Twenty-four seeds rule out gains above about $0.3$ points. For this learner and reference, the raw
-hidden-hand channel is not a large missing ingredient. More broadly, the protocol separates what a
-game hides, what that hiding is worth, and how much a learner banks.
+A reinforcement learning agent stops improving against a fixed opponent. Is the game hiding something it needs, or is the agent failing to use what it can already see? A win rate shows where the agent stopped, not why. We present a self-checking evaluation protocol that separates these explanations. First, we measure what games hide. At each decision, we count the game histories consistent with the player's observation and take the base-two logarithm. We call this \emph{support bits}. Support bits upper-bound the player's uncertainty but do not say whether the hidden state would improve play. Our atlas covers 88 game configurations and records how every value was produced. Independent checks catch three failures that produced plausible headline numbers, including one in our own control. Second, we test whether hidden information explains a plateau. We train a baseline arm, an oracle arm that sees the hidden state, and a placebo arm with a fake addition of the same shape. Eleven games have exact ceilings, which tell us what the hidden state is \emph{worth} for a stated opponent policy. Across fourteen tested small-game and learner combinations, oracle-minus-baseline gains range from $0.22$ to $1.07$ in expected return. Every placebo-baseline difference remains within seed noise. We then run the same test unchanged on Gin Rummy, which is too large for an exact ceiling. Its hand-only upper bound of $30.1$ support bits is the second-highest reported value among the 18 measured two-player card games. Across twenty-four seeds per arm, the oracle scores $0.66$ percentage points below the baseline, with a 95 percent interval of $[-1.65, +0.33]$. The oracle also shows no detectable advantage over the placebo. Twenty-four seeds rule out gains above about $0.3$ points. For this learner and reference, the raw hidden-hand channel is not a large missing ingredient. More broadly, the protocol separates what a game hides, what that hiding is worth, and how much a learner banks.
 \end{abstract}
 
 \section{Introduction}
@@ -177,10 +157,7 @@ Equation~\eqref{eq:identity} is an identity, not a finding. It follows directly 
 \begin{table}[t]
   \centering \small
   \input{../tables/survey_families.tex}
-  \caption{The atlas by family. \emph{Measured} counts games with any reported exact value or
-  bound. Medians and ranges summarise those reported entries and inherit their provenance. The
-  board family's six measured games are exactly its perfect-information controls, so every
-  fog-of-war game is unmeasured.}
+  \caption{The atlas by family. \emph{Measured} counts games with any reported exact value or bound. Medians and ranges summarise those reported entries and inherit their provenance. The board family's six measured games are exactly its perfect-information controls, so every fog-of-war game is unmeasured.}
   \label{tab:families}
 \end{table}
 
@@ -195,10 +172,7 @@ Equation~\eqref{eq:identity} is an identity, not a finding. It follows directly 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig1_hidden_bits.pdf}
-  \caption{How much the player to move cannot see, across 88 games from two engines. The values mix
-  exact enumeration, hand-only upper bounds and censored resampling floors;
-  Appendix~\ref{app:atlas} gives the provenance of every row. The games clearly above Gin Rummy are
-  seated at a larger table, where the extra bits come from extra hands rather than a deeper duel.}
+  \caption{How much the player to move cannot see, across 88 games from two engines. The values mix exact enumeration, hand-only upper bounds and censored resampling floors; Appendix~\ref{app:atlas} gives the provenance of every row. The games clearly above Gin Rummy are seated at a larger table, where the extra bits come from extra hands rather than a deeper duel.}
   \label{fig:atlas}
 \end{figure}
 
@@ -223,11 +197,7 @@ All three failures produce plausible headline numbers. In each case, information
 \begin{table}[t]
   \centering \small
   \input{../tables/app_axis.tex}
-  \caption{The decomposition over eleven games spanning 1.00 to 3.67 bits, eight seeds each. Worth
-  is the exact gap between the two ceilings for this opponent policy, banked is the oracle arm minus
-  the baseline arm, and capture is their ratio. Equation~\eqref{eq:identity} shows how unequal
-  ceiling gaps place capture above or below $100$ percent without explaining why they differ.
-  Widening is the placebo arm minus the baseline arm.}
+  \caption{The decomposition over eleven games spanning 1.00 to 3.67 bits, eight seeds each. Worth is the exact gap between the two ceilings for this opponent policy, banked is the oracle arm minus the baseline arm, and capture is their ratio. Equation~\eqref{eq:identity} shows how unequal ceiling gaps place capture above or below $100$ percent without explaining why they differ. Widening is the placebo arm minus the baseline arm.}
   \label{tab:axis}
 \end{table}
 
@@ -250,30 +220,21 @@ The large case study tests the calibrated diagnostic where exact ceilings are un
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.95\linewidth]{fig_sensitivity.pdf}
-  \caption{The oracle-observation probe across fifteen game and learner combinations: fourteen
-  small-game combinations and the large case study. Each effect is the oracle arm minus the
-  baseline arm, divided by the pooled standard deviation across seeds, so games scored in return
-  and win rate share one axis. Raw effects appear beside each point. The shaded band marks
-  $\pm 0.8$ pooled standard deviations as a visual reference, not a significance threshold.
-  Statistical conclusions come from the intervals.}
+  \caption{The oracle-observation probe across fifteen game and learner combinations: fourteen small-game combinations and the large case study. Each effect is the oracle arm minus the baseline arm, divided by the pooled standard deviation across seeds, so games scored in return and win rate share one axis. Raw effects appear beside each point. The shaded band marks $\pm 0.8$ pooled standard deviations as a visual reference, not a significance threshold. Statistical conclusions come from the intervals.}
   \label{fig:sensitivity}
 \end{figure}
 
 \begin{table}[htbp]
   \centering \footnotesize
   \input{../tables/probes.tex}
-  \caption{The three probes and what each licenses. The first two rows report win rates against the
-  reference, in percent. The last two report differences between arms, in percentage points, with
-  95 percent intervals.}
+  \caption{The three probes and what each licenses. The first two rows report win rates against the reference, in percent. The last two report differences between arms, in percentage points, with 95 percent intervals.}
   \label{tab:probes}
 \end{table}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\linewidth]{fig_gin_arms.pdf}
-  \caption{The oracle-observation probe on Gin Rummy at twenty-four seeds per arm. Dots are seeds, bars
-  are means, whiskers are 95 percent intervals. The placebo carries a fifth plane of the same shape
-  with no information, so it prices the widening itself.}
+  \caption{The oracle-observation probe on Gin Rummy at twenty-four seeds per arm. Dots are seeds, bars are means, whiskers are 95 percent intervals. The placebo carries a fifth plane of the same shape with no information, so it prices the widening itself.}
   \label{fig:probes}
 \end{figure}
 
@@ -344,8 +305,7 @@ Table~\ref{tab:app-corrections} lists the entries whose closed form we had to re
 \begin{table}[h]
   \centering \small
   \input{../tables/app_corrections.tex}
-  \caption{Closed forms repaired by counting hands as multisets. The distinguishable column is what
-  the standard formula returns, and the multiset column is what the deck actually admits.}
+  \caption{Closed forms repaired by counting hands as multisets. The distinguishable column is what the standard formula returns, and the multiset column is what the deck actually admits.}
   \label{tab:app-corrections}
 \end{table}
 
@@ -361,9 +321,7 @@ We also verified that the oracle plane is what we say it is. PettingZoo's \textt
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.95\linewidth]{fig_apparatus.pdf}
-  \caption{The same question asked of two different learners. A tabular learner and a neural
-  learner reading a fixed-width tensor share no code and no update rule, and they agree on which
-  games hide something the learner can use.}
+  \caption{The same question asked of two different learners. A tabular learner and a neural learner reading a fixed-width tensor share no code and no update rule, and they agree on which games hide something the learner can use.}
   \label{fig:app-apparatus}
 \end{figure}
 
@@ -371,9 +329,7 @@ We also verified that the oracle plane is what we say it is. PettingZoo's \textt
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.88\linewidth]{fig_mechanism.pdf}
-  \caption{One bar per game for $g_b - g_o$, with capture at the end of each. Equation
-  \eqref{eq:identity} makes the side of zero and the side of $100$ percent the same fact, so this
-  is a picture of the identity rather than evidence for it.}
+  \caption{One bar per game for $g_b - g_o$, with capture at the end of each. Equation \eqref{eq:identity} makes the side of zero and the side of $100$ percent the same fact, so this is a picture of the identity rather than evidence for it.}
   \label{fig:mechanism}
 \end{figure}
 
@@ -400,8 +356,7 @@ Worth is defined by the two exact ceilings, so changing the learner's training b
 \begin{table}[h]
   \centering \small
   \input{../tables/app_budget.tex}
-  \caption{The decomposition at four training budgets. Exact worth is unchanged by the budget; the
-  capture ratio moves, clearly in Leduc and unevenly in Kuhn.}
+  \caption{The decomposition at four training budgets. Exact worth is unchanged by the budget; the capture ratio moves, clearly in Leduc and unevenly in Kuhn.}
   \label{tab:app-budget}
 \end{table}
 
@@ -422,8 +377,7 @@ Table~\ref{tab:app-capacity} and Figure~\ref{fig:app-capacity} report the sweep.
 \begin{table}[h]
   \centering \small
   \input{../tables/app_capacity.tex}
-  \caption{Exploitability against the number of buckets the learner can tell apart, lower is
-  better. Of these four, only Leduc improves steadily as the buckets approach exact states.}
+  \caption{Exploitability against the number of buckets the learner can tell apart, lower is better. Of these four, only Leduc improves steadily as the buckets approach exact states.}
   \label{tab:app-capacity}
 \end{table}
 
@@ -482,9 +436,7 @@ Figure~\ref{fig:mechanism} draws $g_b - g_o$ for each game with its capture besi
 \begin{table}[h]
   \centering \small
   \input{../tables/app_gaps.tex}
-  \caption{How far each arm sits below its own exact ceiling, sorted by capture. The difference
-  column is $g_b - g_o$, which Equation~\eqref{eq:identity} makes equal to banked minus worth. It
-  changes sign exactly where capture crosses $100$ percent, by construction.}
+  \caption{How far each arm sits below its own exact ceiling, sorted by capture. The difference column is $g_b - g_o$, which Equation~\eqref{eq:identity} makes equal to banked minus worth. It changes sign exactly where capture crosses $100$ percent, by construction.}
   \label{tab:app-gaps}
 \end{table}
 
@@ -517,9 +469,7 @@ Twenty-four seeds per arm is what it took to say this. An earlier four-seed vers
 \begin{table}[h]
   \centering \small
   \input{../tables/app_gin.tex}
-  \caption{The three Gin Rummy arms at twenty-four seeds each, as win rate against the reference.
-  Arm intervals are 95 percent from $t$ on twenty-three degrees of freedom. Contrast intervals use
-  independent-arm standard errors with Welch degrees of freedom, about 41 here.}
+  \caption{The three Gin Rummy arms at twenty-four seeds each, as win rate against the reference. Arm intervals are 95 percent from $t$ on twenty-three degrees of freedom. Contrast intervals use independent-arm standard errors with Welch degrees of freedom, about 41 here.}
   \label{tab:app-gin}
 \end{table}
 
