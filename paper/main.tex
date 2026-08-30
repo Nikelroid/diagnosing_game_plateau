@@ -131,8 +131,10 @@ measurement failures. The second is a three-arm diagnostic validated against exa
 eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, which has 30.1
 support bits and lies near the top of the measured two-player card games. Twelve seeds rule out
 gains above about $1.2$ points from the raw hidden-hand channel for this learner and reference.
-Together, these tools turn an unexplained plateau into separate measurements of what the game
-hides, what that information is worth, and what the learner banks.
+We are not aware of a prior cross-game atlas of this kind, reporting a per-observation
+information-set measure at this scale with the provenance of every value and diagnostics that
+expose a failed estimator. Together, these tools turn an unexplained plateau into separate
+measurements of what the game hides, what that information is worth, and what the learner banks.
 
 \section{Method}
 \label{sec:method}
@@ -157,10 +159,11 @@ best expected return achievable against that policy from a given observation. Th
   \label{eq:worth}
 \end{align}
 %
-Equation~\eqref{eq:bound} separates support bits from uncertainty. Support bits weight every
-possible history equally, so they upper-bound the player's uncertainty. The bound is tight only
-when every history is equally likely. A player can therefore be nearly certain about one hand even
-when a thousand hands remain possible. Worth is different again. Equation~\eqref{eq:worth} can be
+Equation~\eqref{eq:bound} separates support bits from uncertainty. It is the standard
+maximum-entropy bound for a variable on a finite support \citep{coverthomas}: support bits weight
+every possible history equally, so they upper-bound the player's uncertainty, and the bound is
+tight only when every history is equally likely. A player can therefore be nearly certain about one
+hand even when a thousand hands remain possible. Worth is different again. Equation~\eqref{eq:worth} can be
 zero while $b(o)$ is large if the same action is best across many hidden hands. We compute worth
 exactly wherever an optimum is available.
 
@@ -227,8 +230,9 @@ the word \emph{worth} for the exact quantity defined below.
 \paragraph{Probe 3: the oracle-observation learner.} Retrain the identical recipe with the hidden
 state appended to the observation and change nothing else. This puts the question to the learner
 rather than to a search agent. A third arm separates the information from the cost of widening the
-observation. The placebo plane has the same shape and sparsity as the oracle plane. The placebo plane
-contains ten cards that the player cannot see, drawn independently of the opponent's hand. PettingZoo's
+observation. It is a negative control on the observation channel: the placebo plane matches the
+oracle plane in shape and sparsity, but carries ten cards the player cannot see, drawn
+independently of the opponent's hand. PettingZoo's
 \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand, so we built our
 own plane and verified it against engine ground truth (Appendix~\ref{app:apparatus}).
 
@@ -249,7 +253,9 @@ and excluded configuration.
 \label{sec:decomp}
 
 Where exact optima are available, the probe decomposes the plateau into worth, banked and capture.
-Worth is the best return achievable with the hidden state minus the best achievable without it.
+Worth is the best return achievable with the hidden state minus the best achievable without it. It
+is a fixed-policy, sequential analogue of the expected value of perfect information
+\citep{voi}: the same quantity that decision analysis prices, but held to one stated opponent.
 Banked is the oracle arm's observed return minus the baseline arm's observed return, and capture is
 banked divided by worth. Both ceilings use the same fixed opponent policy and differ only in
 whether the learner sees the hidden state, so worth is exact for that evaluation setting rather
@@ -319,8 +325,8 @@ looking plausible. Independent checks catch three such failures in our study.
 
 Agreement or disagreement between methods does not by itself indicate failure. OpenSpiel and RLCard
 both measure Gin Rummy at 30.1 bits, which cross-checks the closed form across libraries. Leduc
-measures 2.01 bits under exact enumeration and 2.30 under the closed form. One row does not show
-that this gap stays small in games with richer public histories, and we do not claim it does.
+measures 2.01 bits under exact enumeration and 2.30 under the closed form, though one row does not
+show the gap stays small in games with richer public histories.
 
 \textbf{Saturation.} Hearts, Euchre and contract bridge each return exactly 6.32 bits, which is
 $\log_2 80$, the sample count. All sampled points are censored. The estimator has exhausted its
@@ -457,23 +463,23 @@ For this learner and reference, the raw hidden-hand channel is therefore not a l
 ingredient. The protocol has removed one plausible explanation for this plateau without claiming
 which remaining intervention should come next.
 
-The result does not show that the hidden hand has zero worth or that belief modelling cannot help.
-A structured encoding of the same information could still produce a smaller gain.
+The result does not show that the hidden hand has zero worth: a structured encoding of the same
+information could still produce a smaller gain.
 
-\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference.
-The application demonstrates the protocol without establishing a domain-general cause of plateaus.
+\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference,
+and the eleven calibration games are two families rather than eleven independent domains. The
+application demonstrates the protocol without establishing a domain-general cause of plateaus.
 Appendix~\ref{app:scope} lists the other conclusions the evidence does not support.
 
 \section{Conclusion}
 
 The main contribution is a self-checking evaluation protocol. It separates what a game hides, what
-the hidden state is worth, and what a learner banks. The atlas applies the first measurement across
-88 game configurations and records the provenance of every value. Independent checks catch three
-silent instrument failures, including one in our own apparatus. Exact ceilings validate the
-three-arm diagnostic across eleven solvable games. We then apply the same diagnostic unchanged to
-Gin Rummy, where it rules out gains above about $1.2$ points from the raw hidden-hand channel for
-this learner and reference. The protocol can test an explanation for a plateau and detect failures
-in its own measurements. That is the difference between reporting a plateau and diagnosing one.
+the hidden state is worth, and what a learner banks. The atlas applies the first across 88 game
+configurations with the provenance of every value, and independent checks catch three silent
+failures, one of them in our own apparatus. Exact ceilings validate the three-arm diagnostic on
+eleven solvable games, and it then runs unchanged on Gin Rummy, where it rules out gains above
+about $1.2$ points from the raw hidden-hand channel for this learner and reference. That is the
+difference between reporting a plateau and diagnosing one.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
@@ -547,6 +553,12 @@ policy gradient, matching the encoder the Gin Rummy learner uses.
 
 \section{The atlas in full}
 \label{app:atlas}
+
+Support bits are conservative twice over. Equation~\eqref{eq:bound} is loose whenever the
+posterior is not uniform, and $|I(o)|$ counts complete histories rather than distinct hidden
+states, so several histories that leave the opponent's hand identical are counted separately. A
+reader comparing our numbers against a hand-count for the same game should expect ours to be the
+larger of the two.
 
 Table~\ref{tab:app-atlas} is the atlas itself, all 88 rows, with the provenance of every value.
 The table does what Figure~\ref{fig:atlas} cannot. A bar chart cannot show which numbers are exact, which are upper bounds, and which are floors from
