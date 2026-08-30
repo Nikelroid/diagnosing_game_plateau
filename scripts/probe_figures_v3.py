@@ -209,13 +209,14 @@ def fig_mechanism():
     ax.set_xlim(-span * 1.30, span * 1.30)
     ax.set_xlabel("how much closer the oracle arm sits to its own ceiling "
                   "($g_b - g_o$, in return)")
-    ax.set_title("Capture reads high exactly when the oracle arm is the easier one to learn",
+    # "easier to learn" asserts a cause the identity does not establish; state the relation instead
+    ax.set_title("Capture exceeds 100% exactly when the baseline arm is farther below its ceiling",
                  pad=20)
     ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
-    ax.text(0.0, 1.035, "bars right of the line: the oracle arm is closer to its ceiling, and "
-            "capture reads above 100%.  Left of it: the reverse.",
+    ax.text(0.0, 1.035, "bars right of the line: the baseline arm is farther below its ceiling, "
+            "and capture reads above 100%.  Left of it: the reverse.",
             transform=ax.transAxes, fontsize=8.2, color=MUTED)
     fig.tight_layout(); save(fig, "fig_mechanism")
 
