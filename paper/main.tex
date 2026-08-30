@@ -159,15 +159,13 @@ which cards. The arithmetic is exact for the deal.
 But it counts hands only, and ignores what the public cards have already ruled out. Measured
 against the information-set definition, the closed form is an upper bound rather than an estimate. We can size
 that gap on one game: Leduc reads 2.01 exact against 2.30 closed form. One row does not establish
-that the gap is small in games with richer public histories, and we do not claim it does. \textbf{Resampling} draws
-worlds consistent with the information state and counts the distinct ones, censored at the sample
-count.
+that the gap is small in games with richer public histories, and we do not claim it does. \textbf{Resampling} draws worlds consistent with the information state and counts the distinct
+ones, censored at the sample count.
 
-The catalog spans 79 games from OpenSpiel \citep{openspiel} and 9 from RLCard \citep{rlcard}.
-OpenSpiel is the only engine here that exposes information-state strings and world resampling.
-RLCard covers games OpenSpiel does not ship, Mahjong and UNO above all. Gin Rummy is deliberately measured by both so the closed
-form can be cross-checked across libraries; it agrees at 30.1 bits each. PettingZoo
-\citep{pettingzoo} supplies the environment API for the case study.
+The catalog spans 79 games from OpenSpiel \citep{openspiel}, the only engine here exposing
+information-state strings and world resampling, and 9 from RLCard \citep{rlcard} for games it does
+not ship. Gin Rummy is measured by both and agrees at 30.1 bits, which cross-checks the closed form
+across libraries. PettingZoo \citep{pettingzoo} supplies the environment API.
 
 \begin{table}[t]
   \centering \small
@@ -194,9 +192,9 @@ from a dial inside one game. Our eight Gin Rummy configurations hold the rules f
 the deck and hand size. They sweep 5.1 to 30.1 bits.
 
 \paragraph{The blind spot.} Thirteen fog-of-war games, dark chess and reconnaissance blind chess
-among them, carry no number by any method: too large to enumerate, no deal to count, and no
-resampling implemented. These are the games most often called the frontier of imperfect information,
-and they are exactly the ones nobody can currently size.
+among them, carry no number by any method. They are too large to enumerate, have no deal to count,
+and expose no resampler. The games most often called the frontier of imperfect information are
+exactly the ones nobody can currently size.
 
 \begin{figure}[t]
   \centering
@@ -239,17 +237,19 @@ reuses the setting of a recent study of lightweight Gin Rummy agents \citep{gold
 against a fixed rule-based reference that never trains. The reference plays 600 games in about two
 minutes, and the graded agent answers in 0.3\,ms per move.
 
-\paragraph{The subset argument, which needs no experiment.} Our expert reads two of the
-learner's four observation planes, so its observation is a strict subset. It scores about 50
-percent against itself, so parity is well defined, and any policy reaching parity is a function of
-information the learner already receives. This transfers to any domain where the reference is a
+\paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
+learner's four observation planes, so its observation is a strict subset, and it scores about 50
+percent against itself. Parity is therefore well defined, and any policy reaching it is a function
+of information the learner already receives. This transfers to any domain where the reference is a
 restriction of the learner.
 
 \begin{table}[t]
   \centering \footnotesize
   \input{../tables/probes.tex}
-  \caption{The three probes, their measured values, and what each licenses. Read together they give
-  a verdict no single win rate can.}
+  \caption{The three probes, their measured values, and what each licenses. The first two rows are
+  win rates against the reference, in percent. The last two are differences between arms, in
+  percentage points, with 95 percent intervals. Read together they give a verdict no single win
+  rate can.}
   \label{tab:probes}
 \end{table}
 
@@ -284,12 +284,11 @@ inside this search protocol, not the decision-theoretic value of revealing the s
 state appended to the observation and change nothing else, putting the question to the learner
 rather than to a search agent. Handed the opponent's hand outright, it reaches $26.79$
 percent across twelve seeds against a $27.04$ baseline. That is $-0.25$ points, with a 95 percent
-interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed version had an interval of
-$[-4.5, +2.7]$, which could not exclude an eleven percent relative gain.
+interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed version had an interval of $[-4.5, +2.7]$, which excluded almost nothing.
 
-A third arm decides what that null means, because widening an observation is not free. The network gains inputs it must learn to ignore, and that
-cost is subtracted from whatever the real plane is worth. We therefore run a \emph{placebo} plane of the same shape and sparsity, holding ten cards
-this player cannot see, drawn independently of the opponent's actual hand. It scores $27.02$
+A third arm decides what that null means, because widening an observation is not free: the network
+gains inputs it must learn to ignore. We therefore run a \emph{placebo} plane of the same shape and
+sparsity, holding ten cards this player cannot see, drawn independently of the opponent's hand. It scores $27.02$
 percent, which is $-0.02$ points from baseline with an interval of $[-1.51, +1.47]$. We therefore
 find no evidence that the cost of the wider input is hiding a real gain. The contrast that isolates the information is oracle against placebo, and
 it changes only whether the plane is true. It holds the shape of the
@@ -305,10 +304,10 @@ Two details decide whether the probe measures what it claims. PettingZoo's
 against engine ground truth at 1{,}200 decision points, and we trim each curriculum opponent's
 input to its own width, so the extra plane reaches the learner alone.
 
-\paragraph{Does the probe work at all?} A null is worth nothing without evidence the
-instrument can fire. We ran the identical probe on every OpenSpiel game small
-enough for counterfactual regret minimisation to supply a true optimum. Two learners ran it: a
-tabular one, and a neural one reading a fixed-width tensor as the Gin Rummy learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
+\paragraph{Does the probe work at all?} A null is worth nothing without evidence the instrument can
+fire. We ran the identical probe on every OpenSpiel game small enough for counterfactual regret
+minimisation to supply a true optimum, under two learners: a tabular one, and a neural one reading
+a fixed-width tensor as the Gin Rummy learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
 $1.07$ in expected return, and the placebo lands on the baseline. Those margins show the instrument works on games of this size. They do not prove it fires
 wherever information exists. On Gin Rummy the same construction reads zero
 (Figure~\ref{fig:sensitivity}).
@@ -414,12 +413,6 @@ true answer handed over free, already buys nothing, so optimisation, reward, cur
 representation come first. A structured encoding of the same information might still pay, and that
 is the experiment we would run next.
 
-\paragraph{When no strong reference exists.} Most domains have no hand-codable expert. The best
-substitute is a reference built on a subset of the learner's observation, because parity is then
-reachable by construction. Failing that, freeze the strongest heuristic available and report its
-saturation point. Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference
-wherever the game is small enough to solve.
-
 \paragraph{Limitations.} The case study is one game and one reference, and the search bound is
 confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly,
 which is the property that makes them unlike Gin Rummy, and seven have a distorted capture that we
@@ -431,9 +424,23 @@ are routinely conflated, not that they are unrelated.
 
 \section{Conclusion}
 
-Choosing a domain is a measurement problem and reading a plateau is a diagnostic one, and both are
-usually settled by tradition. What a game hides, what that is worth, and what a learner banks are
-three different quantities, and they should be measured apart.
+Choosing a domain is a measurement problem and reading a plateau is a diagnostic one. Both are
+usually settled by tradition, and this paper is an argument for measuring them instead.
+
+The measuring is harder than it looks. We could put a number on 58 of 88 configurations, and the
+instruments lied three times: twice in an estimator we inherited, once in a control we built. Every
+row therefore carries its provenance, and an arm that scored above a ceiling no policy can pass was
+thrown out rather than explained.
+
+Gin Rummy sits near the top of its family at 30.1 support bits, and handing the learner the
+opponent's hand outright still moves nothing we can measure. The plateau is not explained by the
+hidden information, for this learner and this reference. Where a game is small enough to solve, the
+same probe splits a plateau into what the information is worth and what the learner banks, and
+shows why the second is distorted when the two arms learn with unequal ease.
+
+The lesson generalises past our case study. What a game hides, what that is worth, and what a
+learner banks are three different quantities. They are routinely reported as one, and separating
+them changes which experiment you run next.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
@@ -595,6 +602,22 @@ genuinely nothing to find, and it does.
   \caption{The capacity sweep. The rightmost point of each curve uses exact information states.}
   \label{fig:app-capacity}
 \end{figure}
+
+\section{Choosing a reference when no expert exists}
+
+Our case study had a hand-codable reference. Most domains do not, and the choice of what to grade
+against decides what a win rate can mean, so it is worth stating what we would do instead.
+
+The best substitute is a reference built on a strict subset of the learner's observation. Parity is
+then reachable by construction, which is the property that made our subset argument work without an
+experiment. Failing that, freeze the strongest heuristic available and report the point at which it
+saturates, so a reader knows where the scale stops being informative. A frozen pool with a fixed
+Elo anchor is next, and a snapshotted checkpoint promoted to reference and never updated is last,
+because it moves with whatever produced it.
+
+Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference wherever the game is
+small enough to solve, and that is what we use for the eleven decomposed games. The reason we
+cannot use one on Gin Rummy is the reason the case study needs a reference at all.
 
 \section{The rejected game}
 \label{app:reject}
