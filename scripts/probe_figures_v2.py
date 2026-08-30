@@ -108,7 +108,7 @@ def fig_decomposition():
 def fig_gin():
     def arm(pat):
         out = []
-        for p in sorted(glob.glob(os.path.join("$HOME/Adversarial-CoEvolution",
+        for p in sorted(glob.glob(os.path.join(os.environ.get("ADVCOEV_ROOT", os.path.expanduser("~/Adversarial-CoEvolution")),
                                                "sweep", "curriculum", pat))):
             d = json.load(open(p)); vg = d.get("vs_gold") or {}
             if vg.get("win_rate") is not None:

@@ -20,7 +20,7 @@ INK, RULE, MUTED = v2.INK, v2.RULE, v2.MUTED
 TEAL, TEAL_L, GOLD, GOLD_L = v2.TEAL, v2.TEAL_L, v2.GOLD, v2.GOLD_L
 SLATE, SLATE_L, PLUM, PLUM_L = v2.SLATE, v2.SLATE_L, v2.PLUM, v2.PLUM_L
 HERE, save, nice = v2.HERE, v2.save, v2.nice   # axis_data reached via v2.axis_data
-MAIN = "$HOME/Adversarial-CoEvolution/sweep/curriculum"
+MAIN = os.path.join(os.environ.get("ADVCOEV_ROOT", os.path.expanduser("~/Adversarial-CoEvolution")), "sweep", "curriculum")
 
 
 def load_axis():

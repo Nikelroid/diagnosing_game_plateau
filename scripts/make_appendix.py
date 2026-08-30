@@ -13,7 +13,7 @@ sys.path.insert(0, HERE)          # so hidden_info_survey imports when run from 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # for gin_arms
 
 import axis_data
-MAIN = "$HOME/Adversarial-CoEvolution/sweep/curriculum"
+MAIN = os.path.join(os.environ.get("ADVCOEV_ROOT", os.path.expanduser("~/Adversarial-CoEvolution")), "sweep", "curriculum")
 OUT = os.path.join(HERE, "tables")
 
 

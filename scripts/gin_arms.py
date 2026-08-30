@@ -13,7 +13,7 @@ import math
 import os
 import statistics as st
 
-CURRICULUM = "$HOME/Adversarial-CoEvolution/sweep/curriculum"
+CURRICULUM = os.path.join(os.environ.get("ADVCOEV_ROOT", os.path.expanduser("~/Adversarial-CoEvolution")), "sweep", "curriculum")
 
 # arm label -> the run-file prefixes that make up that arm
 ARMS = {

@@ -9,7 +9,7 @@
 #   sbatch --array=0-3 slurm/oracle.slurm          # all four from scratch
 #
 #SBATCH --job-name=oracle-obs
-#SBATCH --account=REDACTED_SLURM_ACCOUNT
+#SBATCH --account=${SLURM_ACCOUNT:-your_account_here}
 #SBATCH --partition=epyc-64
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -22,7 +22,7 @@ set -euo pipefail
 
 module purge
 source ~/miniconda/etc/profile.d/conda.sh
-conda activate $SCRATCH/envs/coev
+conda activate "${CONDA_ENV:-$HOME/envs/coev}"
 
 # PYTHONNOUSERSITE: the conda env has NumPy 2.4.6 while ~/.local has 1.26.4 and shadows it; the
 # curated seed models are NumPy 2 pickles and fail to load under NumPy 1.

@@ -14,11 +14,11 @@ PROJECT=6a9187545883feb1b5e78337     # "Is it the game or the agent?" (IAEval wo
 LIMIT=8                              # content pages: the workshop allows 8, excluding
                                      # references AND appendices, which are unlimited
 SRC=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-PY=$SCRATCH/envs/coev/bin/python
+PY=${SCRATCH:-/tmp}/envs/coev/bin/python
 CHECK_ONLY=${1:-}
 redact() { sed -E 's/olp_[A-Za-z0-9]+/olp_REDACTED/g; s|git:[^@]*@|git:REDACTED@|g'; }
 
-B=$(mktemp -d $SCRATCH/ol_bundle_XXXX)
+B=$(mktemp -d ${SCRATCH:-/tmp}/ol_bundle_XXXX)
 trap 'rm -rf "$B" "${C:-}"' EXIT
 mkdir -p "$B/figures" "$B/tables"
 sed -e 's|{{\.\./figures/}}|{{figures/}}|' -e 's|\.\./tables/|tables/|' "$SRC/paper/main.tex" > "$B/main.tex"
@@ -56,7 +56,7 @@ if ! [ "${PAGES:-x}" -eq "${PAGES:-x}" ] 2>/dev/null; then echo "page check fail
 
 TOKEN=$(bash -lc 'source ~/.bashrc >/dev/null 2>&1; printf "%s" "$OVERLEAF_TOKEN"')
 [ -n "$TOKEN" ] || { echo "no OVERLEAF_TOKEN"; exit 3; }
-C=$(mktemp -d $SCRATCH/ol_clone_XXXX); rm -rf "$C"
+C=$(mktemp -d ${SCRATCH:-/tmp}/ol_clone_XXXX); rm -rf "$C"
 git clone -q "https://git:${TOKEN}@git.overleaf.com/${PROJECT}" "$C" 2>&1 | redact
 
 rm -rf "$C"/figures "$C"/tables

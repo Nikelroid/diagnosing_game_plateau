@@ -10,23 +10,23 @@
 #   sbatch --array=0-35 slurm/gin_power2.slurm
 #
 #SBATCH --job-name=gin-pow2
-#SBATCH --account=REDACTED_SLURM_ACCOUNT
+#SBATCH --account=${SLURM_ACCOUNT:-your_account_here}
 #SBATCH --partition=main
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=48G
 #SBATCH --time=02:00:00
-#SBATCH --output=$HOME/diagnosing_game_plateau/slurm/logs/ginpow2_%A_%a.out
-#SBATCH --error=$HOME/diagnosing_game_plateau/slurm/logs/ginpow2_%A_%a.err
+#SBATCH --output="${REPO_ROOT:-$HOME/diagnosing_game_plateau}"/slurm/logs/ginpow2_%A_%a.out
+#SBATCH --error="${REPO_ROOT:-$HOME/diagnosing_game_plateau}"/slurm/logs/ginpow2_%A_%a.err
 set -euo pipefail
 module purge
 source ~/miniconda/etc/profile.d/conda.sh
-conda activate $SCRATCH/envs/coev
+conda activate "${CONDA_ENV:-$HOME/envs/coev}"
 export PYTHONNOUSERSITE=1
 export OMP_NUM_THREADS=1
 export TMPDIR=/scratch1/$USER/tmp; mkdir -p "$TMPDIR"
-cd $HOME/diagnosing_game_plateau
+cd "${REPO_ROOT:-$HOME/diagnosing_game_plateau}"
 
 T=${SLURM_ARRAY_TASK_ID}
 if   [ "$T" -lt 12 ]; then ARM=oracle;   SEED=$((T + 12))

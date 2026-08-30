@@ -1,164 +1,164 @@
 {
-  "results_dir": "$HOME/Adversarial-CoEvolution/sweep/curriculum",
-  "pending": [],
-  "capacity": {
-    "arms": [
-      {
-        "name": "ppoarch_mlp",
-        "label": "MLP",
-        "seeds": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "win_rates": [
-          0.284,
-          0.235,
-          0.245,
-          0.255
-        ],
-        "steps": 3000000,
-        "mean": 0.2547,
-        "lo": 0.235,
-        "hi": 0.284,
-        "n": 4
-      },
-      {
-        "name": "ppoarch_attn",
-        "label": "Self-attention",
-        "seeds": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "win_rates": [
-          0.212,
-          0.3,
-          0.243,
-          0.272
-        ],
-        "steps": 3000000,
-        "mean": 0.2568,
-        "lo": 0.212,
-        "hi": 0.3,
-        "n": 4
-      }
+ "results_dir": "$ADVCOEV_ROOT/sweep/curriculum",
+ "pending": [],
+ "capacity": {
+  "arms": [
+   {
+    "name": "ppoarch_mlp",
+    "label": "MLP",
+    "seeds": [
+     0,
+     1,
+     2,
+     3
     ],
-    "band_lo": 0.212,
-    "band_hi": 0.3,
-    "iqm": 0.2538
-  },
-  "oracle_observation": {
-    "arms": [
-      {
-        "name": "ppoarch_mlp",
-        "label": "Baseline (4 planes)",
-        "seeds": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "win_rates": [
-          0.284,
-          0.235,
-          0.245,
-          0.255
-        ],
-        "steps": 3000000,
-        "mean": 0.2547,
-        "lo": 0.235,
-        "hi": 0.284,
-        "n": 4
-      },
-      {
-        "name": "oracleobs",
-        "label": "Oracle observation (5 planes)",
-        "seeds": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "win_rates": [
-          0.251,
-          0.245,
-          0.231,
-          0.262
-        ],
-        "steps": 3000000,
-        "mean": 0.2472,
-        "lo": 0.231,
-        "hi": 0.262,
-        "n": 4
-      }
+    "win_rates": [
+     0.284,
+     0.235,
+     0.245,
+     0.255
     ],
-    "band_lo": 0.231,
-    "band_hi": 0.284,
-    "iqm": 0.249
-  },
-  "value_of_information": {
-    "fair": [
-      {
-        "rollouts": 10,
-        "win_rate": 0.10333333333333333,
-        "games": 300,
-        "seconds_per_move": 0.15492577651013079
-      },
-      {
-        "rollouts": 30,
-        "win_rate": 0.17333333333333334,
-        "games": 300,
-        "seconds_per_move": 0.4401394080692584
-      },
-      {
-        "rollouts": 60,
-        "win_rate": 0.21,
-        "games": 300,
-        "seconds_per_move": 0.7850184156221349
-      },
-      {
-        "rollouts": 120,
-        "win_rate": 0.256,
-        "games": 250,
-        "seconds_per_move": 1.547626523515344
-      }
+    "steps": 3000000,
+    "mean": 0.2547,
+    "lo": 0.235,
+    "hi": 0.284,
+    "n": 4
+   },
+   {
+    "name": "ppoarch_attn",
+    "label": "Self-attention",
+    "seeds": [
+     0,
+     1,
+     2,
+     3
     ],
-    "oracle": [
-      {
-        "rollouts": 10,
-        "win_rate": 0.4066666666666667,
-        "games": 300,
-        "seconds_per_move": 0.14595410367990028
-      },
-      {
-        "rollouts": 30,
-        "win_rate": 0.59,
-        "games": 300,
-        "seconds_per_move": 0.36601835721988485
-      },
-      {
-        "rollouts": 60,
-        "win_rate": 0.7533333333333333,
-        "games": 300,
-        "seconds_per_move": 0.6856509731816189
-      },
-      {
-        "rollouts": 120,
-        "win_rate": 0.8533333333333334,
-        "games": 300,
-        "seconds_per_move": 1.5919072715615654
-      }
+    "win_rates": [
+     0.212,
+     0.3,
+     0.243,
+     0.272
     ],
-    "fair_range": [
-      0.10333333333333333,
-      0.256
+    "steps": 3000000,
+    "mean": 0.2568,
+    "lo": 0.212,
+    "hi": 0.3,
+    "n": 4
+   }
+  ],
+  "band_lo": 0.212,
+  "band_hi": 0.3,
+  "iqm": 0.2538
+ },
+ "oracle_observation": {
+  "arms": [
+   {
+    "name": "ppoarch_mlp",
+    "label": "Baseline (4 planes)",
+    "seeds": [
+     0,
+     1,
+     2,
+     3
     ],
-    "oracle_range": [
-      0.4066666666666667,
-      0.8533333333333334
-    ]
-  }
+    "win_rates": [
+     0.284,
+     0.235,
+     0.245,
+     0.255
+    ],
+    "steps": 3000000,
+    "mean": 0.2547,
+    "lo": 0.235,
+    "hi": 0.284,
+    "n": 4
+   },
+   {
+    "name": "oracleobs",
+    "label": "Oracle observation (5 planes)",
+    "seeds": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "win_rates": [
+     0.251,
+     0.245,
+     0.231,
+     0.262
+    ],
+    "steps": 3000000,
+    "mean": 0.2472,
+    "lo": 0.231,
+    "hi": 0.262,
+    "n": 4
+   }
+  ],
+  "band_lo": 0.231,
+  "band_hi": 0.284,
+  "iqm": 0.249
+ },
+ "value_of_information": {
+  "fair": [
+   {
+    "rollouts": 10,
+    "win_rate": 0.10333333333333333,
+    "games": 300,
+    "seconds_per_move": 0.15492577651013079
+   },
+   {
+    "rollouts": 30,
+    "win_rate": 0.17333333333333334,
+    "games": 300,
+    "seconds_per_move": 0.4401394080692584
+   },
+   {
+    "rollouts": 60,
+    "win_rate": 0.21,
+    "games": 300,
+    "seconds_per_move": 0.7850184156221349
+   },
+   {
+    "rollouts": 120,
+    "win_rate": 0.256,
+    "games": 250,
+    "seconds_per_move": 1.547626523515344
+   }
+  ],
+  "oracle": [
+   {
+    "rollouts": 10,
+    "win_rate": 0.4066666666666667,
+    "games": 300,
+    "seconds_per_move": 0.14595410367990028
+   },
+   {
+    "rollouts": 30,
+    "win_rate": 0.59,
+    "games": 300,
+    "seconds_per_move": 0.36601835721988485
+   },
+   {
+    "rollouts": 60,
+    "win_rate": 0.7533333333333333,
+    "games": 300,
+    "seconds_per_move": 0.6856509731816189
+   },
+   {
+    "rollouts": 120,
+    "win_rate": 0.8533333333333334,
+    "games": 300,
+    "seconds_per_move": 1.5919072715615654
+   }
+  ],
+  "fair_range": [
+   0.10333333333333333,
+   0.256
+  ],
+  "oracle_range": [
+   0.4066666666666667,
+   0.8533333333333334
+  ]
+ }
 }

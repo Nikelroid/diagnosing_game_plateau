@@ -9,22 +9,22 @@
 #   sbatch --array=0-95 slurm/capacity.slurm
 #
 #SBATCH --job-name=capacity
-#SBATCH --account=REDACTED_SLURM_ACCOUNT
+#SBATCH --account=${SLURM_ACCOUNT:-your_account_here}
 #SBATCH --partition=main
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH --time=03:00:00
-#SBATCH --output=$HOME/diagnosing_game_plateau/slurm/logs/cap_%A_%a.out
-#SBATCH --error=$HOME/diagnosing_game_plateau/slurm/logs/cap_%A_%a.err
+#SBATCH --output="${REPO_ROOT:-$HOME/diagnosing_game_plateau}"/slurm/logs/cap_%A_%a.out
+#SBATCH --error="${REPO_ROOT:-$HOME/diagnosing_game_plateau}"/slurm/logs/cap_%A_%a.err
 set -euo pipefail
 module purge
 source ~/miniconda/etc/profile.d/conda.sh
-conda activate $SCRATCH/envs/coev
+conda activate "${CONDA_ENV:-$HOME/envs/coev}"
 export OMP_NUM_THREADS=1
 export TMPDIR=/scratch1/$USER/tmp; mkdir -p "$TMPDIR"
-cd $HOME/diagnosing_game_plateau
+cd "${REPO_ROOT:-$HOME/diagnosing_game_plateau}"
 
 GAMES=( "kuhn_poker" "leduc_poker" "liars_dice(numdice=1,dice_sides=4)" "dark_hex(board_size=2)" )
 BUCKETS=( 2 4 8 16 32 128 512 0 )        # 0 = exact, no folding
