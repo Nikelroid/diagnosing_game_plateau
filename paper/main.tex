@@ -58,7 +58,7 @@
 \newcommand{\ORACLEOBSN}{twelve}
 
 \title{Is It the Game or the Agent?\\
-       Measuring What a Game Hides, and Diagnosing Why an Agent Stops Improving}
+       Measuring What a Game Hides and Testing Whether Hidden Information Explains a Plateau}
 \author{Anonymous submission}
 \date{}
 
@@ -88,7 +88,7 @@ learner and reference. More broadly, the instrument separates what a game hides,
 information is worth, what a learner banks, and when the measurement itself has failed.
 \end{abstract}
 
-\section{Two measurements nobody makes}
+\section{Introduction}
 
 Agents in imperfect-information games are graded against references that cannot bear the weight.
 Random play yields numbers near 99 percent that barely move, self-play yields numbers near 50
@@ -127,7 +127,7 @@ Prior game research measures related information-set structure \citep{pimc,rbcco
 and privileged-state interventions are standard \citep{policyinference,ismcts}. The individual
 quantities are not new. Their provenance-aware connection and validation sequence are.
 
-\section{Part I: an atlas of what is hidden}
+\section{Measuring what a game hides}
 
 At any decision, some complete histories of the game remain consistent with everything the acting
 player has seen. Hidden information is $\log_2$ of how many, so zero means the player can see
@@ -220,7 +220,7 @@ currently size.
   \label{fig:atlas}
 \end{figure}
 
-\section{When the instrument lies}
+\section{Three measurement failures}
 
 Resampling is what a practitioner reaches for when a game is too large to enumerate. In our data it
 fails silently in both directions, and returns a plausible number each time.
@@ -245,7 +245,7 @@ All three failures were caught the same way, and it is the lesson of this sectio
 never that a number looked wrong. The alarm was that it broke a bound we could compute
 independently.
 
-\section{Part II: three probes for a plateau}
+\section{Diagnosing a plateau: three probes}
 
 The atlas says what a domain can hide. It cannot say whether a given agent is limited by that, and
 the rest of the paper is about telling those apart. Our large case reuses the setting of a recent
@@ -294,7 +294,7 @@ reaches 10.3 percent at 10 rollouts and 25.6 at 120; the oracle variant reaches 
 identical budgets. The gap is not a clean value of information, because oracle access removes strategy fusion
 \citep{strategyfusion,rebel} as well as uncertainty. The gap therefore bounds the benefit available inside this search protocol, not the
 decision-theoretic value of revealing the state. We reserve the word
-\emph{worth} for the exact quantity we compute in Part III.
+\emph{worth} for the exact quantity computed in Section~\ref{sec:decomp}.
 
 \paragraph{Probe 3: the oracle-observation learner.} Retrain the identical recipe with the hidden
 state appended to the observation and change nothing else, putting the question to the learner
@@ -341,7 +341,8 @@ wherever information exists. On the large case study, the same construction show
   \label{fig:sensitivity}
 \end{figure}
 
-\section{Part III: splitting a plateau in two}
+\section{Decomposing a plateau: worth and banked}
+\label{sec:decomp}
 
 Where exact optima are available, the probe decomposes the plateau into worth, banked and capture.
 Worth is the best return achievable with the hidden state minus the best achievable without it.
@@ -416,7 +417,7 @@ observed gap differences, not evidence that either arm was causally easier to le
 without a corrected capture value because the identity supplies no such correction. None of this
 reaches the case-study null, which never divides by worth.
 
-\section{Reading both halves together}
+\section{Discussion}
 
 We entered with the hypothesis that this agent had stalled because the game hid too much from it.
 Three results narrow that explanation. The atlas places the case study at 30.1 support bits, so the
