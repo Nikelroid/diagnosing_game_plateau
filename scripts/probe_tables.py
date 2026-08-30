@@ -31,17 +31,17 @@ def main():
     orc_vs_plac = gin_arms.contrast("oracle", "placebo")
 
     rows = [
-        ("Capacity",
-         "is the network the limit?",
+        ("Architecture sensitivity",
+         "do the tested encoders differ?",
          f"every encoder in {cap['band_lo']*100:.1f} to {cap['band_hi']*100:.1f}",
          "not among those tested"),
-        ("Value of information",
-         "what is the hidden state worth, at most?",
+        ("Oracle-search gap",
+         "how much does privileged state move this search?",
          f"fair {voi['fair_range'][0]*100:.1f} to {voi['fair_range'][1]*100:.1f} vs "
          f"oracle {voi['oracle_range'][0]*100:.1f} to {voi['oracle_range'][1]*100:.1f}",
          "confounded proxy"),
         ("Oracle observation",
-         "information-bound or learning-bound?",
+         "does this raw hidden-hand channel help?",
          f"{live['oracle']['mean']:.2f} vs {live['baseline']['mean']:.2f} baseline, "
          f"{orc_vs_base['diff']:+.2f} "
          f"[{orc_vs_base['lo']:+.2f}, {orc_vs_base['hi']:+.2f}]",

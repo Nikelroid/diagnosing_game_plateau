@@ -50,14 +50,20 @@ def arms():
     return out
 
 
-def contrast(a, b):
+def contrast(a, b, dp=2):
     """Difference of two arms as an independent (Welch) estimate, in percentage points.
 
     The arms are independent training runs, not paired: seed i of the oracle arm shares no
     trajectory with seed i of the baseline, so a paired interval would understate the spread.
+
+    The point estimate is computed from the means AS PRINTED, at `dp` decimals. Computing it at
+    full precision instead makes the printed difference fail to match the printed means: a reader
+    subtracting 27.02 from 27.04 gets -0.02 while the table says -0.03. Both are defensible and
+    one of them is checkable, so we print the checkable one. The interval is unaffected, being
+    wider than this by two orders of magnitude.
     """
     A, B = arms()[a], arms()[b]
-    diff = A["mean"] - B["mean"]
+    diff = round(A["mean"], dp) - round(B["mean"], dp)
     se = math.sqrt(A["sd"] ** 2 / A["n"] + B["sd"] ** 2 / B["n"])
     df = (A["sd"] ** 2 / A["n"] + B["sd"] ** 2 / B["n"]) ** 2 / (
         (A["sd"] ** 2 / A["n"]) ** 2 / (A["n"] - 1) + (B["sd"] ** 2 / B["n"]) ** 2 / (B["n"] - 1))

@@ -1,0 +1,64 @@
+AI1(GEMINI):{ SOUND | "The paper says this is an upper bound on posterior entropy and says nothing about the value of the hidden state." | Strongest objection: A uniform policy makes support bits equal to entropy, so the distinction is often irrelevant. Does not land because an upper bound remains mathematically true regardless of policy. }
+AI1(GEMINI):{ SOUND | "in this atlas, the extra bits come from extra players" | Strongest objection: 23 games do not represent all 2-player card games. Does not land because the claim is strictly scoped to "in this atlas." }
+AI1(GEMINI):{ SOUND | "scored 0.67 above its own exact ceiling" | Strongest objection: The placebo failure implies other arms might leak state. Does not land because the automated exact ceiling bound independently verifies validity. }
+AI1(GEMINI):{ BROKEN | "placebo - baseline -0.03 ... oracle - placebo -0.22" | 27.02 - 27.04 = -0.02, not -0.03. 26.79 - 27.02 = -0.23, not -0.22. The reported contrasts mathematically contradict the reported means. | FIX: Recompute and align contrasts with the rounded means. | COSTS: None. }
+AI1(GEMINI):{ SOUND | "this learner, on this recipe, graded against this fixed reference, banks nothing from a raw hidden-hand channel" | Strongest objection: A different architecture could exploit it. Does not land because the claim is explicitly scoped to this specific recipe. }
+AI1(GEMINI):{ SOUND | "Worth is invariant to a 64-fold change in training budget" | Strongest objection: Leduc and Kuhn are too small to generalize. Does not land because worth is defined as an exact game property independent of the learner. }
+AI1(GEMINI):{ SOUND | "placebo arm minus baseline arm ... +0.0175. Inside seed noise in every game." | Strongest objection: Placebo widening might disrupt early learning dynamics. Does not land because final performance is what the null hypothesis measures. }
+AI1(GEMINI):{ SOUND | "In all 7 games with capture > 100%, the baseline arm sits further below its own ceiling." | Strongest objection: Without a correcting estimator, capture is useless. Does not land because the paper explicitly warns against using it as a point estimate. }
+AI1(GEMINI):{ SOUND | "Closed forms count hands and ignore public information" | Strongest objection: The exact vs. closed-form gap might be huge in other games. Does not land because the paper admits it only sized it on one game. }
+AI1(GEMINI):{ SOUND | "The paper's stated novelty is now the JOINING..." | Strongest objection: Combining existing techniques is marginal novelty. Does not land because exposing estimator failures and structurally decomposing plateaus provides novel utility. }
+AI1(GEMINI):{ KEEP | "Structured privileged features" | This is the load-bearing next step to test if the network is limited by raw representation rather than just information. }
+
+AI1(GEMINI):{ SOUND | Table 1 | Strongest objection: A 0.0 range for board games implies they are trivial. Does not land because the text explicitly states it's an unmeasured blind spot. }
+AI1(GEMINI):{ BROKEN | Table 2 | The contrast "26.79 vs 27.02 placebo, -0.22" contradicts basic arithmetic (26.79 - 27.02 = -0.23). }
+AI1(GEMINI):{ SOUND | Table 3 | Strongest objection: 8 seeds is too few for stable capture metrics. Does not land because the paper focuses on rank ordering. }
+AI1(GEMINI):{ SOUND | Table 4 | Strongest objection: Only two games shown. Does not land because it sufficiently proves the standard formula inflates estimates. }
+AI1(GEMINI):{ SOUND | Table 5 | Strongest objection: Gap with oracle doesn't verify capture without the baseline gap. Does not land because Figure 6 provides the trend confirmation. }
+AI1(GEMINI):{ SOUND | Table 6 | Strongest objection: Only Leduc shows the capacity-bound pattern. Does not land because the others are stated to be too small. }
+AI1(GEMINI):{ BROKEN | Table 7 | Leduc poker baseline gap (0.035) - oracle gap (0.394) = -0.359. Table states -0.358. Liar's dice 1d4 IR (0.077) - (0.006) = 0.071. Table states 0.070. }
+AI1(GEMINI):{ BROKEN | Table 8 | The contrasts block (-0.25, -0.03, -0.22) mathematically contradicts the means block (27.04, 26.79, 27.02). }
+AI1(GEMINI):{ SOUND | Figures 1-7, Appendix A-I | Artefacts accurately reflect the claims and provide necessary reproduction scope. }
+
+**TALLY**
+
+* **C1 to C10:** 9 SOUND, 0 TOO WIDE, 0 UNSUPPORTED, 1 BROKEN.
+* **T, F and A items:** 21 SOUND, 0 TOO WIDE, 0 UNSUPPORTED, 3 BROKEN.
+
+**BLOCKERS**
+
+1. **C4 / Table 2 / Table 8 (BROKEN):** "placebo minus baseline -0.03" and "oracle minus placebo -0.22". Re-calculating the means step-by-step: 27.02 - 27.04 = -0.02, and 26.79 - 27.02 = -0.23. The math is inconsistent. FIX: Recompute and align contrasts with the rounded means. Takes 10 minutes.
+2. **Table 7 (BROKEN):** "Difference -0.358" for Leduc poker (0.035 - 0.394 = -0.359) and "+0.070" for Liar's dice 1d4 IR (0.077 - 0.006 = 0.071). FIX: Correct the subtraction errors in the Difference column. Takes 5 minutes.
+3. **Nothing blocks it.** Strongest attacked claims: C1, C5, C8.
+
+**THE MISSING CLAIM**
+The widening column (Placebo vs Baseline) in Table 3 is universally positive across all non-poker games (Dice +0.000 to +0.014). The paper claims "a wider observation costs the learner nothing measurable," but the data supports a slight regularization benefit from dummy inputs in the dice games, which is unexamined.
+
+**THE NUMBER CHAIN**
+**26.79 percent (oracle arm):** Abstract -> Table 2 -> Table 8 (Appendix I) -> C4. It survives the trip perfectly in isolation, but fails when subtracted from the 27.02 placebo baseline in the same sentences due to the arithmetic inconsistency detailed above.
+
+**THE PAPER I WOULD WRITE**
+This is the paper the authors already have. Title: "Is It the Game or the Agent? Measuring What a Game Hides and Diagnosing the Plateau." Claim: Observational ambiguity is distinct from the value of information, and a raw hidden-state probe can identify whether an agent is bottlenecked by belief modelling. Results: 1) The 88-game atlas showing 2P card games saturate early; 2) The exact decomposition proving a plateau splits into game-worth and learner-capture; 3) The oracle probe proving the agent gains nothing from raw hidden state.
+
+**THE ONE EXPERIMENT**
+Run the Gin Rummy oracle probe with a *structured* privileged feature encoding (e.g., probability distributions of hidden cards) instead of raw cards to test if the network was limited by the raw representation rather than the information itself. Costs roughly 2 days of compute for 12 seeds.
+
+**WHAT A HOSTILE REVIEWER SAYS FIRST**
+"The authors claim Gin Rummy is highly ambiguous, yet show handing the agent the hidden cards yields zero improvement, suggesting their specific MLP encoder is simply too weak to integrate the extra input plane. A negative result on one architecture and one game does not justify a generalized diagnostic framework."
+**Response:** We explicitly scope our claim to "this learner, on this recipe, graded against this fixed reference." The framework's value is precisely in isolating where the bottleneck lies for a *given* agent, allowing practitioners to stop tuning belief models when the architecture cannot exploit ground-truth data.
+
+**TITLE**
+The title overclaims slightly. The paper diagnoses *that* an agent stops improving from information starvation, but not exactly *why*.
+New Title: "Is It the Game or the Agent? Sizing Observational Ambiguity and Probing an Agent's Plateau."
+
+**RATING**
+
+* Claim discipline: 4/5
+* Evidence quality: 4/5
+* Novelty and framing: 5/5
+* Honesty: 5/5
+* Writing: 4/5
+* **TOTAL: 22/25**
+
+**VERDICT: SUBMIT AFTER ONE FIX**
+The paper is a rigorous, deeply honest measurement study that successfully bridges domain complexity and agent capacity. The decomposition of the plateau into worth and capture is clarifying, and the inclusion of the placebo probe is excellent experimental design. However, the arithmetic inconsistencies in the contrasts across the main text, Table 2, Table 7, and Table 8 are glaring and will undermine reviewer trust immediately. Fix the subtraction errors in the reported contrasts to align with the rounded means.

@@ -118,8 +118,8 @@ def table_gaps():
     capture's bias. Printed per game so a reader can check the eleven-out-of-eleven directly.
     """
     rows, _ = load_axis()
-    L = [r"\begin{tabular}{l r r r r c}", r"\toprule",
-         r"Game & Capture & Baseline gap & Oracle gap & Difference & Predicted \\",
+    L = [r"\begin{tabular}{l r r r r}", r"\toprule",
+         r"Game & Capture & Baseline gap & Oracle gap & Difference \\",
          r"\midrule"]
     agree = 0
     for g, rs in sorted(rows.items(), key=lambda kv: st.mean([r["capture"] for r in kv[1]])):
@@ -128,11 +128,50 @@ def table_gaps():
         og = st.mean([r["arms"]["oracle"]["gap_to_ceiling"] for r in rs])
         ok = (bg > og) == (cap > 100)
         agree += ok
-        L.append(f"{esc(nice(g))} & {cap:.0f}\\% & {bg:.3f} & {og:.3f} & ${bg-og:+.3f}$ & "
-                 f"{'yes' if ok else 'no'} \\\\")
+        diff = round(bg, 3) - round(og, 3)      # so the column subtracts as printed
+        L.append(f"{esc(nice(g))} & {cap:.0f}\\% & {bg:.3f} & {og:.3f} & ${diff:+.3f}$ \\\\")
     L += [r"\bottomrule", r"\end{tabular}"]
     open(os.path.join(OUT, "app_gaps.tex"), "w").write("\n".join(L) + "\n")
     return f"{agree}/{len(rows)}"
+
+
+def table_atlas():
+    """All 88 atlas rows with their provenance, so the mixed estimators can be audited.
+
+    Figure 1 cannot show which values are exact, which are combinatorial upper bounds and which
+    are right-censored lower bounds. A reviewer asked for the table that can, and this is it.
+    """
+    import csv
+    with open(os.path.join(HERE, "tables", "survey_full.csv")) as fh:
+        rows = list(csv.DictReader(fh))
+    short = {"closed form": "closed", "exact": "exact", "resampled": "resampled",
+             "not measured": "none"}
+    fam = {"card": "2p card", "multi": "3-4p card", "board": "board", "dice": "dice",
+           "comm": "signalling", "solo": "solo", "dial": "gin dial"}
+    def sortkey(r):
+        try:
+            return (0, -float(r["bits"]))
+        except (TypeError, ValueError):
+            return (1, 0)
+    L = [r"\begin{tabular}{l l l r l}", r"\toprule",
+         r"Game & Engine & Family & Bits & Provenance \\", r"\midrule"]
+    for r in sorted(rows, key=sortkey):
+        try:
+            bits = f"{float(r['bits']):.2f}"
+        except (TypeError, ValueError):
+            bits = "n/a"
+        note = short.get(r["bits_source"], r["bits_source"])
+        if r["bits_source"] == "resampled":
+            try:
+                if float(r["resample_censored_frac"]) > 0.5:
+                    note = "censored floor"
+            except (TypeError, ValueError):
+                pass
+        L.append(f"{esc(r['label'])} & {esc(r['engine'])} & {fam.get(r['family'], r['family'])} "
+                 f"& {bits} & {note} \\\\")
+    L += [r"\bottomrule", r"\end{tabular}"]
+    open(os.path.join(OUT, "app_atlas.tex"), "w").write("\n".join(L) + "\n")
+    return len(rows)
 
 
 def table_corrections():
@@ -173,4 +212,4 @@ if __name__ == "__main__":
             print(f"    {g}")
     print(f"  axis: {table_axis()} games | capacity: {table_capacity()} games | "
           f"gin: {table_gin()} runs | budget: {table_budget()} cells | "
-          f"corrections: {table_corrections()} entries | gaps: {table_gaps()} predicted")
+          f"atlas: {table_atlas()} rows | corrections: {table_corrections()} entries | gaps: {table_gaps()} predicted")
