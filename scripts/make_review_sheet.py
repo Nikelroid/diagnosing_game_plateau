@@ -181,8 +181,14 @@ CC_ROUND1 = {
              "separates them and says why an arm interval cannot contain zero.",
 }
 
+AGENTS = {1: ("GEMINI", "AI1(GEMINI)"), 2: ("ChatGPT", "AI2(ChatGPT)"),
+          3: ("GROK", "AI3(GROK)"), 4: ("PERPLEXITY", "AI4(PERPLEXITY)")}
+
+# Which slots a sheet carries. The master keeps all nine for merging the replies back together;
+# a per-agent sheet carries only that agent's slot and the CC written to it.
 SLOTS = ["AI1(GEMINI)", "AI2(ChatGPT)", "AI3(GROK)", "AI4(PERPLEXITY)",
          "CC1", "CC2", "CC3", "CC4", "Nima"]
+WHO = None          # None for the master sheet, else the agent number
 L = []
 
 
@@ -270,7 +276,8 @@ def claim(tag, headline, evidence):
     for line in evidence.strip("\n").split("\n"):
         L.append("  " + line if line.strip() else "")
     L.append("")
-    for s in SLOTS:
+    slots = SLOTS if WHO is None else [AGENTS[WHO][1], f"CC{WHO}", "Nima"]
+    for s in slots:
         r = CC_ROUND1.get((tag, int(s[2]))) if re.fullmatch(r"CC[1-4]", s) else None
         L.append(f"{s}:{{{r}}}" if r else f"{s}:{{}}")
     L.append("")
@@ -298,9 +305,21 @@ def main():
     engines = Counter(r["engine"] for r in atlas)
     prov = Counter(r["bits_source"] or "no number" for r in atlas)
 
-    L.append("FOUR-EXPERT SIGN-OFF: IS ANY CLAIM STILL WIDER THAN ITS EVIDENCE?")
+    if WHO is None:
+        L.append("ROUND TWO, MASTER SHEET: all four expert slots.")
+        L.append("Use this to merge the replies back together. Do not send it out; each expert")
+        L.append("has a sheet of their own so the four reviews stay independent.")
+    else:
+        name, slot = AGENTS[WHO]
+        L.append(f"ROUND TWO REVIEW SHEET FOR {name.upper()}")
+        L.append(f"You are {slot}. Write inside your own braces and inside no others.")
+        L.append(f"CC{WHO} holds our reply to what you filed in round one. Read it first: it says")
+        L.append("what we changed, and what we declined and why.")
+        L.append("The other three experts have their own sheets. You are not shown their answers,")
+        L.append("so that the four reviews stay independent.")
     L.append("Paper: Is It the Game or the Agent? (NeurIPS 2026 TAE workshop, 8pp + appendix)")
-    L.append("Every number below is read from the result files, not typed. C1..C11 are claims. T are tables, F figures, A appendix sections.")
+    L.append("Every number below is read from the result files, not typed. C1..C11 are claims. "
+             "T are tables, F figures, A appendix sections.")
     L.append("")
     L.append("=" * 96)
     L.append("")
@@ -494,13 +513,22 @@ you would drop entirely. If the real next step is not on the list, say what it i
             L.append(f"  {g}")
         L.append("")
 
-    out = os.path.join(HERE, "REVIEW_SHEET.txt")
+    name = "REVIEW_SHEET.txt" if WHO is None else f"REVIEW_SHEET_{AGENTS[WHO][0].upper()}.txt"
+    out = os.path.join(HERE, name)
     with open(out, "w") as f:
         f.write("\n".join(L) + "\n")
-    print(f"  wrote {out}: {sum(1 for x in L if x.startswith(chr(91))) } items, {len(SLOTS)} slots each")
-    print(f"  usable {len(good)} games / {sum(len(v) for v in good.values())} runs, "
-          f"{len(bad)} rejected")
+    items = sum(1 for x in L if re.match(r"^\[[CTFA]\d", x))
+    filled = sum(1 for x in L if re.match(r"^CC\d:\{[^}]", x))
+    print(f"  {name:<34} {items} items, {filled} replies to this agent")
+    return len(good), len(bad)
 
 
 if __name__ == "__main__":
-    main()
+    # the master first, then one sheet per agent
+    good, bad = main()
+    for who in AGENTS:
+        WHO = who
+        L.clear()
+        main()
+    WHO = None
+    print(f"  usable {good} games, {bad} rejected")

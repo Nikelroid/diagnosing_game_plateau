@@ -1,7 +1,16 @@
 ================================================================================
 ROUND TWO: DID THE FIXES LAND, AND DOES THE PAPER READ AS ONE VOICE?
-Paste this whole block. Attach the paper PDF and REVIEW_SHEET.txt.
-Tell the model which slot it owns before it starts.
+Paste this whole block. Attach the paper PDF and that model's own sheet:
+
+  Gemini      REVIEW_SHEET_GEMINI.txt      you are AI1
+  ChatGPT     REVIEW_SHEET_CHATGPT.txt     you are AI2
+  Grok        REVIEW_SHEET_GROK.txt        you are AI3
+  Perplexity  REVIEW_SHEET_PERPLEXITY.txt  you are AI4
+
+Each sheet carries one expert slot, the reply we wrote to that expert, and a
+slot for Nima. Nobody sees anybody else's answers, which is the point of
+asking four. REVIEW_SHEET.txt is the master for merging the replies; do not
+send it to a model.
 ================================================================================
 
 You are one of four experts reading this workshop paper for the second time. It goes to the
@@ -20,14 +29,19 @@ that changed meaning halfway through, a claim narrowed in one place and left wid
 Those seams are what you are hunting.
 
 YOUR SLOT
-You own exactly one of AI1(GEMINI), AI2(ChatGPT), AI3(GROK), AI4(PERPLEXITY). The user will
-tell you which. Write only inside your slot's braces. Never edit the item text, another
-expert's slot, a CC slot, or the Nima slot.
+Your sheet names you in its first two lines. It carries exactly one expert slot, and that slot
+is yours. Write only inside its braces. Never edit the item text, the CC slot, or the Nima
+slot. Return the whole sheet with your braces filled, so it can be merged.
 
 WHAT CHANGED SINCE YOU LAST READ IT
-The CC slots in REVIEW_SHEET.txt record what was done with each round-one finding, and why.
-Read them first. Do not re-file a finding the CC says was fixed unless the fix failed, and if
-it failed, say exactly how.
+The CC slot on each item records what we did with what YOU filed in round one, and why. Some
+say FIXED, some say PARTLY, and some say DECLINED with a reason. Read them first. Do not
+re-file a finding the CC says was fixed, unless the fix failed; if it failed, say exactly how.
+Where the CC declines something you raised, you may argue back, and we would rather you did
+than let it go.
+
+Your CC is empty on items where you filed nothing last round. Those are open: another expert
+may have found something there, or nobody looked.
 
 The largest change: the paper used to claim that the sign of the arm-gap difference predicts
 capture's bias "in eleven games out of eleven", with a rank correlation of 1.000. Two of you

@@ -1,6 +1,9 @@
-ROUND TWO, MASTER SHEET: all four expert slots.
-Use this to merge the replies back together. Do not send it out; each expert
-has a sheet of their own so the four reviews stay independent.
+ROUND TWO REVIEW SHEET FOR GEMINI
+You are AI1(GEMINI). Write inside your own braces and inside no others.
+CC1 holds our reply to what you filed in round one. Read it first: it says
+what we changed, and what we declined and why.
+The other three experts have their own sheets. You are not shown their answers,
+so that the four reviews stay independent.
 Paper: Is It the Game or the Agent? (NeurIPS 2026 TAE workshop, 8pp + appendix)
 Every number below is read from the result files, not typed. C1..C11 are claims. T are tables, F figures, A appendix sections.
 
@@ -18,13 +21,7 @@ Every number below is read from the result files, not typed. C1..C11 are claims.
   Gin Rummy anchor: 30.1 bits, cross-checked across two engines.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. You said calling all 88 rows 'computed support bits' collapses provenance. Right. Appendix B now carries all 88 rows with the estimator for each, and the text separates 11 exact, 45 upper bounds, 2 censored floors and 30 unmeasured.}
-CC3:{}
-CC4:{NOTED, no change. You accepted the definition and asked for 'unweighted tree average' at first use in the Figure 1 caption. The definition paragraph is now immediately before Figure 1, so the caption would repeat it within half a page.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -38,13 +35,7 @@ Nima:{}
   The paper now says "in this atlas, the extra bits come from extra players", not the general claim.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED, both halves. The 3-4p median is 39.9 as Table 1 says; the 31.1 in prose was stale. The denominator is now the 18 measured games, not all 23.}
-CC3:{}
-CC4:{AGREED. Same finding as ChatGPT on coverage. Fixed by scoping to measured games.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -61,13 +52,7 @@ Nima:{}
   is rejected from every table and figure by an automated rule.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. You said the fingerprint sentence overran what we showed. It is now three short sentences that describe the mechanism and stop.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -87,13 +72,7 @@ Nima:{}
   An earlier four-seed version had an interval of [-4.5, +2.7], which excluded almost nothing.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{FIXED, and this was the sharpest catch of the round. No contrast could be reproduced from the printed means: 27.02 minus 27.04 reads -0.02 while we printed -0.03. The difference was computed before rounding, which is defensible but not checkable. Contrasts now come from the means as printed.}
-CC2:{SOUND accepted, and your T8 note found the related error: we named Welch but used a t(11) multiplier. Now t at the Welch degrees of freedom, about 21. Intervals tightened to [-1.70, +1.20], [-1.51, +1.47] and [-1.57, +1.11].}
-CC3:{NOTED. You flagged that the interval still admits gains near 1.3 points. It is now 1.2 after the Welch correction, and the paper states that limit outright.}
-CC4:{AGREED. The chain you traced now holds with the corrected intervals.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -108,13 +87,7 @@ Nima:{}
   belief modelling, because a structured encoding of the same information might still pay.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. You said the prescription still reads as general advice. It now says the result reorders what to try next, and names the structured-feature test as the experiment that would settle it.}
-CC3:{NOTED. Same point as ChatGPT, same fix.}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -133,13 +106,7 @@ Nima:{}
   3.67 bits.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Worth depends on the frozen opponent. The paper now says both ceilings use the same fixed opponent policy, so worth is exact for that setting and not for the game in the abstract.}
-CC3:{}
-CC4:{FIXED. Your A4 point, that the two ceilings must be commensurate, is verified in the code: ceiling() takes one opponent and differs only in the acting player's partition. The paper states it now rather than implying it.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -155,13 +122,7 @@ Nima:{}
   free", and the paper no longer says so.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. 'There is no widening cost for a benefit to cancel' asserted more than the interval allows. Now 'no evidence that the cost of a wider input hides a real gain'.}
-CC3:{}
-CC4:{FIXED. 'Across all 88 runs' was an ambiguous unit, as you said. The widening column is now described per game over eight seeds, with Gin Rummy quoted separately.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -189,13 +150,7 @@ Nima:{}
   Per game the gap difference is 0.8 to 2.3 times the seed spread, so no single game settles it.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{PARTLY DECLINED. You marked this SOUND and said the paper warns against using capture as a point estimate. It did, but the supporting argument was circular, which the other two reviewers caught. Rewritten as algebra.}
-CC2:{FIXED, and this was the round's most important find. You and Perplexity independently showed the sign agreement is the identity banked = worth + g_b - g_o, so it is true by definition and measures nothing. Part III now derives it and says an earlier draft reported the count as evidence. The count and the rank correlation are gone.}
-CC3:{NOTED. You flagged the rank-correlation claim as resting on related configurations. The deeper problem was that it rested on nothing: it was an identity.}
-CC4:{FIXED. Same finding as ChatGPT, reached independently, and you were right that the quantities share arm returns. Verified: the identity holds to 1.1e-16.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -213,13 +168,7 @@ Nima:{}
   against 2.30 closed form).
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The limitations paragraph inherited the same circular wording. It now says capture is distorted in a known direction, not that we confirmed it in eleven games.}
-CC3:{DECLINED for this deadline. You, Gemini and Perplexity all named the structured-feature experiment as the one to run. It is named in the paper as the next step. There is no time to run it and we will not claim a result we do not have.}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -236,13 +185,7 @@ Nima:{}
   hides, used to read a specific agent's plateau, with a placebo that prices the intervention.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{SOUND accepted, no change.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -273,13 +216,7 @@ Nima:{}
   you would drop entirely. If the real next step is not on the list, say what it is.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -301,13 +238,7 @@ Nima:{}
     Solo against chance        3      0         n/a          n/a
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. 'Any estimate' hid a mixture of exact values, upper bounds and censored floors. The caption now says 'any reported value or bound, exact, upper or censored'. The two prose numbers you flagged are corrected under C2.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -326,13 +257,7 @@ Nima:{}
     \quad net of the placebo  is any of that the wider input?                   26.79 vs 27.02 placebo, -0.23 [-1.57, +1.11]   no benefit detected
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The row labels restored the two names the body had retired. Now 'Architecture sensitivity' and 'Oracle-search gap'.}
-CC3:{}
-CC4:{FIXED. Same point, and your suggested questions are close to what we used.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -358,13 +283,7 @@ Nima:{}
     Leduc action-map    3.67  8  1.358  1.041   77%      +0.025
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The caption asserted the game/learner split the body had already withdrawn.}
-CC3:{}
-CC4:{FIXED. Caption now names the opponent policy and says capture is distorted when the arms learn with unequal ease.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -467,13 +386,7 @@ Nima:{}
     Blackjack (RLCard)                      rlcard     solo        n/a     none
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{SOUND accepted, no change.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -490,13 +403,7 @@ Nima:{}
     Mahjong 4p  136   13    3             176.2            109.6
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Worth is invariant by construction, as you say. The caption now says exact worth is unchanged by the budget, and that the capture ratio moves.}
-CC3:{}
-CC4:{FIXED. Same point, same fix.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -519,13 +426,7 @@ Nima:{}
     Leduc poker  1,600,000  1.317  79%      0.412
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. 'Capacity bound' overstated a bucket-folding sweep. Now 'only Leduc improves steadily as the buckets approach exact states'.}
-CC3:{}
-CC4:{FIXED. Your wording, that this is a state-resolution signature rather than a diagnosis, is what the body now says.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -544,13 +445,7 @@ Nima:{}
     Liar's dice 1d4        0.79  0.65  0.69  0.60  0.79  0.81  0.73  0.81
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{FIXED. You found the difference column did not subtract as printed. It now does.}
-CC2:{FIXED. The 'Predicted' column asked whether the sign agrees, which the identity makes true by construction. The column is deleted.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -576,13 +471,7 @@ Nima:{}
     Liar's dice 1d4     108%     0.084         0.007       +0.077
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{FIXED. Same arithmetic problem you raised on C4, fixed the same way.}
-CC2:{FIXED. You caught that we named Welch and used t(11). The contrast intervals now use t at the Welch degrees of freedom, and the caption distinguishes arm intervals from contrast intervals.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -604,13 +493,7 @@ Nima:{}
     oracle minus placebo                             -0.23        [-1.57, +1.11]
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -624,13 +507,7 @@ Nima:{}
   What it draws: Horizontal bars, one per game, sorted by support bits, coloured by family. Hatched bars mark resampled values, which are right-censored lower bounds rather than estimates. 88 configurations. Gin Rummy marked as the anchor at 30.1.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{PARTLY. The bar chart cannot carry provenance, and we did not rebuild it. Instead Appendix B now holds the 88-row table with the estimator for every value, and the text tells readers to check provenance before comparing two games.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -644,13 +521,7 @@ Nima:{}
   What it draws: Three arms on one axis: baseline, oracle, placebo. One dot per training seed (12 each), a bar at the arm mean, and a 95 percent whisker. The three intervals overlap heavily.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The title asserted an exact zero. It now reads 'no detectable gain from the hidden hand, or from the widening'. We kept the seed dots and added the three contrasts to Table 2 rather than redrawing the figure.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -664,13 +535,7 @@ Nima:{}
   What it draws: Effect of the oracle across fifteen game and learner combinations, standardised by the seed-to-seed spread so games measured in return and in win rate share an axis. Raw effects printed beside each point. A shaded band marks where an effect cannot be told from none; Gin Rummy's interval is the only one inside it.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. 'Wherever' was universal language. The title now says 'in every tested small game, but not detectably on Gin Rummy', and the caption defines the pooled standard deviation, the symlog threshold and the 0.8 band.}
-CC3:{}
-CC4:{PARTLY. You asked for a forest plot in native units and called this a blocker. The definition was the real defect and it is fixed in the caption. Replacing the figure is a change we will not make hours before a deadline without time to check it.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -684,13 +549,7 @@ Nima:{}
   What it draws: One line per game, from how far the baseline arm sits below its ceiling to how far the oracle arm sits below its own. Lines coloured by whether capture exceeds 100 percent. 11 games. Every line for capture over 100 slopes one way and every line under it the other; this is the figure the eleven-of-eleven claim rests on.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The caption claimed the figure showed a mechanism. It now says the figure is a picture of the identity rather than evidence for it.}
-CC3:{}
-CC4:{FIXED. Same point, same fix.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -704,13 +563,7 @@ Nima:{}
   What it draws: The same probe under two learners that share no code, a tabular one and a neural one reading a fixed-width tensor. Gain from the hidden state on the y axis, one point per game per learner. The two agree on which games hide something usable.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{SOUND accepted, no change.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -724,13 +577,7 @@ Nima:{}
   What it draws: Worth and capture against training episodes, 25k to 1.6M on a log axis, for Kuhn and Leduc. Worth is a flat line in both; capture rises.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The subplot title claimed monotone growth the figure contradicts. Kuhn dips and returns. Now 'the share banked moves with budget; Leduc rises overall'.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -744,13 +591,7 @@ Nima:{}
   What it draws: Exploitability against the number of buckets the learner can tell apart, log x, rightmost point exact. One curve per game. Only Leduc descends.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{SOUND accepted. The replication caveat you raised elsewhere is now in the caption.}
-CC3:{}
-CC4:{FIXED. Caption and body now say signature rather than diagnosis.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -764,13 +605,7 @@ Nima:{}
   Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twelve. Tabular runs use data/configs/; neural runs use a fixed-width tensor observation and policy gradient, matching the encoder the Gin Rummy learner uses.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{PARTLY. You noted the appendix names scripts that do not all exist under those names. Corrected to the scripts that do.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -782,13 +617,7 @@ Nima:{}
   Table[tab:app-corrections] lists the entries whose closed form we had to repair. The naive count treats every physical card as distinguishable, which is right for a 52-card deck and wrong for a deck with identical copies. Two red sevens are the same holding whichever card you were dealt, so a hand is a multiset and not a sequence. Counting them as distinct inflates the estimate. For Mahjong it inflates it by 67 bits, and for UNO it puts the game above a ceiling it cannot reach. The repair changes one claim in the main text. Before it, two measured two-player card games hid more than Gin Rummy. After it, one does.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The section was called 'the atlas in full' and held only two corrections. It now carries all 88 rows with provenance, which is what the title promised.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -802,13 +631,7 @@ Nima:{}
   We also verified that the oracle plane is what we say it is. PettingZoo's opponents\_hand\_visible flag does not supply the opponent's hand. It exposes an ``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10, so a learner reading it cannot recover the hand. We built our own plane and checked it against engine ground truth at 1,200 decision points. Each curriculum opponent's input is trimmed to its own width, so the extra plane reaches the learner and nobody else.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{NOTED. You are right that the placebo matches shape and sparsity but not every marginal. The rejected game in Appendix G is exactly that failure, and we say so.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -822,13 +645,7 @@ Nima:{}
   The eleven games are not eleven independent domains. Seven are Liar's dice at different die sizes and three are Leduc variants, so the spread of bits is wider than the spread of game structure. That is a deliberate choice: holding the game fixed and moving one parameter is what lets worth be compared across rows at all. It also means the seven-to-four split in Section[app:mechanism] tracks two game families, not seven independent confirmations, and we do not read it as such.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Seeds reach banked and widening directly and capture through banked, not 'the banked column alone'.}
-CC3:{}
-CC4:{FIXED. Both ceilings share one opponent policy, verified in the code and now stated.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -840,13 +657,7 @@ Nima:{}
   Kuhn poker is the useful contrast. Its capture does not climb monotonically: it dips to 83 percent at 400,000 episodes and returns to 97 at 1,600,000. The game is small enough that the learner is already near its ceiling at the smallest budget. What the middle budgets show is seed noise rather than a trend, and we report it rather than smoothing it away.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Worth is invariant by construction, so the appendix no longer presents budget invariance as a test that worth passed.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -858,13 +669,7 @@ Nima:{}
   Leduc Hold'em is the clean case. Exploitability falls from 5.58 at two buckets to 1.55 with exact states, and the curve is monotone over the last three points. That is the signature we would expect from a state-resolution bottleneck, on a single sweep without replication. Kuhn poker and Liar's dice are flat across the whole sweep, because both are small enough that two buckets already separate what matters. Dark hex on a two by two board is solved, so every arm reads zero. It is in the table as a control: the instrument should return zero when there is genuinely nothing to find, and it does.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. 'That is what being capacity bound looks like' is now a signature on one unreplicated sweep.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -878,13 +683,7 @@ Nima:{}
   The one-die games are safe for the reason the two-dice game is not: their placebo alphabet is three to six values, far too coarse to fingerprint a deal. The fix is to match the placebo's cardinality to the hidden state rather than to its shape, which is a rerun we did not have time for. We exclude the game from every table rather than report it, and the rejection rule is in scripts/make\_appendix.py so no future run can enter a table unannounced.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Same overrun as C3, split into shorter sentences that stop at what we showed.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -902,13 +701,7 @@ Nima:{}
   What we can rule out. One reading is a bug in the oracle ceiling. If it were too low, capture would exceed 100 percent everywhere, and it does not. The four poker variants run the same ceiling code and land below. A second reading is that the effect is too small to trust. Per game the gap difference is 0.8 to 2.3 times the seed spread of the banked column, so no single game settles it on its own. We report the two-family pattern rather than a test, because eleven related configurations do not supply eleven independent trials.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. Rewritten around the derivation. The ordering claim is gone.}
-CC3:{}
-CC4:{FIXED. You said 'bias' presumes an estimand we do not have. The section now says the identity gives the direction of the distortion and no estimator for its size.}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
@@ -920,13 +713,7 @@ Nima:{}
   Twelve seeds per arm is what it took to say this. An earlier four-seed version of the same probe had an interval of [-4.5, +2.7] on the oracle arm, which could not exclude an eleven percent relative gain. A null is only as good as the seeds behind it, and four was not enough.
 
 AI1(GEMINI):{}
-AI2(ChatGPT):{}
-AI3(GROK):{}
-AI4(PERPLEXITY):{}
 CC1:{}
-CC2:{FIXED. The sentence conflated arm-mean intervals with contrast intervals. It now separates them and says why an arm interval cannot contain zero.}
-CC3:{}
-CC4:{}
 Nima:{}
 
 ------------------------------------------------------------------------------------------------
