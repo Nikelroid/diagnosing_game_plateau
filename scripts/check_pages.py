@@ -38,16 +38,29 @@ def main():
             print("BUILD FAILED"); print("\n".join(re.findall(r"^!.*", log, re.M)[:8])); return 2
         import fitz
         doc = fitz.open(pdf)
-        refs = appx = None
+        refs = appx = ref_y = None
         for i, page in enumerate(doc, 1):
             text = page.get_text()
             if refs is None and re.search(r"^\s*References\s*$", text, re.M):
                 refs = i
+                for b in page.get_text("blocks"):
+                    if re.search(r"^\s*References\s*$", b[4], re.M):
+                        ref_y = b[1]
+                        break
             if appx is None and re.search(r"^\s*Appendix\s*$", text, re.M):
                 appx = i
         if refs is None:
             print("could not find the References heading"); return 2
-        content = refs - 1
+
+        # Counting refs-1 treats body text sharing a page with the heading as free. It is not:
+        # if the body runs onto the References page at all, the body is longer than that page
+        # count. Charge the spill, unless the heading sits at the very top of the page.
+        page_top = 100.0
+        spill = ref_y is not None and ref_y > page_top
+        content = refs - 1 + (1 if spill else 0)
+        if spill:
+            print(f"  NOTE  body text runs onto page {refs} above the References heading "
+                  f"(heading at y={ref_y:.0f}), so that page counts as content")
         errs = len(re.findall(r"^!", log, re.M))
         undef = len(re.findall(r"undefined", log))
         print(f"  content pages   {content}/{LIMIT}   {'OK' if content <= LIMIT else 'OVER LIMIT'}")

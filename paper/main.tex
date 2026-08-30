@@ -29,6 +29,7 @@
 \usepackage[dblblindworkshop]{neurips_2026}
 \workshoptitle{TAE (Trust-AI-Eval): Can We Trust AI Evaluation?}
 \usepackage{amsmath}
+\usepackage{array}      % >{\raggedright\arraybackslash} in p{} columns
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{graphicx}
@@ -111,16 +112,13 @@ belong together. Without the atlas, a plateau invites the excuse that the game h
 Without the probes, the atlas is a table nobody acts on.
 
 \paragraph{What is and is not new here.} Neither half of this paper invents its quantity.
-\citet{pimc} measured three properties of a game: leaf correlation, bias and disambiguation factor.
-They showed those properties predict when determinized search succeeds, which makes it the closest
-precedent for Part I. Our difference is scope rather than kind. We measure one quantity across 88
-real games, and use it to choose a benchmark. \citet{rbccomplexity} size information sets in reconnaissance blind
-chess against poker and Go, which is our atlas for a single game. \citet{ggpii} attack the same
-uncertainty from the planning side, sampling information sets and valuing information-gathering
-moves. Handing privileged state to an agent is likewise standard, in trick-taking inference
-\citep{policyinference} and in determinized search \citep{pimc,ismcts}. What we have not found is the two
-halves joined. A provenance-aware measurement of what a domain hides, used to read one agent's
-plateau, with a placebo that prices the intervention.
+\citet{pimc} measured leaf correlation, bias and disambiguation factor, and showed they predict
+when determinized search succeeds. That is the closest precedent for Part I, and our difference is
+scope rather than kind. \citet{rbccomplexity} size information sets in reconnaissance blind chess,
+which is our atlas for a single game, and \citet{ggpii} attack the same uncertainty from the
+planning side. Handing privileged state to an agent is standard too \citep{policyinference,ismcts}.
+What we have not found is the two halves joined: a provenance-aware measurement of what a domain
+hides, used to read one agent's plateau, with a placebo that prices the intervention.
 
 \section{Part I: an atlas of what is hidden}
 
@@ -189,10 +187,9 @@ of this size cannot conceal much more. A difficulty ladder assembled from
 distinct two-player card games therefore bunches at the top rather than spanning a range.
 
 \paragraph{In this atlas, the extra bits come from extra players.} The three and four-handed family
-has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong, with
-Hearts, Spades and contract bridge at 56.2.
-Those bits are bought with extra hands and arrive attached to coalitions and signalling, which is a
-different problem rather than a deeper version of the same one. A difficulty \emph{axis} therefore has to come
+has a median of 39.9 bits over the 15 of 21 we can measure, and reaches 109.6 for Mahjong. Those
+bits are bought with extra hands, and they arrive attached to coalitions and signalling. That is a
+different problem, not a deeper version of the same one. A difficulty \emph{axis} therefore has to come
 from a dial inside one game. Our eight Gin Rummy configurations hold the rules fixed and move only
 the deck and hand size. They sweep 5.1 to 30.1 bits.
 
@@ -271,8 +268,8 @@ controlled capacity sweep. The controlled version folds information states into 
 buckets, and it is in Appendix~\ref{app:capacity}. A
 plain MLP
 averages 25.5 percent over four seeds and a self-attention encoder 25.7, with all eight seeds inside
-21.2 to 30.0. Attention buys variance, not mean, at roughly twelve times the wall-clock cost, so the
-network is not the binding constraint among the encoders we tried.
+21.2 to 30.0. Attention buys variance, not mean, at roughly twelve
+times the wall-clock cost. The network is not the binding constraint among the encoders we tried.
 
 \paragraph{Probe 2: the oracle-search gap.} Run a determinized search
 \citep{pimc,ismcts} graded fairly, then as an oracle handed the true hidden cards, following
@@ -287,9 +284,8 @@ inside this search protocol, not the decision-theoretic value of revealing the s
 state appended to the observation and change nothing else, putting the question to the learner
 rather than to a search agent. Handed the opponent's hand outright, it reaches $26.79$
 percent across twelve seeds against a $27.04$ baseline. That is $-0.25$ points, with a 95 percent
-interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed version of this probe had an
-interval of $[-4.5, +2.7]$. That could not exclude an eleven percent relative gain, and a null is only as good as the seeds
-behind it.
+interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed version had an interval of
+$[-4.5, +2.7]$, which could not exclude an eleven percent relative gain.
 
 A third arm decides what that null means, because widening an observation is not free. The network gains inputs it must learn to ignore, and that
 cost is subtracted from whatever the real plane is worth. We therefore run a \emph{placebo} plane of the same shape and sparsity, holding ten cards
@@ -300,15 +296,14 @@ it changes only whether the plane is true. It holds the shape of the
 input fixed and changes only whether the plane is true. That contrast is $-0.23$ points, with an interval of
 $[-1.57, +1.11]$, and Table~\ref{tab:probes} carries all three.
 
-What the interval excludes is worth stating plainly. Twelve seeds rule out gains above about $1.2$
-points, which is a fifth of the distance from this agent's $27$ percent to the parity its reference
-defines. Smaller gains remain possible, and we do not claim the effect is exactly zero.
+Twelve seeds rule out gains above about $1.2$ points, a fifth of the distance from this agent's
+$27$ percent to the parity its reference defines. Smaller gains remain possible, and we do not claim the effect is exactly zero.
 
 Two details decide whether the probe measures what it claims. PettingZoo's
-\texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand. The flag exposes
-an ``unknown cards'' plane, which holds 41 cards on a fresh deal against the opponent's 10. We verified our
-plane against engine ground truth at 1{,}200 decision points. And we trim each curriculum
-opponent's input to its own width, so the extra plane reaches the learner alone.
+\texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand; it exposes an
+``unknown cards'' plane holding 41 cards on a fresh deal. We built our own plane and checked it
+against engine ground truth at 1{,}200 decision points, and we trim each curriculum opponent's
+input to its own width, so the extra plane reaches the learner alone.
 
 \paragraph{Does the probe work at all?} A null is worth nothing without evidence the
 instrument can fire. We ran the identical probe on every OpenSpiel game small
@@ -341,12 +336,11 @@ is a ratio of two gains. Part III
 shows it is distorted in a known direction when the two arms learn with unequal ease. We read it as
 a bound, not a point estimate.
 
-Both ceilings are computed against the same fixed opponent policy, and the only difference between
-them is whether the acting learner sees the hidden state. Worth is therefore exact for that
-evaluation setting rather than for the game in the abstract. Within a setting it behaves as a
-property of the game should. Worth does not move. We swept training
-budgets over a sixty-four-fold range, from 25{,}000 to 1{,}600{,}000 episodes. In both games worth
-is constant to three decimals at every budget (Appendix~\ref{app:budget}). Capture moves with the budget
+Both ceilings use the same fixed opponent policy, and differ only in whether the learner sees the
+hidden state, so worth is exact for that evaluation setting rather than for the game in the
+abstract. Within a setting it behaves as a game property should. Across a sixty-four-fold range of
+training budgets, 25{,}000 to 1{,}600{,}000 episodes, worth is constant to three decimals in both
+games (Appendix~\ref{app:budget}). Capture moves with the budget
 instead, rising from $56$ to $79$ percent in Leduc Hold'em and moving unevenly in Kuhn. A plateau therefore separates into a
 quantity set by the game and a quantity set by the agent, which is the distinction a win rate
 cannot make.
@@ -386,11 +380,10 @@ That equation is an identity, not a
 finding. It follows from the definitions in one line, and our runs satisfy it to machine precision. Dividing by worth gives the consequence: capture exceeds $1$ exactly when $g_b > g_o$. That is, exactly when the baseline arm sits further below its ceiling
 than the oracle arm sits below its own.
 
-So the seven games are not anomalies and they are not noise. The identity ties the two quantities
-together, so capture reads above $100$ percent whenever the oracle arm is easier to learn. Our eleven games show exactly that. Revealing the hidden state supplies information, and it also
-removes the need to hold a belief over what cannot be seen. The four games below $100$ percent are the poker variants. There
-the oracle arm is the harder one, because a much higher ceiling leaves the learner further from
-it.
+So the seven games are neither anomalies nor noise. Capture reads above $100$ percent whenever the
+oracle arm is the easier one to learn, and revealing the hidden state does make it easier: the
+learner no longer holds a belief over what it cannot see. The four games below $100$ percent are
+the poker variants, where a much higher oracle ceiling leaves the learner further from it.
 
 \begin{figure}[t]
   \centering
@@ -401,57 +394,46 @@ it.
   \label{fig:mechanism}
 \end{figure}
 
-Capture is therefore a biased statistic with a known sign rather than an unreliable one. Where the
-oracle arm learns more easily, capture reads high; where it learns less easily, capture reads low.
-Read as a bound it still says something, and the poker learners bank at least the $73$ to $78$
-percent shown. Read as a point estimate it says less than it appears to, and we do not use it as
-one. What we cannot yet do is correct it, because Equation~\eqref{eq:identity} gives the direction
-of the distortion but not an estimator for its size.
-
-None of this reaches the Gin Rummy null. That null is a difference between two arms and it never
-divides by worth, so the identity is not in its path.
+Capture is therefore distorted in a known direction rather than unreliable. Read as a bound it
+still says something, and the poker learners bank at least the $73$ to $78$ percent shown. Read as
+a point estimate it says less than it appears to, and we do not use it as one. We cannot correct
+it, because Equation~\eqref{eq:identity} gives the direction of the distortion and not its size.
+None of this reaches the Gin Rummy null, which never divides by worth.
 
 \section{Reading both halves together}
 
-The atlas places Gin Rummy at 30.1 support bits, within 4 of the two-player ceiling. The agent is
-therefore graded in a game with high observational ambiguity, not a thin one. The probes then say the
-plateau is not relieved by that information. No tested encoder does better, the subset argument puts
-parity inside the learner's own information, and handing over the opponent's hand outright moves
-nothing we can measure.
+The atlas places Gin Rummy at 30.1 support bits, within 4 of the two-player ceiling, so the agent
+is graded in a game with high observational ambiguity. The probes then say the plateau is not
+relieved by that information. No tested encoder does better, the subset argument puts parity inside
+the learner's own information, and the opponent's hand handed over outright moves nothing.
 
-What follows is narrower than it first looks. We have not shown that the opponent's hand is worth
-nothing in Gin Rummy, nor that belief modelling cannot help. We have shown that this learner, on
-this recipe, graded against this fixed reference, banks nothing from a raw hidden-hand channel. The result reorders what to try next, putting optimisation, reward, curriculum and representation
-before belief modelling. The cheapest possible belief model, the true answer handed over free,
-already buys nothing. A structured encoding of the same information might still pay where the
-raw plane does not, and that is the experiment we would run first.
+That is narrower than it looks. We have not shown the opponent's hand is worth nothing, nor that
+belief modelling cannot help. We have shown that this learner, on this recipe, against this
+reference, banks nothing from a raw hidden-hand channel. The cheapest possible belief model, the
+true answer handed over free, already buys nothing, so optimisation, reward, curriculum and
+representation come first. A structured encoding of the same information might still pay, and that
+is the experiment we would run next.
 
-\paragraph{When no strong reference exists.} Most domains have no hand-codable expert. In descending order of what they buy: the strongest available heuristic, frozen, and reported with
-its saturation point; a frozen pool with a fixed Elo anchor; a snapshotted checkpoint promoted to
-reference and never updated. Best where possible is a reference built on a subset of the learner's
-observation, because that makes parity reachable by construction. Equilibrium baselines
-\citep{cfr,nfsp,deepcfr} give an absolute reference where the game is small enough to solve.
+\paragraph{When no strong reference exists.} Most domains have no hand-codable expert. The best
+substitute is a reference built on a subset of the learner's observation, because parity is then
+reachable by construction. Failing that, freeze the strongest heuristic available and report its
+saturation point. Equilibrium baselines \citep{cfr,nfsp,deepcfr} give an absolute reference
+wherever the game is small enough to solve.
 
-\paragraph{Limitations.} The case study is one game and one expert, and the search bound is
-confounded with strategy fusion. The decomposition covers eleven games, but all of them are small
-enough to solve exactly, which is the same property that makes them unlike Gin Rummy. Capture is distorted wherever the two arms sit
-unequally far below their ceilings, which is seven of those eleven. We report the direction rather
-than correcting it, because we have no estimator that does. The architecture probe covers the encoders we could train at scale, and it varies inductive bias
-and compute together. Neither it nor the bucket sweep addresses capacity a network
-loses during training \citep{capacityloss}. Capacity loss during training is a live alternative explanation for a plateau, and we do not
-test it. The closed forms count hands
-and ignore public information. Bits are a property of the game and not of the difficulty of
-learning it: we claim the two are routinely conflated, not that they are unrelated.
+\paragraph{Limitations.} The case study is one game and one reference, and the search bound is
+confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly,
+which is the property that makes them unlike Gin Rummy, and seven have a distorted capture that we
+report rather than correct. The architecture probe varies inductive bias and compute together, and
+neither it nor the bucket sweep tests capacity lost during training \citep{capacityloss}, a live
+rival explanation for any plateau. The closed forms count hands and ignore public information.
+Support bits are a property of the game and not of the difficulty of learning it: we claim the two
+are routinely conflated, not that they are unrelated.
 
 \section{Conclusion}
 
 Choosing a domain is a measurement problem and reading a plateau is a diagnostic one, and both are
-usually settled by tradition. Eighty-eight games measured, three probes, eleven games
-decomposed. This plateau is not explained by the hidden information, in a game near the top of its
-family for ambiguity. Support bits, the value of the hidden state, and what a learner banks from it
-are three different quantities. This paper is mostly an argument that they be measured
-separately. The decomposition also prices its own instrument, and says where capture can
-and cannot be read as a number.
+usually settled by tradition. What a game hides, what that is worth, and what a learner banks are
+three different quantities, and they should be measured apart.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
