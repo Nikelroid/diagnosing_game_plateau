@@ -126,12 +126,11 @@ Hidden information at a decision is $\log_2$ of the number of histories consiste
 player's information state. Zero is perfect information; each further bit doubles the worlds the
 player must consider. We compute it three ways and always report which.
 
-\paragraph{What this number is, and what it is not.} We call this number \emph{support bits}.
-Three quantities are easy to confuse here, so we name all three and keep them apart.
-
-Write $o$ for what the acting player can see, and $I(o)$ for the set of complete game histories
-that are consistent with seeing $o$. Support bits are $\log_2$ of the size of that set. They count
-how many histories are still possible, and they weight every one of them equally.
+\paragraph{What this number is, and what it is not.} We call this number \emph{support bits}, and
+three quantities are easy to confuse here, so we name all three and keep them apart. Write $o$ for
+what the acting player can see, and $I(o)$ for the set of complete game histories consistent with
+seeing $o$. Support bits are $\log_2$ of the size of that set. They count how many histories are
+still possible, and they weight every one of them equally.
 
 Posterior entropy is the second quantity. It asks how likely each of those histories is, given
 chance and the players' policies, and it is never larger than support bits. A player who knows the
@@ -140,10 +139,9 @@ remain possible.
 
 The value of the hidden information is the third. It asks what an optimal player would gain by
 being told the hidden state. This one can be zero while support bits are large, because many
-different hidden hands can call for the same move.
-
-Support bits bound the second quantity and say nothing about the third. We compute the third
-exactly wherever we can, and we call it \emph{worth}.
+different hidden hands can call for the same move. Support bits bound the second quantity and say
+nothing about the third, and we compute the third exactly wherever we can, calling it
+\emph{worth}.
 
 We report one number per game: the mean of the support bits over every distinct information state
 in the tree, pooled across both seats. Every information state counts once, however often play
@@ -151,16 +149,22 @@ actually reaches it. A game with rare huge information sets and common small one
 higher than a player would feel. We count states equally because that needs no policy. Weighting them by how often play reaches
 them would make the number describe the policy as much as the game.
 
-\textbf{Exact} enumeration walks the tree and groups histories by information state. Enumeration
-gives the true value, and we can afford it on 11 of our 88 rows. \textbf{Closed form} counts the ways the hidden hands
-could have been dealt. For one hidden hand of $k$ cards drawn from $u$ cards the player cannot see, that count is
-$\log_2\binom{u}{k}$. A full table needs the multinomial, because it matters which opponent holds
-which cards. The arithmetic is exact for the deal.
-But it counts hands only, and ignores what the public cards have already ruled out. Measured
-against the information-set definition, the closed form is an upper bound rather than an estimate. We can size
-that gap on one game: Leduc reads 2.01 exact against 2.30 closed form. One row does not establish
-that the gap is small in games with richer public histories, and we do not claim it does. \textbf{Resampling} draws worlds consistent with the information state and counts the distinct
-ones, censored at the sample count.
+\textbf{Exact} enumeration walks the tree and groups histories by information state. It gives the
+true value, and we can afford it on 11 of our 88 rows.
+
+\textbf{Closed form} counts the ways the hidden hands could have been dealt. For one hidden hand of
+$k$ cards drawn from $u$ the player cannot see, that count is $\log_2\binom{u}{k}$, and a full
+table needs the multinomial, because it matters which opponent holds which cards.
+
+\textbf{Resampling} draws worlds consistent with the information state and counts the distinct
+ones, censored at the sample count. It is the only method that needs no closed form, and the only
+one that can fail without saying so.
+
+The closed form is exact arithmetic for the deal, but it counts hands only and ignores what the
+public cards have already ruled out, so against the information-set definition it is an upper
+bound. We can size that gap on one game: Leduc reads 2.01 exact against 2.30 closed form. One row
+does not establish that the gap is small in games with richer public histories, and we do not claim
+it does.
 
 The catalog spans 79 games from OpenSpiel \citep{openspiel}, the only engine here exposing
 information-state strings and world resampling, and 9 from RLCard \citep{rlcard} for games it does
@@ -216,9 +220,8 @@ out of samples, not of worlds; the closed form puts Hearts at 56.2, nearly nine 
 
 \textbf{Degeneracy.} The second is worse, because it looks like a clean result. Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back the same world
 on every draw. A survey trusting that column alone would file a 30-bit game beside Connect Four.
-
-Neither failure is visible without a second estimator to disagree with. These two failures are the practical case for reporting provenance in every row, and our released
-table does.
+Neither failure is visible without a second estimator to disagree with, which is the practical case
+for reporting provenance in every row, as our released table does.
 
 \paragraph{And a third failure, in our own instrument.} The two above are failures of an
 estimator we did not write. A twelfth game caught one in a control we did write. In Liar's dice with
@@ -226,8 +229,10 @@ two dice per player, the placebo arm scored $0.74$ above the baseline and, decis
 its own exact ceiling, which no policy can do. The cause is the mechanism the placebo exists to avoid. The
 fake plane is drawn once per deal, from a space large enough that the draw is nearly unique. It
 therefore stopped being noise and became a fingerprint of the deal. A tabular learner could key on
-it and recover exactly what the plane was built to withhold. We report the game as rejected rather than fixing it after the
-fact (Appendix~\ref{app:reject}). The lesson is the one this section is about. The alarm was not that the number looked wrong. The
+it and recover exactly what the plane was built to withhold. We report the game as rejected rather than fixing it after the fact
+(Appendix~\ref{app:reject}).
+
+The lesson is the one this section is about. The alarm was not that the number looked wrong. The
 alarm was that it broke a bound we could compute independently.
 
 \section{Part II: three probes for a plateau}
@@ -288,15 +293,17 @@ interval of $[-1.70, +1.20]$ (Figure~\ref{fig:probes}). An earlier four-seed ver
 
 A third arm decides what that null means, because widening an observation is not free: the network
 gains inputs it must learn to ignore. We therefore run a \emph{placebo} plane of the same shape and
-sparsity, holding ten cards this player cannot see, drawn independently of the opponent's hand. It scores $27.02$
-percent, which is $-0.02$ points from baseline with an interval of $[-1.51, +1.47]$. We therefore
-find no evidence that the cost of the wider input is hiding a real gain. The contrast that isolates the information is oracle against placebo, and
-it changes only whether the plane is true. It holds the shape of the
-input fixed and changes only whether the plane is true. That contrast is $-0.23$ points, with an interval of
+sparsity, holding ten cards this player cannot see, drawn independently of the opponent's hand. It scores $27.02$ percent, which is $-0.02$ points from
+baseline with an interval of $[-1.51, +1.47]$.
+
+We therefore find no evidence that the cost of the wider input is hiding a real gain. The contrast
+that isolates the information is oracle against placebo, which holds the shape of the input fixed
+and changes only whether the plane is true. That contrast is $-0.23$ points, with an interval of
 $[-1.57, +1.11]$, and Table~\ref{tab:probes} carries all three.
 
-Twelve seeds rule out gains above about $1.2$ points, a fifth of the distance from this agent's
-$27$ percent to the parity its reference defines. Smaller gains remain possible, and we do not claim the effect is exactly zero.
+Twelve seeds rule out gains above about $1.2$ points, which is a fifth of the distance from this
+agent's $27$ percent to the parity its reference defines. Smaller gains remain possible, and we do
+not claim the effect is exactly zero. Smaller gains remain possible, and we do not claim the effect is exactly zero.
 
 Two details decide whether the probe measures what it claims. PettingZoo's
 \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand; it exposes an
@@ -364,11 +371,10 @@ find no evidence that the cost of a wider input hides a real gain, which is the 
 exists to rule out. That claim is weaker than saying widening is free, and it is the one the runs support.
 
 \paragraph{Capture can exceed one hundred percent, and the algebra says why.} Seven of the eleven
-games report capture above $100$ percent. At face value that is impossible. The ceilings are
-exact, so the error is not in them. The error is in what capture quietly assumes.
-
-Write $g_b$ for how far the baseline arm sits below its own ceiling, and $g_o$ for the same
-quantity in the oracle arm. Then banked, worth and those two gaps are not independent:
+games report capture above $100$ percent. At face value that is impossible. The ceilings are exact,
+so the error is not in them; it is in what capture quietly assumes. Write $g_b$ for how far the
+baseline arm sits below its own ceiling, and $g_o$ for the same quantity in the oracle arm. Then
+banked, worth and those two gaps are not independent:
 %
 \begin{equation}
 \text{banked} \;=\; \text{worth} \;+\; g_b \;-\; g_o .
@@ -425,9 +431,8 @@ are routinely conflated, not that they are unrelated.
 \section{Conclusion}
 
 Choosing a domain is a measurement problem and reading a plateau is a diagnostic one. Both are
-usually settled by tradition, and this paper is an argument for measuring them instead.
-
-The measuring is harder than it looks. We could put a number on 58 of 88 configurations, and the
+usually settled by tradition, and this paper is an argument for measuring them instead. The
+measuring is harder than it looks. We could put a number on 58 of 88 configurations, and the
 instruments lied three times: twice in an estimator we inherited, once in a control we built. Every
 row therefore carries its provenance, and an arm that scored above a ceiling no policy can pass was
 thrown out rather than explained.
@@ -439,8 +444,9 @@ same probe splits a plateau into what the information is worth and what the lear
 shows why the second is distorted when the two arms learn with unequal ease.
 
 The lesson generalises past our case study. What a game hides, what that is worth, and what a
-learner banks are three different quantities. They are routinely reported as one, and separating
-them changes which experiment you run next.
+learner banks are three different quantities, and they are routinely reported as one. Separating
+them changes which experiment you run next, which is the whole practical point of measuring rather
+than assuming.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
