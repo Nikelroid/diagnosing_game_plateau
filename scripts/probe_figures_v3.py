@@ -19,15 +19,18 @@ v2 = importlib.util.module_from_spec(_v2); _v2.loader.exec_module(v2)
 INK, RULE, MUTED = v2.INK, v2.RULE, v2.MUTED
 TEAL, TEAL_L, GOLD, GOLD_L = v2.TEAL, v2.TEAL_L, v2.GOLD, v2.GOLD_L
 SLATE, SLATE_L, PLUM, PLUM_L = v2.SLATE, v2.SLATE_L, v2.PLUM, v2.PLUM_L
-HERE, save, nice = v2.HERE, v2.save, v2.nice
+HERE, save, nice = v2.HERE, v2.save, v2.nice   # axis_data reached via v2.axis_data
 MAIN = "$HOME/Adversarial-CoEvolution/sweep/curriculum"
 
 
 def load_axis():
-    rows = defaultdict(list)
-    for p in glob.glob(os.path.join(HERE, "data", "axis_games", "*.json")):
-        r = json.load(open(p)); rows[r["game"]].append(r)
-    return rows
+    """Shared loader, so a game rejected from the tables is not still drawn in a figure.
+
+    fig_mechanism plots the very quantity the rejection rule tests, so a rejected game here would
+    contradict the eleven-of-eleven claim the figure is cited for.
+    """
+    good, _ = v2.axis_data.load()
+    return good
 
 
 def load_neural():

@@ -9,7 +9,7 @@ Styling follows the companion paper: tinted fills with a saturated edge of the s
 soft grid behind the data, serif text so figures read as part of the page rather than beside it.
 """
 from __future__ import annotations
-import glob, json, math, os, statistics as st
+import glob, json, math, os, sys, statistics as st
 from collections import defaultdict
 
 import matplotlib
@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import axis_data
 FIGS = os.path.join(HERE, "figures")
 
 INK, RULE, MUTED = "#16242d", "#ccd4d8", "#77878f"
@@ -63,12 +66,13 @@ def save(fig, name):
 
 
 def fig_decomposition():
-    rows = defaultdict(list)
-    for p in glob.glob(os.path.join(HERE, "data", "axis_games", "*.json")):
-        r = json.load(open(p)); rows[r["game"]].append(r)
+    rows, _ = axis_data.load()
     if not rows:
         print("  [skip] decomposition: no data"); return
-    items = sorted(rows.items(), key=lambda kv: kv[1][0].get("hidden_bits") or 0)
+    # A game whose tree exceeds the enumeration cap has no bit count and cannot be placed on this
+    # axis; the table reports it as "not computed" instead.
+    rows = {g: rs for g, rs in rows.items() if rs[0].get("hidden_bits") is not None}
+    items = sorted(rows.items(), key=lambda kv: kv[1][0]["hidden_bits"])
     labels = [nice(g) for g, _ in items]
     worth = [st.mean([r["information_worth"] for r in rs]) for _, rs in items]
     got = [st.mean([r["oracle_minus_baseline"] for r in rs]) for _, rs in items]

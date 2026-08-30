@@ -11,54 +11,22 @@ from collections import defaultdict
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, HERE)          # so hidden_info_survey imports when run from scripts/
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # for gin_arms
+
+import axis_data
 MAIN = "$HOME/Adversarial-CoEvolution/sweep/curriculum"
 OUT = os.path.join(HERE, "tables")
 
 
 def load_axis():
-    """Axis-sweep results grouped by game, split into usable and rejected.
-
-    Rejection rule: an arm whose trained return exceeds its own exact ceiling. The ceiling is a
-    closed-form property of the game, so exceeding it means the arm is not the arm it claims to be.
-    Observed once, in liars_dice 2d3, where the per-deal placebo tag became a near-unique
-    fingerprint of the deal and leaked through the back door what it was built to withhold.
-    """
-    rows = defaultdict(list)
-    for path in glob.glob(os.path.join(HERE, "data", "axis_games", "*.json")):
-        r = json.load(open(path))
-        rows[r["game"]].append(r)
-    good, bad = {}, {}
-    for g, rs in rows.items():
-        violation = False
-        for arm in ("baseline", "oracle", "placebo"):
-            gaps = [r["arms"][arm]["gap_to_ceiling"] for r in rs if arm in r["arms"]]
-            if len(gaps) < 2:
-                continue
-            mean = st.mean(gaps)
-            # A single seed can land a hair above the ceiling: the arm is evaluated by sampling
-            # episodes while the ceiling is exact. Averaged over seeds that noise cancels, so the
-            # test is on the mean against its own standard error, not on any one run.
-            sem = st.stdev(gaps) / math.sqrt(len(gaps))
-            if mean < -2 * max(sem, 1e-9):
-                violation = True
-        (bad if violation else good)[g] = rs
-    return good, bad
+    """Delegates to scripts/axis_data.py, which figures read too."""
+    return axis_data.load()
 
 
 def esc(x):
     return str(x).replace("_", r"\_").replace("&", r"\&").replace("%", r"\%")
 
 
-def nice(g):
-    if g.startswith("liars_dice"):
-        n = g.split("dice_sides=")[1].rstrip(")")
-        d = g.split("numdice=")[1][0]
-        return f"Liar's dice {d}d{n}" + (" IR" if "_ir" in g else "")
-    return {"kuhn_poker": "Kuhn poker", "leduc_poker": "Leduc poker",
-            "dark_hex(board_size=2)": "Dark hex 2x2 (solved)",
-            "liars_dice(numdice=2,dice_sides=3)": "Liar's dice 2d3",
-            "leduc_poker(action_mapping=true)": "Leduc action-map",
-            "leduc_poker(players=2,suit_isomorphism=true)": "Leduc suit-iso"}.get(g, g)
+nice = axis_data.nice   # shared so a game is labelled the same in every table and figure
 
 
 def table_axis():
