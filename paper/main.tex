@@ -66,54 +66,57 @@
 \maketitle
 
 \begin{abstract}
-A win rate is only as informative as what it was measured against. Two things are almost never
-measured. How much the game actually hides, and what an agent's plateau is made of. We supply both.
-First, an atlas: across 88 games from two engines we compute \emph{support bits}, the log-cardinality
-of the acting player's information set, averaged over the information states in the tree. Support bits bound
-a player's uncertainty from above, and say nothing on their own about what the hidden state is
-worth. Keeping those two apart is most of what this paper argues for. Two-player card games saturate early.
-Their median is 3.1 bits, and only one of the 18 we can measure sits above Gin Rummy's 30.1.
-Everything clearly above is at a larger table, where the extra bits come from extra hands. The atlas
-also catches instruments lying three times. A resampling estimator returns a saturated constant for
-three games, and a confident \emph{zero} for a game with 30.1 bits. In our own apparatus, a placebo
-control became a fingerprint and scored above a ceiling no policy can pass. The atlas also exposes
-a blind spot. Of 19 board games, the only six we can measure are the perfect-information controls, so
-every fog-of-war game is unmeasured. Second, three probes that turn a
-plateau against a fixed reference into a diagnosis. The probes do not agree, and that is the point. A determinized search handed the hidden cards
-gains a great deal. A learner handed the same cards
-gains nothing measurable, reaching \ORACLEOBSMEAN{} percent against a \textbf{27.04} baseline over
-\ORACLEOBSN{} seeds. The difference is $-0.25$ points, with a 95 percent interval of $[-1.70, +1.20]$, and
-$-0.23$ points against a matched placebo. Where a game is small enough to solve,
-exact ceilings split the plateau in two. What the information is worth is fixed by the game and the
-opponent. What the learner banks is not. Measuring the domain and diagnosing the agent
-are one workflow, and we release the code and all measurements.
+A win rate is only as informative as what it was measured against, and two things behind it are
+almost never measured: how much the game hides, and what an agent's plateau is made of. We measure
+both, and show they come apart.
+
+First, an atlas. Across 88 game configurations from two engines we compute \emph{support bits}, the
+log-cardinality of the acting player's information set. Support bits bound a player's uncertainty
+from above and say nothing about what the hidden state is worth, and keeping those apart is most of
+what this paper argues for. Two-player card games saturate early, at a median of 3.1 bits. The
+atlas also catches instruments lying three times, once inside our own apparatus, and it exposes a
+blind spot: of 19 board games the only six we can measure are the perfect-information controls.
+
+Second, a decomposition. Against a fixed reference, a plateau splits into what the hidden
+information is \emph{worth}, an exact property of the game and opponent, and what the learner
+\emph{banks} of it. We compute both exactly in eleven games where an optimum is available, add a
+placebo arm that prices the wider observation, and show that worth is invariant to a sixty-fourfold
+change in training budget while capture is not. The same instrument then runs on a twelfth game far
+too large to solve, where handing the learner the opponent's hand outright yields no detectable
+gain: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$ against the placebo.
+
+The three quantities are routinely reported as one. Separating them changes which experiment comes
+next, and we release the code and every measurement.
 \end{abstract}
 
 \section{Two measurements nobody makes}
 
 Agents in imperfect-information games are graded against references that cannot bear the weight.
-Random play yields numbers near 99 percent that barely move as the agent improves, self-play yields
-numbers near 50 percent by construction, and a pool of past checkpoints moves as the agent moves.
-Fixing the reference is the obvious repair, and it is not enough, because two questions survive
-it.
+Random play yields numbers near 99 percent that barely move, self-play yields numbers near 50
+percent by construction, and a pool of past checkpoints moves as the agent moves. Fixing the
+reference is the obvious repair, and two questions survive it.
 
-\textbf{How much does this game hide?} Games are chosen by reputation. Poker is hard, Hanabi is
-cooperative, Stratego is big. The quantity that supposedly unites them is rarely computed, so
-comparative claims about difficulty rest on tradition.
+\textbf{How much does this game hide?} Games are chosen by reputation: poker is hard, Hanabi is
+cooperative, Stratego is big. The quantity that unites them is rarely computed, so comparative
+claims about difficulty rest on tradition.
 
-\textbf{What is the plateau made of?} The plateau we diagnose is the one reported by
-\citet{goldstandard}, whose agents stall well short of their reference. An agent that stops
-improving is stuck either because it cannot see enough, or because it can and fails to exploit it.
-Those call for opposite work, and one win rate cannot separate them.
+\textbf{What is the plateau made of?} An agent that stops improving is stuck either because it
+cannot see enough, or because it can and fails to exploit what it sees. Those call for opposite
+work, and one win rate cannot separate them.
 
-We answer the first by measurement and the second by three probes. The case study shows why they
-belong together. Without the atlas, a plateau invites the excuse that the game hides too much.
-Without the probes, the atlas is a table nobody acts on.
+This paper's claim is one sentence. What a game hides, what that hiding is worth, and what a
+learner banks of it are three different quantities that are routinely reported as one, and we give
+an instrument that separates them.
+
+We answer the first by measurement and the second by decomposition. The two belong together:
+without the atlas a plateau invites the excuse that the game hides too much, and without the
+decomposition the atlas is a table nobody acts on. We validate the instrument on eleven games small enough to solve exactly, where every quantity it
+reports is checkable against a known optimum, then run it unchanged on a twelfth that is far too
+large.
 
 Both questions ask whether an evaluation measures the construct it names. The atlas is a coverage
-audit, and it finds that a difficulty ladder built from two-player card games spans almost no
-range. The probes are a validity check, and they ask what inference a win rate against a fixed
-reference actually supports.
+audit, and the decomposition is a validity check on what a win rate against a fixed reference
+actually supports.
 
 \paragraph{What is and is not new here.} Neither half of this paper invents its quantity.
 \citet{pimc} measured leaf correlation, bias and disambiguation factor, and showed they predict
@@ -235,10 +238,11 @@ independently.
 
 \section{Part II: three probes for a plateau}
 
-The atlas says what a domain can hide; it cannot say whether a given agent is limited by that. Our case study
-reuses the setting of a recent study of lightweight Gin Rummy agents \citep{goldstandard}. It grades
-against a fixed rule-based reference that never trains. The reference plays 600 games in about two
-minutes, and the graded agent answers in 0.3\,ms per move.
+The atlas says what a domain can hide. It cannot say whether a given agent is limited by that, and
+the rest of the paper is about telling those apart. Our large case reuses the setting of a recent
+study of lightweight card-game agents \citep{goldstandard}, which grades against a fixed rule-based
+reference that never trains. The reference plays 600 games in about two minutes, and the graded
+agent answers in 0.3\,ms per move. Nothing in the method depends on which game this is.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
 learner's four observation planes, so its observation is a strict subset, and it scores about 50
@@ -361,9 +365,9 @@ cannot make.
 \end{table}
 
 Table~\ref{tab:axis} runs the decomposition across eleven games, eight seeds each. The widening
-column is what makes the Gin Rummy null mean anything. It is the placebo arm minus the baseline
+column is what makes the case-study null mean anything. It is the placebo arm minus the baseline
 arm, averaged over the eight seeds of each game, and it stays inside seed noise in all eleven. In
-Gin Rummy the same contrast is $-0.02$ points, with an interval of $[-1.51, +1.47]$. We therefore
+the case study the same contrast is $-0.02$ points, with an interval of $[-1.51, +1.47]$. We therefore
 find no evidence that the cost of a wider input hides a real gain, which is the reading a placebo
 exists to rule out. That claim is weaker than saying widening is free, and it is the one the runs support.
 
@@ -400,12 +404,12 @@ Capture is therefore distorted in a known direction rather than unreliable. In t
 harder to learn, so capture is pulled down rather than up and the $73$ to $78$ percent shown
 understates those learners. We give the direction, not a corrected value. We cannot correct
 it, because Equation~\eqref{eq:identity} gives the direction of the distortion and not its size.
-None of this reaches the Gin Rummy null, which never divides by worth.
+None of this reaches the case-study null, which never divides by worth.
 
 \section{Reading both halves together}
 
-The atlas places Gin Rummy at 30.1 support bits, within 4 of the two-player ceiling, so the agent
-is graded in a game with high observational ambiguity. The probes then say the plateau is not
+The atlas places the case study at 30.1 support bits, within 4 of the two-player ceiling, so the
+agent is graded in a game with high observational ambiguity. The probes then say the plateau is not
 relieved by that information. No tested encoder does better, the subset argument puts parity inside
 the learner's own information, and the opponent's hand handed over outright moves nothing.
 
@@ -418,8 +422,8 @@ is the experiment we would run next.
 
 \paragraph{Limitations.} The case study is one game and one reference, and the search bound is
 confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly,
-which is the property that makes them unlike Gin Rummy, and seven have a distorted capture that we
-report rather than correct. The architecture probe varies inductive bias and compute together, and
+which is the property that makes them unlike the case study, and seven have a distorted capture
+that we report rather than correct. The architecture probe varies inductive bias and compute together, and
 neither it nor the bucket sweep tests capacity lost during training \citep{capacityloss}, a live
 rival explanation for any plateau. The closed forms count hands and ignore public information.
 Support bits describe the game rather than the difficulty of learning it. We claim the two are
@@ -432,14 +436,10 @@ usually settled by tradition, and this paper is an argument for measuring them i
 instruments lied three times. Every row therefore carries its provenance, and an arm that scored
 above a ceiling no policy can pass was thrown out rather than explained.
 
-Gin Rummy sits near the top of its family at 30.1 support bits, and handing the learner the
-opponent's hand still moves nothing we can measure. The plateau is not explained by the hidden
-information, for this learner and this reference. Where a game is small enough to solve, the same
-probe splits a plateau into worth and capture.
-
-The lesson generalises past the case study. What a game hides, what that is worth, and what a
-learner banks are three quantities, routinely reported as one. Separating them changes which
-experiment you run next.
+In the large case study, handing the learner the opponent's hand moves nothing we can measure, so
+that plateau is not explained by the hidden information. What a game hides, what that hiding is
+worth, and what a learner banks are three quantities, routinely reported as one. Separating them
+changes which experiment you run next.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
