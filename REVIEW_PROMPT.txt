@@ -1,0 +1,103 @@
+================================================================================
+PROMPT: FOUR EXPERTS, FINAL SIGN-OFF BEFORE SUBMISSION
+Paste this whole block. Attach the paper PDF and REVIEW_SHEET.txt.
+Tell the model which slot it owns before it starts.
+================================================================================
+
+You are one of four independent experts giving a workshop paper its last read before
+submission. It goes to the NeurIPS 2026 TAE workshop, "Can We Trust AI Evaluation?", in
+under a day. Eight pages excluding references and appendices, double blind, non-archival.
+
+This is not a brainstorm and not a polish pass. The paper is written. Your job is to find
+what is still wrong, and to say plainly whether you would submit it.
+
+YOUR SLOT
+You own exactly one of AI1(GEMINI), AI2(ChatGPT), AI3(GROK), AI4(PERPLEXITY). The user will
+tell you which. Write only inside your slot's braces. Never edit the claim text, another
+expert's slot, any CC slot, or the Nima slot.
+
+WHAT YOU ARE LOOKING AT
+REVIEW_SHEET.txt holds ten claims, C1 to C10. Each states something the paper now asserts,
+followed by the evidence under it. Every number is read from the result files rather than
+typed, so you may treat them as what the runs actually produced. C9 is the paper's own list
+of what it does not do; read it before accusing the paper of a gap it already concedes.
+
+THIS PAPER HAS ALREADY BEEN REVIEWED ONCE
+A previous external round found real problems. All of them were fixed. Do not re-report
+them, and do not credit yourself for finding them:
+
+  - a summary table read a stale four-seed file while the body read twelve-seed runs
+  - "bits of hidden information" implied Shannon entropy; it is log-cardinality and is now
+    defined as support bits, with the sampling rule stated
+  - "this agent is learning-bound" and "effort belongs in optimisation, not belief
+    modelling" were cut as overclaims
+  - probe 1 was called a capacity probe; it varies inductive bias and compute together and
+    is now called architecture sensitivity
+  - probe 2 was called a value of information bound; strategy fusion confounds it and it is
+    now called an oracle-search gap
+  - a p-value of 9e-8 was quoted over eleven related configurations and has been dropped
+  - the closest prior work, Long et al. 2010, was cited only as a search method
+
+Your value is in what that round MISSED. Assume the obvious defects are gone and hunt the
+ones that survive a careful revision.
+
+WHAT TO DO
+
+For each claim C1 to C10, write one entry in your slot, in this form:
+
+  <VERDICT> | "<verbatim quote from the paper or the sheet>" | <what is wrong> |
+  FIX: <the specific change> | COSTS: <what gets cut or weakened, or none>
+
+  SOUND      the claim is supported by the evidence shown. This is a costly verdict: you
+             must also name the single strongest objection a hostile reviewer could still
+             raise, and say why it does not land.
+  TOO WIDE   the evidence supports something narrower. Give the narrower sentence.
+  UNSUPPORTED the evidence does not support it at all. Say what would.
+  BROKEN     an internal inconsistency, a number that contradicts another number, or a
+             claim that contradicts C9.
+
+Quote the actual words. An entry without a quotation will be ignored.
+
+THEN, FOUR THINGS THE SHEET DOES NOT ASK
+
+  1. THE MISSING CLAIM. Name one thing the paper's own data supports that it does not claim.
+     Under-claiming is a defect too, with one day left.
+  2. THE KILL SHOT. If you had to reject this paper in three sentences, what would you write?
+     Then answer it as the authors would.
+  3. THE NUMBER CHAIN. Pick one number in the abstract and follow it to the table, the
+     appendix and the claim it licenses. Say whether it survives the trip.
+  4. TITLE AND ABSTRACT. The title is "Is It the Game or the Agent? Measuring What a Game
+     Hides, and Diagnosing Why an Agent Stops Improving." Does the paper deliver what that
+     promises? If not, propose either a narrower title or the sentence that would earn it.
+
+OUTPUT, IN THIS ORDER
+
+  TALLY
+  One line: how many SOUND, TOO WIDE, UNSUPPORTED, BROKEN.
+
+  BLOCKERS
+  At most three, worst first. A blocker is something that must change before submission.
+  For each: the claim id, the quoted words, the fix, and how long the fix takes. If nothing
+  blocks it, write "nothing blocks it" and name the three claims you attacked hardest.
+
+  THE FOUR ANSWERS
+  Missing claim, kill shot, number chain, title.
+
+  RATING, 5 dimensions, 5 points each, 25 total
+  Claim discipline    x/5   are claims the size of their evidence
+  Evidence quality    x/5   seeds, controls, exactness, what is ruled out
+  Novelty and framing x/5   does the joining of the two halves earn its keep
+  Honesty             x/5   are limitations real or decorative
+  Writing             x/5   can a tired reviewer follow it once, at speed
+  TOTAL               xx/25
+
+  VERDICT: SUBMIT or DO NOT SUBMIT
+  One word first, then at most six sentences. SUBMIT means you would put your name on it as
+  it stands. DO NOT SUBMIT means one specific thing must change first, and the last line
+  must be that single change. Do not hedge between the two.
+
+RULES
+Do not praise. Do not summarise the paper back to the authors. Do not propose experiments
+that take more than a day, unless you are naming one as future work rather than a blocker.
+If a claim is fine, say so and pay the SOUND cost. Agreement without an objection is not an
+answer.
