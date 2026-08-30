@@ -124,26 +124,32 @@ contribution, not a new way to measure uncertainty.
 
 \section{Part I: an atlas of what is hidden}
 
-At any decision, some complete histories of the game are still consistent with everything the
-acting player has seen. Hidden information is $\log_2$ of how many. Zero means the player can see
-everything, and each further bit doubles the worlds still in play. We compute it three ways and always report which.
+At any decision, some complete histories of the game remain consistent with everything the acting
+player has seen. Hidden information is $\log_2$ of how many, so zero means the player can see
+everything and each further bit doubles the worlds still in play. We compute it three ways and
+always report which.
 
-\paragraph{What this number is, and what it is not.} We call this number \emph{support bits}, and
-three quantities are easy to confuse here, so we name all three and keep them apart. Write $o$ for
-what the acting player can see, and $I(o)$ for the set of complete game histories consistent with
-seeing $o$. Support bits are $\log_2$ of the size of that set. They count how many histories are
-still possible, and they weight every one of them equally.
-
-Posterior entropy is the second quantity. It asks how likely each of those histories is, given
-chance and the players' policies, and it is never larger than support bits. A player who knows the
-opponent almost always holds one particular hand is nearly certain, even when a thousand hands
-remain possible.
-
-The value of the hidden information is the third. It asks what an optimal player would gain by
-being told the hidden state. This one can be zero while support bits are large, because many
-different hidden hands can call for the same move. Support bits bound the second quantity and say
-nothing about the third, and we compute the third exactly wherever we can, calling it
-\emph{worth}.
+\paragraph{Three quantities, kept apart.} Write $o$ for what the acting player observes, $I(o)$ for
+the set of complete histories consistent with $o$, and $Z$ for the hidden state. Fix an opponent
+policy $\pi$ and let $V^\star_\pi(\cdot)$ be the best expected return achievable against it from a
+given observation. Then
+%
+\begin{align}
+  b(o) &\;=\; \log_2 |I(o)| &&\text{support bits, what we measure,}
+  \label{eq:bits}\\
+  H(Z \mid O = o) &\;\le\; b(o) &&\text{with equality only if the posterior is uniform,}
+  \label{eq:bound}\\
+  \mathrm{worth}(\pi) &\;=\; V^\star_\pi(O, Z) - V^\star_\pi(O) &&\text{what the hidden state is
+  worth.}
+  \label{eq:worth}
+\end{align}
+%
+Equation~\eqref{eq:bound} is why we keep the three apart. Support bits weight every possible
+history equally, so they bound a player's real uncertainty and meet it only when every history is
+equally likely. A player who knows the opponent almost always holds one hand is nearly certain,
+even with a thousand hands still possible. Worth is further removed again:
+Equation~\eqref{eq:worth} can be zero while $b(o)$ is large, because many hidden hands call for the
+same move. We compute worth exactly wherever an optimum is available.
 
 We report the mean support bits over every distinct information state in the tree, pooled across
 both seats. Every state counts once, however often play reaches it, so a game with rare huge
