@@ -68,31 +68,34 @@
 
 \begin{abstract}
 A reinforcement learning agent stops improving against a fixed opponent. Is the game hiding
-something it needs, or is it failing to use what it can already see? A win rate cannot answer
-that: it says where the agent stopped, not why. First we measure how much a game hides. At
-each decision we count the game histories still possible given what the player can see, and take
-the base-two logarithm. We call this \emph{support bits}, and we report it for 88 game
-configurations, recording how every value was produced. That record matters: three of our measurements
-failed while returning plausible numbers, and only an independent check caught them, one in our
-own control. Second we test whether hidden information explains a plateau. We
-train one agent with the hidden state added to what it sees, one without, and a third with a fake
-addition of the same shape. Eleven games are small enough to solve exactly, so we know the answer
-in advance: the test finds the hidden state in all eleven, worth $0.22$ to $1.07$ in expected
-return, while every fake-addition difference stays within seed noise. We then run the same test, unchanged, on Gin
-Rummy, which is far too large to solve and whose hand-only upper bound of 30.1 support bits is
-second highest among the 18 two-player card games we measure. Across twenty-four
-runs per arm the agent that sees the opponent's hand scores $0.66$ percentage points below the one
-that does not, with a 95 percent interval of $[-1.65, +0.33]$ containing zero. That rules out any
-gain above about $0.3$ points. So for this agent and opponent, the hidden hand is not the missing
-ingredient. More broadly, the protocol separates three things a win rate reports as one:
-what a game hides, what that hiding is worth, and how much a learner banks.
+something it needs, or is the agent failing to use what it can already see? A win rate shows where
+the agent stopped, not why. We present a self-checking evaluation protocol that separates these
+explanations. First, we measure what games hide. At each decision, we count the game histories
+consistent with the player's observation and take the base-two logarithm. We call this
+\emph{support bits}. Support bits bound uncertainty but do not say whether the hidden state would
+improve play. Our atlas covers 88 game configurations and records how every value was produced.
+Independent checks catch three failures that produced plausible headline numbers, including one
+in our own control. Second, we test whether hidden information explains a plateau. We train a
+baseline arm, an oracle arm that sees the hidden state, and a placebo arm with a fake addition of
+the same shape. Eleven games have exact ceilings, which tell us what the hidden state is
+\emph{worth} for a stated opponent policy. Across fourteen tested small-game and learner
+combinations, oracle-minus-baseline gains range from $0.22$ to $1.07$ in expected return. Every
+placebo-baseline difference remains within seed noise. We then run the same test unchanged on Gin
+Rummy, which is too large for an exact ceiling. Its hand-only upper bound of $30.1$ support bits is
+the second-highest reported value among the 18 measured two-player card games. Across twenty-four
+seeds per arm, the oracle scores $0.66$ percentage points below the baseline, with a 95 percent
+interval of $[-1.65, +0.33]$. The oracle also shows no detectable advantage over the placebo.
+Twenty-four seeds rule out gains above about $0.3$ points. For this learner and reference, the raw
+hidden-hand channel is not a large missing ingredient. More broadly, the protocol separates what a
+game hides, what that hiding is worth, and how much a learner banks.
 \end{abstract}
 
 \section{Introduction}
 
 A plateau is an observation, not a diagnosis. A win rate shows that a reinforcement learning agent
-has stopped improving; it does not show whether the game hides something the agent needs, or the
-agent is failing to use what it already sees. Those two answers call for different experiments.
+has stopped improving. It cannot tell whether the game hides something the agent needs or whether
+the agent is failing to use what it already sees. Those two answers call for different
+experiments.
 
 The reference also decides what a win rate can mean. Random play produces scores near 99 percent
 that barely move. Self-play produces scores near 50 percent by construction. A pool of past
@@ -406,8 +409,8 @@ worth.
 \subsection{The large case study: no detectable gain}
 \label{sec:r-case}
 
-The large case study is the decisive application. For this learner and reference, adding the raw
-hidden-hand channel produces no detectable gain. Table~\ref{tab:probes} states what each probe
+The large case study tests the calibrated diagnostic where exact ceilings are unavailable. For this
+learner and reference, adding the raw hidden-hand channel produces no detectable gain. Table~\ref{tab:probes} states what each probe
 licenses. We first show that the same probe detects effects in every tested small-game
 configuration.
 
@@ -648,8 +651,9 @@ games were chosen, how the numbers were produced, and what each column can carry
 
 \texttt{scripts/screen\_games.py} walks every game \texttt{pyspiel} registers as loadable and keeps
 those that are two-player, zero sum, sequential, imperfect information and not sampled-stochastic,
-with at most 60{,}000 information states, so that counterfactual regret minimisation returns a true
-optimum inside a 20 second walk. Five base games clear it: Kuhn poker, Leduc poker, Liar's dice,
+with at most 60{,}000 information states. This limit lets counterfactual regret
+minimisation produce the fixed opponent policy within the 20-second screen and keeps exact best
+responses to that policy tractable. Five base games clear it: Kuhn poker, Leduc poker, Liar's dice,
 Liar's dice with imperfect recall, and universal poker.
 
 \texttt{scripts/screen\_variants.py} then sweeps size parameters across those families and the
