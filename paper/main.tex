@@ -66,23 +66,25 @@
 \maketitle
 
 \begin{abstract}
-A reinforcement learning agent in an imperfect-information game stops improving against a fixed
-opponent. Is the game hiding too much from it, or is it failing to use what it can already
-see? The two call for opposite work, and a win rate cannot tell
-them apart. We measure both. First we ask how much a game hides. Across 88 game configurations we
-count the worlds a player cannot rule out and take the logarithm, a number we call \emph{support
-bits}. Two-player card games run out of room early, at a median of 3.1 bits, so a difficulty ladder
-built from different card games spans almost no range at all. Then we ask whether the hiding is
-what stops the agent. We hand the learner the opponent's hidden cards, retrain, and see whether it
-does better. In eleven games small enough to solve exactly, a known optimum tells us what those cards are
-\emph{worth} and how much of it a tabular and a neural learner \emph{bank}. A third arm carries a fake
-hidden hand of the same shape, so we can price the cost of a wider input on its own. Worth holds
-steady across a sixty-fourfold change in training budget; what the learner banks does not, and the
-two can be told apart only because both are computed against a known answer. In a twelfth game, far too large to solve, the real hidden hand buys
-nothing we can detect. It is $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and
-$-0.23$ against the fake one. Twelve seeds rule out any gain
-above about $1.2$ points. What a game hides, what the hiding is worth, and what a learner takes
-from it are three different things, usually reported as one number.
+A reinforcement learning agent stops improving against a fixed reference in an
+imperfect-information game. Is the game hiding too much from it, or is it failing to use what it
+can already see? The two call for opposite work, and a win rate cannot tell them apart. We separate them in two
+steps. First we measure how much each game hides. At each decision we count the game histories
+still consistent with what the acting player can see, and take the base-two logarithm. This
+quantity, \emph{support bits}, upper-bounds the player's real uncertainty and says nothing about
+what the hidden state is worth. Across 88 game configurations, the two-player card games we
+can measure have a median of 3.1 support bits, so a difficulty ladder built from different card
+games covers almost no range. Second, we test whether hidden information explains a plateau, by retraining the learner with the
+opponent's hidden cards added to its observation. In eleven games small enough to solve exactly,
+exact ceilings give what those cards are \emph{worth} for a stated opponent policy, and seeded runs
+measure how much of it a tabular and a neural learner \emph{bank}.
+A placebo arm receives a fake hidden hand of the same shape, isolating the cost of widening the
+input. Worth holds steady across a sixty-fourfold change in training budget; what the learners bank
+does not. We then apply the same three arms to a twelfth game far too large to solve. The oracle
+arm shows no detectable gain over the baseline arm: $-0.25$ points over twelve seeds, interval
+$[-1.70, +1.20]$, and $-0.23$ against the placebo arm. Twelve seeds rule out gains above about
+$1.2$ points. What a game hides, what that hiding is worth, and what a learner banks are three
+different quantities that one win rate cannot separate.
 \end{abstract}
 
 \section{Two measurements nobody makes}
@@ -97,8 +99,8 @@ cooperative, and Stratego is big. The quantity that unites them is rarely comput
 claims about difficulty rest on tradition.
 
 \textbf{What is the plateau made of?} A learner that stops improving is stuck either because it
-cannot see enough, or because it can and fails to exploit what it sees. Those call for opposite
-work, and one win rate cannot separate them.
+cannot see enough, or because it can and fails to exploit what it sees. The first calls for a
+better observation and the second for better learning, and nobody buys both.
 
 This paper's claim is one sentence. What a game hides, what that hiding is worth, and what a
 learner banks of it are three different quantities, routinely reported as one. We give an
@@ -439,9 +441,8 @@ usually settled by tradition, and this paper is an argument for measuring them i
 instruments lied three times. Every row therefore says how its number was obtained, and an arm
 that scored above a ceiling no policy can pass was thrown out rather than explained.
 
-In the large case study, the raw hidden-hand channel produces no detectable gain. One win rate
-collapses support bits, worth and banked into a single number. The protocol separates them exactly
-where optima exist, and reports only the supported contrast where they do not.
+The protocol separates the three quantities exactly where an optimum exists, and reports only the
+contrast the runs support where none does.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
