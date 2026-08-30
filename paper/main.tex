@@ -207,8 +207,8 @@ be computed. That is precisely the regime a diagnostic has to survive. The two t
 would reach for instead both mislead here: the engine's world resampler reports \emph{0.00} bits
 for every Gin Rummy configuration (Section~\ref{sec:r-failures}), and determinized search gains
 from oracle access partly because that access removes strategy fusion rather than because the
-hidden cards are worth something. The game also supplies its own dial, since eight configurations
-move hidden information from 5.1 to 30.1 bits with the rules unchanged.
+hidden cards are worth something. Eight of its own configurations also move hidden
+information from 5.1 to 30.1 bits with the rules fixed.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
 learner's four observation planes, so it sees a strict subset of what the learner sees, and it
@@ -236,10 +236,20 @@ contains ten cards that the player cannot see, drawn independently of the oppone
 \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand, so we built our
 own plane and verified it against engine ground truth (Appendix~\ref{app:apparatus}).
 
-Before interpreting a null, we test whether the probe can fire where exact ceilings are available.
-We run it on every OpenSpiel game small enough for counterfactual regret minimisation to supply a
-true optimum, with a tabular learner and with a neural learner reading a fixed-width tensor, as the
-case-study learner does.
+Before interpreting a null, we test whether the probe can fire where exact ceilings are available,
+with a tabular learner and with a neural learner reading a fixed-width tensor, as the case-study
+learner does.
+
+\paragraph{Why these games.} We did not choose the calibration set; a filter did. We walk every
+game OpenSpiel registers and keep those that are two-player, zero sum, sequential, imperfect
+information, and small enough for counterfactual regret minimisation to return a true optimum
+rather than an approximation. Five base games survive. Sweeping their size parameters, which moves
+how much a game hides while leaving the rules alone, returns sixteen solvable configurations, and
+twelve of those carry the probe. The ceiling check then rejects one, so eleven calibrate the
+instrument and Gin Rummy is the twelfth game in this paper: the only one where no exact answer
+exists. The count is a property of what OpenSpiel exposes and what CFR can solve rather than a
+choice we made. Appendix~\ref{app:axis} accounts for every configuration in both groups and says
+what this narrow supply costs us.
 
 \subsection{Decomposing a plateau: worth, banked and capture}
 \label{sec:decomp}
@@ -575,8 +585,30 @@ width, so the extra plane reaches the learner and nobody else.
 \section{The decomposition across eleven games}
 \label{app:axis}
 
-The per-game numbers are in Table~\ref{tab:axis} in the main text. This section records how they
-were produced and what each column can carry.
+The per-game numbers are in Table~\ref{tab:axis} in the main text. This section records how the
+games were chosen, how the numbers were produced, and what each column can carry.
+
+\texttt{scripts/screen\_games.py} walks every game \texttt{pyspiel} registers as loadable and keeps
+those that are two-player, zero sum, sequential, imperfect information and not sampled-stochastic,
+with at most 60{,}000 information states, so that counterfactual regret minimisation returns a true
+optimum inside a 20 second walk. Five base games clear it: Kuhn poker, Leduc poker, Liar's dice,
+Liar's dice with imperfect recall, and universal poker.
+
+\texttt{scripts/screen\_variants.py} then sweeps size parameters across those families and the
+other parameterised imperfect-information games OpenSpiel ships, since shrinking a game keeps its
+rules and changes only how much it hides. Sixteen configurations come back solvable
+(\texttt{data/variants.json}) and twelve of them carry the probe. We account for the other four
+here rather than leave them implicit. \texttt{kuhn\_poker(players=2)} is a duplicate spec of
+\texttt{kuhn\_poker}. Dark hex on a two by two board is solved outright, so worth is zero and
+capture is undefined; it appears instead as the zero control in Appendix~\ref{app:capacity}, where
+the instrument correctly returns nothing. The remaining two, Dark hex with imperfect recall on the
+same board and \texttt{liars\_dice\_ir(numdice=1,dice\_sides=8)}, we did not run. Universal poker
+clears the base filter but was never swept.
+
+Of the twelve that ran, the ceiling check in \texttt{scripts/axis\_data.py} rejected
+\texttt{liars\_dice(numdice=2,dice\_sides=3)} (Appendix~\ref{app:reject}), leaving eleven. That is
+the only exclusion made after seeing a number, and it tests an arm against its own ceiling rather
+than against the result we wanted.
 
 Worth is the oracle ceiling minus the baseline ceiling. Both are exact for the stated opponent
 policy, so worth alone carries no seed noise. The eight seeds per game reach banked and widening
@@ -685,7 +717,7 @@ learning it: we claim the two are routinely conflated, not that they are unrelat
 
 Every arm is graded against a ceiling that is a closed-form property of the game. An arm scoring
 above its own ceiling is therefore impossible, not merely surprising. We check it automatically, and
-one game of twelve fails.
+one of the twelve screened configurations fails.
 
 In \texttt{liars\_dice(numdice=2,dice\_sides=3)} the placebo arm returns $0.738$ against a ceiling
 of $0.062$, a violation of $0.68$, consistent across all eight seeds. The placebo plane is drawn
