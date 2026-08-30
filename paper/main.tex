@@ -217,7 +217,7 @@ fails silently in both directions, and returns a plausible number each time.
 $\log_2 80$, the sample count, with 100 percent of sampled points censored. The estimator had exhausted its samples rather than the possible worlds, and the closed form
 puts Hearts at 56.2, nearly nine times higher.
 
-\textbf{Degeneracy.} The second is worse, because it looks like a clean result. Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back the same world
+\textbf{Degeneracy.} Degeneracy is the worse failure, because it looks like a clean result. Every Gin Rummy configuration returns \emph{0.00} bits with zero censoring, since the engine's resampler hands back the same world
 on every draw. A survey trusting that column alone would file a 30-bit game beside Connect Four.
 Neither failure is visible without a second estimator to disagree with, which is the practical case
 for reporting provenance in every row, as our released table does.
@@ -229,8 +229,9 @@ fake plane is drawn once per deal, from a space large enough that the draw is ne
 it and recover exactly what the plane was built to withhold. We report the game as rejected rather than fixing it after the fact
 (Appendix~\ref{app:reject}).
 
-The lesson is the one this section is about. The alarm was not that the number looked wrong. The
-alarm was that it broke a bound we could compute independently.
+All three failures were caught the same way, and it is the lesson of this section. The alarm was
+never that a number looked wrong. The alarm was that it broke a bound we could compute
+independently.
 
 \section{Part II: three probes for a plateau}
 
@@ -300,7 +301,7 @@ $[-1.57, +1.11]$, and Table~\ref{tab:probes} carries all three.
 
 Twelve seeds rule out gains above about $1.2$ points, which is a fifth of the distance from this
 agent's $27$ percent to the parity its reference defines. Smaller gains remain possible, and we do
-not claim the effect is exactly zero. Smaller gains remain possible, and we do not claim the effect is exactly zero.
+not claim the effect is exactly zero.
 
 Two details decide whether the probe measures what it claims. PettingZoo's
 \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand; it exposes an
@@ -360,9 +361,8 @@ cannot make.
 \end{table}
 
 Table~\ref{tab:axis} runs the decomposition across eleven games, eight seeds each. The widening
-column is what makes the Gin Rummy null mean anything. The widening column is the placebo arm minus the
-baseline arm, averaged over the eight seeds of each game, and it stays inside seed noise in all
-eleven. In
+column is what makes the Gin Rummy null mean anything. It is the placebo arm minus the baseline
+arm, averaged over the eight seeds of each game, and it stays inside seed noise in all eleven. In
 Gin Rummy the same contrast is $-0.02$ points, with an interval of $[-1.51, +1.47]$. We therefore
 find no evidence that the cost of a wider input hides a real gain, which is the reading a placebo
 exists to rule out. That claim is weaker than saying widening is free, and it is the one the runs support.

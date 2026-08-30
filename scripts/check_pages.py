@@ -61,6 +61,20 @@ def main():
         if spill:
             print(f"  NOTE  body text runs onto page {refs} above the References heading "
                   f"(heading at y={ref_y:.0f}), so that page counts as content")
+        # Merging paragraphs has twice left a sentence duplicated, once three times over, and both
+        # survived every other check. Compare consecutive sentences in the rendered text.
+        import difflib
+        flat = " ".join(re.sub(r"\s\d{1,3}\s", " ", "".join(p.get_text() for p in doc)).split())
+        sents = [x.strip() for x in re.split(r"(?<=[.!?])\s+", flat) if len(x.split()) > 6]
+        dupes = []
+        for a, b in zip(sents, sents[1:]):
+            if difflib.SequenceMatcher(None, a, b).ratio() > 0.80:
+                dupes.append(a[:70])
+        if dupes:
+            print(f"  REPEATED SENTENCES: {len(dupes)}")
+            for d in dupes[:5]:
+                print(f"    {d}")
+
         errs = len(re.findall(r"^!", log, re.M))
         undef = len(re.findall(r"undefined", log))
         print(f"  content pages   {content}/{LIMIT}   {'OK' if content <= LIMIT else 'OVER LIMIT'}")
@@ -70,7 +84,7 @@ def main():
                   f"({doc.page_count - appx + 1} pages, no limit)")
         print(f"  total           {doc.page_count} pages")
         print(f"  latex errors    {errs}    undefined refs {undef}")
-        return 0 if content <= LIMIT and errs == 0 and undef == 0 else 1
+        return 0 if content <= LIMIT and errs == 0 and undef == 0 and not dupes else 1
 
 
 if __name__ == "__main__":
