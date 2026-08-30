@@ -66,28 +66,28 @@
 \maketitle
 
 \begin{abstract}
-A win rate is only as informative as what it was measured against, and two things behind it are
-almost never measured: how much the game hides, and what an agent's plateau is made of. We measure
-both and show they come apart. Across 88 game configurations from two engines we compute
-\emph{support bits}, the log-cardinality of the acting player's information set, which bounds a
-player's uncertainty from above and says nothing about what the hidden state is worth. Two-player
+A win rate is only as informative as what it was measured against. Two things behind it are almost
+never measured: how much the game hides, and what an agent's plateau is made of. We measure both,
+and show they come apart. Across 88 game configurations from two engines we compute \emph{support
+bits}, the log-cardinality of the acting player's information set. Support bits bound a player's
+uncertainty from above and say nothing about what the hidden state is worth. Two-player
 card games saturate early, at a median of 3.1 bits, and the atlas catches instruments lying three
-times, once inside our own apparatus. We then decompose a plateau against a fixed reference into
-what the hidden information is \emph{worth}, an exact property of the game and opponent, and what
-the learner \emph{banks} of it. Both are computed exactly in eleven games where an optimum is
-available, against a placebo arm that prices the wider observation, and worth proves invariant to a
-sixty-fourfold change in training budget while capture does not. The same instrument then runs
-unchanged on a twelfth game far too large to solve, where handing the learner the opponent's hand
-yields no detectable gain: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$
-against the placebo. These three quantities are routinely reported as one, and separating them
+times, once inside our own apparatus. We then split a plateau against a fixed reference into what the hidden
+information is \emph{worth}, an exact property of the game and opponent, and what the learner
+\emph{banks} of it. Both are computed exactly in eleven games where an optimum is available,
+alongside a placebo arm that prices the wider observation. Worth proves invariant to a sixty-fourfold
+change in training budget; capture does not. The same instrument then runs unchanged on a twelfth
+game far too large to solve. There, handing the learner the opponent's hand yields no detectable
+gain: $-0.25$ points over twelve seeds, interval $[-1.70, +1.20]$, and $-0.23$ against the
+placebo. These three quantities are routinely reported as one, and separating them
 changes which experiment comes next. We release the code and every measurement.
 \end{abstract}
 
 \section{Two measurements nobody makes}
 
 Agents in imperfect-information games are graded against references that cannot bear the weight.
-Random play yields numbers near 99 percent that barely move, self-play yields numbers near 50
-percent by construction, and a pool of past checkpoints moves as the agent moves. Fixing the
+Random play yields numbers near 99 percent that barely move. Self-play yields numbers near 50
+percent by construction. A pool of past checkpoints moves as the agent moves. Fixing the
 reference is the obvious repair, and two questions survive it.
 
 \textbf{How much does this game hide?} Games are chosen by reputation: poker is hard, Hanabi is
@@ -99,14 +99,13 @@ cannot see enough, or because it can and fails to exploit what it sees. Those ca
 work, and one win rate cannot separate them.
 
 This paper's claim is one sentence. What a game hides, what that hiding is worth, and what a
-learner banks of it are three different quantities that are routinely reported as one, and we give
-an instrument that separates them.
+learner banks of it are three different quantities, routinely reported as one. We give an
+instrument that separates them.
 
-We answer the first by measurement and the second by decomposition. The two belong together:
-without the atlas a plateau invites the excuse that the game hides too much, and without the
-decomposition the atlas is a table nobody acts on. We validate the instrument on eleven games small enough to solve exactly, where every quantity it
-reports is checkable against a known optimum, then run it unchanged on a twelfth that is far too
-large.
+We answer the first by measurement and the second by decomposition. The two belong together. Without the atlas a plateau invites the excuse that the game hides too
+much, and without the decomposition the atlas is a table nobody acts on. We validate the instrument
+on eleven games small enough to solve exactly, where every quantity it reports is checkable against
+a known optimum. We then run it unchanged on a twelfth that is far too large.
 
 Both questions ask whether an evaluation measures the construct it names. The atlas is a coverage
 audit, and the decomposition is a validity check on what a win rate against a fixed reference
@@ -117,8 +116,9 @@ actually supports.
 when determinized search succeeds. Their work is the closest precedent for Part I, and our difference is scope rather than kind. \citet{rbccomplexity} size information sets in reconnaissance blind chess,
 which is our atlas for a single game, and \citet{ggpii} attack the same uncertainty from the
 planning side. Handing privileged state to an agent is standard too \citep{policyinference,ismcts}.
-What we have not found is the two halves joined: a provenance-aware measurement of what a domain
-hides, used to read one agent's plateau, with a placebo that prices the intervention.
+What we have not found is the two halves joined. That is a
+provenance-aware measurement of what a domain hides, used to read one agent's plateau, with a
+placebo that prices the intervention.
 
 \section{Part I: an atlas of what is hidden}
 
@@ -157,9 +157,8 @@ table needs the multinomial, because it matters which opponent holds which cards
 \textbf{Resampling} draws worlds consistent with the information state and counts the distinct
 ones, censored at the sample count. Resampling needs no closed form, and it is the only method that can fail without saying so.
 
-The closed form is exact arithmetic for the deal, but it counts hands only and ignores what the
-public cards have already ruled out, so against the information-set definition it is an upper
-bound. Leduc measures that gap at 2.01 bits under exact enumeration and 2.30 under the closed form. One row
+The closed form is exact arithmetic for the deal. But it counts hands only and ignores what the
+public cards rule out, so against the information-set definition it is an upper bound. Leduc measures that gap at 2.01 bits under exact enumeration and 2.30 under the closed form. One row
 does not establish that the gap is small in games with richer public histories, and we do not claim
 it does.
 
@@ -314,8 +313,8 @@ own width.
 
 \paragraph{Does the probe work at all?} A null is worth nothing without evidence the instrument can
 fire. We ran the identical probe on every OpenSpiel game small enough for counterfactual regret
-minimisation to supply a true optimum, under two learners: a tabular one, and a neural one reading
-a fixed-width tensor as the Gin Rummy learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
+minimisation to supply a true optimum. Two learners ran it: a tabular one, and a neural one reading
+a fixed-width tensor as the case-study learner does. It fires in every tested configuration where the hidden state is present, by margins of $0.22$ to
 $1.07$ in expected return, and the placebo lands on the baseline. Those margins show the instrument works on games of this size. They do not prove it fires
 wherever information exists. On the large case study the same construction reads zero
 (Figure~\ref{fig:sensitivity}).
@@ -342,8 +341,8 @@ is a ratio of two gains. Part III
 shows it is distorted in a known direction when the two arms learn with unequal ease. We read it as
 a bound, not a point estimate.
 
-Both ceilings use the same fixed opponent policy, and differ only in whether the learner sees the
-hidden state, so worth is exact for that evaluation setting rather than for the game in the
+Both ceilings use the same fixed opponent policy and differ only in whether the learner sees the
+hidden state. Worth is therefore exact for that evaluation setting, not for the game in the
 abstract. Within a setting it behaves as a game property should. Across a sixty-four-fold range of
 training budgets, 25{,}000 to 1{,}600{,}000 episodes, worth is constant to three decimals in both
 games (Appendix~\ref{app:budget}). Capture moves with the budget
@@ -378,9 +377,9 @@ banked, worth and those two gaps are not independent:
 \label{eq:identity}
 \end{equation}
 %
-That equation is an identity, not a
-finding. It follows from the definitions in one line, and our runs satisfy it to machine precision. Dividing by worth gives the consequence: capture exceeds $1$ exactly when $g_b > g_o$. That is, exactly when the baseline arm sits further below its ceiling
-than the oracle arm sits below its own.
+That equation is an identity, not a finding. It follows from the definitions in one line, and our
+runs satisfy it to machine precision. Dividing by worth gives the consequence: capture exceeds $1$
+exactly when $g_b > g_o$.
 
 The seven games are therefore neither anomalies nor noise. Capture exceeds $100$ percent exactly
 when the baseline arm finishes further below its ceiling than the oracle arm finishes below its own.
@@ -419,9 +418,8 @@ possible belief model, the true answer handed over free, buys nothing here. A st
 the same information might still pay, and that is the experiment we would run next.
 
 \paragraph{Limitations.} The case study is one game and one reference, and the search bound is
-confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly,
-which is the property that makes them unlike the case study, and seven have a distorted capture
-that we report rather than correct. The architecture probe varies inductive bias and compute together, and
+confounded with strategy fusion. All eleven decomposed games are small enough to solve exactly, which is the property that makes
+them unlike the case study. Seven have a distorted capture that we report rather than correct. The architecture probe varies inductive bias and compute together, and
 neither it nor the bucket sweep tests capacity lost during training \citep{capacityloss}, a live
 rival explanation for any plateau. The closed forms count hands and ignore public information.
 Support bits describe the game rather than the difficulty of learning it. We claim the two are
@@ -435,9 +433,10 @@ instruments lied three times. Every row therefore carries its provenance, and an
 above a ceiling no policy can pass was thrown out rather than explained.
 
 In the large case study, handing the learner the opponent's hand moves nothing we can measure, so
-that plateau is not explained by the hidden information. What a game hides, what that hiding is
-worth, and what a learner banks are three quantities, routinely reported as one. Separating them
-changes which experiment you run next.
+that plateau is not explained by the hidden information. A field that reports one number where
+three are in play will keep mistaking a learning failure for a hard game. The instrument here is
+cheap, it is checkable against exact optima wherever those exist, and it changes which experiment
+comes next.
 
 \bibliographystyle{plainnat}
 \input{refs.tex}
