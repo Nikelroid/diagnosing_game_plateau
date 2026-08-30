@@ -75,16 +75,19 @@ that are still possible given what the player can see, and take the base-two log
 count. We call this \emph{support bits}, and we report it for 88 game configurations, recording
 how every value was produced. That record earns its place: three of our measurements failed while
 still returning reasonable-looking numbers, and only an independent check caught them, one of the
-three in our own control. Second we test whether hidden information explains a plateau. We train
-one agent with the hidden state added to what it sees, one without it, and a third with a fake
-addition of the same size and shape. Eleven games are small enough to solve exactly, so we know
-the answer before we start: the test finds the hidden state in every one of them, while the fake
-addition changes nothing. We then run the same test, unchanged, on a game far too large to solve.
-Across twenty-four training runs per arm, the agent that sees the opponent's hand does no better
-than the agent that does not, and the results rule out any gain above about $0.3$ percentage
-points. So for this agent and this opponent, the hidden hand is not the missing ingredient. More
-broadly, the protocol separates three things a win rate reports as one: what a game hides, what
-that hiding is worth, and how much of it a learner actually takes.
+three in our own control. The atlas also places our case study, since Gin Rummy hides 30.1
+support bits and only one of the 18 two-player card games we can measure hides more. Second we
+test whether hidden information explains a plateau. We train one agent with the hidden state
+added to what it sees, one without it, and a third with a fake addition of the same size and
+shape. Eleven games are small enough to solve exactly, so we know the answer before we start: the
+test finds the hidden state in all eleven, worth $0.22$ to $1.07$ in expected return, while the
+fake addition leaves the score where it was. We then run the same test, unchanged, on Gin Rummy,
+which is far too large to solve. Across twenty-four training runs per arm the agent that sees the
+opponent's hand scores $0.66$ percentage points below the one that does not, with a 95 percent
+interval of $[-1.65, +0.33]$ that contains zero. That rules out any gain above about $0.3$ points.
+So for this agent and this opponent, the hidden hand is not the missing ingredient. More broadly,
+the protocol separates three things a win rate reports as one: what a game hides, what that hiding
+is worth, and how much of it a learner banks.
 \end{abstract}
 
 \section{Introduction}
