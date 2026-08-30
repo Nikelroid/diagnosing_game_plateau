@@ -83,8 +83,7 @@ arm isolates the cost of widening the observation. The probe detects gains of $0
 every tested small-game configuration, and the placebo stays at the baseline. We then apply the
 same probe unchanged to a twelfth game that is too large to solve. The oracle arm shows no
 detectable gain over the baseline arm: $-0.66$ points over twenty-four seeds, with interval
-$[-1.65, +0.33]$. It also finishes $-0.28$ points below the placebo arm. Twenty-four seeds rule out
-gains above about $0.3$ points, while smaller gains remain possible. For this learner and
+$[-1.65, +0.33]$. It also finishes $-0.28$ points below the placebo arm. Twenty-four seeds rule out gains above about $0.3$ points. For this learner and
 reference, raw hidden-state access is not a large missing ingredient. More broadly, the protocol
 measures what a game hides, validates what that information is worth, separates information from
 input widening, and catches failures in its own instruments.
@@ -131,9 +130,9 @@ measurement failures. The second is a three-arm diagnostic validated against exa
 eleven solvable games. We then apply the same diagnostic unchanged to Gin Rummy, which has 30.1
 support bits and lies near the top of the measured two-player card games. Twenty-four seeds rule out
 gains above about $0.3$ points from the raw hidden-hand channel for this learner and reference.
-We are not aware of a prior cross-game atlas of this kind, reporting a per-observation
-information-set measure at this scale with the provenance of every value and diagnostics that
-expose a failed estimator. Together, these tools turn an unexplained plateau into separate
+We are not aware of another cross-game atlas that reports a per-observation
+information-set measure for 88 configurations, records every value's provenance, and uses
+independent checks to expose estimator failure. Together, these tools turn an unexplained plateau into separate
 measurements of what the game hides, what that information is worth, and what the learner banks.
 
 \section{Method}
@@ -199,14 +198,12 @@ which grades against a fixed rule-based reference that never trains, with Pettin
 \citep{pettingzoo} supplying the environment API. The three contrasts apply across games, but each
 game still needs a verified oracle observation and a matched placebo.
 
-\paragraph{Why Gin Rummy.} Gin Rummy lies near the top of the measured two-player card games at
-30.1 support bits, and only one measured game in that family lies higher
-(Section~\ref{sec:r-atlas}), so switching games would buy little extra difficulty. Its eight
-configurations also sweep 5.1 to 30.1 support bits with the rules fixed, giving a dial inside one
-game. The full game is too large for an exact ceiling, which makes it a real test of whether a
-diagnostic validated on solvable games transfers unchanged to a much larger one. It is also a game
-the usual estimator gets wrong: the engine's world resampler reports \emph{0.00} bits for every Gin
-Rummy configuration (Section~\ref{sec:r-failures}).
+\paragraph{Why Gin Rummy.} Gin Rummy gives us a large case near the top of the measured
+two-player card games. Standard Gin Rummy has $30.1$ support bits, and only one measured game in
+that family lies higher (Section~\ref{sec:r-atlas}). Another game in the family would therefore add
+little range on this measure. Eight Gin Rummy configurations sweep $5.1$ to $30.1$ support bits
+while holding the rules fixed. The full game is too large for an exact ceiling, so it tests whether
+a diagnostic validated on solvable games transfers unchanged to a much larger one.
 
 \paragraph{The subset argument, which needs no experiment.} Our reference reads two of the
 learner's four observation planes, so it sees a strict subset of what the learner sees, and it
@@ -434,19 +431,15 @@ Figure~\ref{fig:sensitivity} in the appendix compares these effects with the lar
 \paragraph{The direct test.} Probe~3 adds the opponent's hand to the learner's observation. The
 oracle arm reaches $26.37$ percent across twenty-four seeds, against $27.03$ for the baseline arm. The
 difference is $-0.66$ points, with a 95 percent interval of $[-1.65, +0.33]$
-(Figure~\ref{fig:probes}). The placebo arm reaches $26.65$ percent, $-0.38$ points from baseline
-with an interval of $[-1.45, +0.69]$. Both widened arms sit a little below the baseline and every
-interval contains zero, so what separation there is tracks the wider input rather than the hand it
-carries.
+(Figure~\ref{fig:probes}). The placebo arm reaches $26.65$ percent, $-0.38$ points from baseline,
+with an interval of $[-1.45, +0.69]$.
 
-Oracle against placebo holds the input shape fixed and changes only whether the added plane carries
-the true hand. That contrast is $-0.28$ points, with interval $[-1.17, +0.61]$. Twenty-four seeds rule
-out gains above about $0.3$ points. That limit is about one seventieth of the distance from this
-agent's $27$ percent to the parity its reference defines, and it is tighter than the smallest
-margin the same probe detects in the tested small games, $0.22$. An effect of the size it finds
-there would not have been missed here. Smaller gains remain possible, and we do
-not claim that the effect is exactly zero. An earlier four-seed version gave an interval of
-$[-4.5, +2.7]$, which excluded almost nothing.
+The oracle-placebo contrast holds the input shape fixed and changes only whether the added plane
+carries the true hand. That contrast is $-0.28$ points, with interval $[-1.17, +0.61]$. All three
+contrast intervals contain zero, so no contrast shows detectable improvement or deterioration. The
+oracle-baseline interval rules out gains above about $0.3$ points. That bound is about one
+seventieth of the distance from this agent's $27$ percent to the parity its reference defines. An
+earlier four-seed version gave an interval of $[-4.5, +2.7]$, which excluded almost nothing.
 
 \FloatBarrier
 \paragraph{The supporting probes.} Probe~1 varies the encoder. A plain MLP averages 25.5 percent,
@@ -468,12 +461,11 @@ For this learner and reference, the raw hidden-hand channel is therefore not a l
 ingredient. The protocol has removed one plausible explanation for this plateau without claiming
 which remaining intervention should come next.
 
-The result does not show that the hidden hand has zero worth: a structured encoding of the same
-information could still produce a smaller gain.
-
-\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference,
-and the eleven calibration games are two families rather than eleven independent domains. The
-application demonstrates the protocol without establishing a domain-general cause of plateaus.
+\paragraph{Scope.} The large-case result covers one learner, one recipe and one fixed reference.
+Its interval leaves gains of about $0.3$ points or less unresolved, and a structured encoding of
+the same information could still produce a smaller gain. The eleven calibration games cover two
+families rather than eleven independent domains. The application demonstrates the protocol without
+establishing a domain-general cause of plateaus.
 Appendix~\ref{app:scope} lists the other conclusions the evidence does not support.
 
 \section{Conclusion}
@@ -528,9 +520,8 @@ which says what the intervention could have bought.
 \paragraph{Evaluation as measurement.} The framing comes from outside games. Measurement theory
 asks whether a test measures the construct it names \citep{measurementfairness}, benchmark critique
 asks whether narrow coverage supports broad claims \citep{wholeworld}, and reliable reporting asks
-for intervals and honest seed counts rather than point estimates \citep{rliable}. The twenty-four-seed
-intervals throughout this paper, and the four-seed comparison in Appendix~\ref{app:gin}, follow
-that last recommendation directly.
+for intervals and honest seed counts rather than point estimates \citep{rliable}. The twenty-four-seed Gin Rummy intervals and the
+four-seed comparison in Appendix~\ref{app:gin} follow that last recommendation directly.
 
 \paragraph{What we hold fixed rather than study.} The Gin Rummy learner is PPO \citep{ppo} with a
 shaped reward that adds knock and gin bonuses, a step penalty and a deadwood term. Those terms are
@@ -548,7 +539,12 @@ the probe tables from \texttt{scripts/probe\_tables.py}, and the appendix tables
 \texttt{scripts/make\_appendix.py}. Regenerating them from a clean checkout reproduces the paper.
 
 Ceilings are exact rather than estimated. The baseline ceiling is the best response to the opponent
-policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. The oracle ceiling is a memoised
+policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. Section~\ref{sec:r-failures} reports
+that the same library's world resampler fails on Gin Rummy, so it is fair to ask why we trust its
+solver. Two reasons: the resampler and the solver are separate code paths, and unlike the
+resampler the ceilings carry a check that can contradict them, since an arm scoring above its own
+ceiling is impossible. That check is what caught the game we reject in Appendix~\ref{app:reject},
+and it is one-sided: it would expose a ceiling that is too low, not one that is too high. The oracle ceiling is a memoised
 expectimax over the same game with the hidden state revealed. Both are exact deterministic values
 for the stated game and opponent policy, so they carry no seed noise and no confidence interval.
 
@@ -670,15 +666,16 @@ directly, and reach capture through banked. Banked
 is the oracle arm's observed return minus the baseline arm's observed return.
 Capture is banked over worth, and widening is the placebo arm minus the baseline arm.
 
-The eleven games are not eleven independent domains. Seven are Liar's dice at different die sizes
-and three are Leduc variants, so the spread of bits is wider than the spread of game structure.
+The eleven games are not eleven independent domains. Seven are Liar's dice variants at different die sizes, and
+four are poker variants, three of them Leduc. The spread of bits is therefore wider than the
+spread of game structure.
 This is a property of the supply rather than of our effort. The only non-poker, non-dice family the
 screen returns is Dark hex on a two by two board, and both its variants are won outright by the
 first player: the baseline and oracle ceilings are both $+1.0000$, so worth is exactly zero and
 capture is undefined. No third family is available under the constraint that an exact optimum must
 exist.
-We chose that deliberately. Holding the game fixed and moving one parameter is what lets worth be
-compared across rows at all. It also means the seven-to-four split in Section~\ref{app:mechanism}
+Within that supply, holding the game fixed and changing one parameter
+lets worth be compared across rows. It also means the seven-to-four split in Section~\ref{app:mechanism}
 tracks two game families, not seven independent confirmations, and we do not read it as such.
 
 \section{Worth does not move with the training budget}
