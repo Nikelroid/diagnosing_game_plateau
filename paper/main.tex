@@ -114,6 +114,17 @@ measure what the game hides. Worth measures how much the hidden state can improv
 achievable return against a stated opponent policy. Banked measures the observed difference between
 learners trained with and without that state.
 
+\label{sec:related}
+Three lines of work meet here, and they are usually kept apart. Measurement research asks whether
+an evaluation measures the construct it names \citep{measurementfairness}, and benchmark critiques
+ask whether limited domain coverage supports broad conclusions \citep{wholeworld}. Research on
+imperfect-information games measures related information-set structure
+\citep{pimc,rbccomplexity,ggpii}, and privileged-state interventions test what hidden information
+can buy \citep{policyinference,ismcts}. What joins them here is a validation chain: every atlas
+value carries its provenance, independent bounds expose silent failures, exact ceilings validate
+the diagnostic where answers are known, and the same protocol then runs where those ceilings cannot
+be computed. Appendix~\ref{app:related} places the work against this literature in full.
+
 We contribute two connected tools. The first is an atlas of support bits across 88 game
 configurations, with the provenance of every value and independent checks that catch three silent
 measurement failures. The second is a three-arm diagnostic validated against exact ceilings in
@@ -122,19 +133,6 @@ support bits and lies near the top of the measured two-player card games. Twelve
 gains above about $1.2$ points from the raw hidden-hand channel for this learner and reference.
 Together, these tools turn an unexplained plateau into separate measurements of what the game
 hides, what that information is worth, and what the learner banks.
-
-\section{Related work}
-\label{sec:related}
-
-This paper connects three lines of work that are usually treated separately. Measurement research
-asks whether an evaluation measures the construct it names \citep{measurementfairness}, and
-benchmark critiques ask whether limited domain coverage supports broad conclusions
-\citep{wholeworld}. Research on imperfect-information games measures related information-set
-structure \citep{pimc,rbccomplexity,ggpii}, and privileged-state interventions test what hidden
-information can buy \citep{policyinference,ismcts}. Our contribution is the validation chain that
-joins these lines of work. Every atlas value carries its provenance. Independent bounds expose
-silent failures. Exact ceilings validate the diagnostic where answers are known, and the same
-protocol then runs where those ceilings cannot be computed.
 
 \section{Method}
 \label{sec:method}
@@ -234,14 +232,15 @@ contains ten cards that the player cannot see, drawn independently of the oppone
 \texttt{opponents\_hand\_visible} flag does \emph{not} supply the opponent's hand, so we built our
 own plane and verified it against engine ground truth (Appendix~\ref{app:apparatus}).
 
-Before interpreting a null, we test whether the probe can fire where exact ceilings are available,
+Before interpreting a null, we test whether the probe can detect an effect where exact ceilings
+are available,
 with a tabular learner and with a neural learner reading a fixed-width tensor, as the case-study
 learner does.
 
 \paragraph{Why these games.} A fixed screen defines the candidate games before any probe result is
 examined. The screen keeps OpenSpiel games that are two-player, zero sum, sequential, imperfect
 information, and small enough for counterfactual regret minimisation to provide a true optimum.
-Parameter sweeps produce sixteen solvable configurations, twelve of which receive the probe. A
+Parameter sweeps produce sixteen solvable configurations, and we run the probe on twelve of them. A
 ceiling check rejects one, leaving eleven configurations for calibration. Gin Rummy is the only
 diagnostic application without an exact ceiling. Appendix~\ref{app:axis} accounts for every unrun
 and excluded configuration.
@@ -490,7 +489,7 @@ full tables, the measurement apparatus, and the two results we can describe but 
 \section{Related work in full}
 \label{app:related}
 
-Section~\ref{sec:related} states the connection in brief. This section gives the longer version.
+The introduction states the connection in brief. This section gives the longer version.
 
 \paragraph{Agents for imperfect-information games.} The landmark results in this area are agents
 rather than measurements. Libratus and then Pluribus took heads-up and six-player no-limit poker
