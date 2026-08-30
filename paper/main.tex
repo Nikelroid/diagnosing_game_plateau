@@ -482,8 +482,8 @@ the probe tables from \texttt{scripts/probe\_tables.py}, and the appendix tables
 
 Ceilings are exact rather than estimated. The baseline ceiling is the best response to the opponent
 policy, computed with OpenSpiel's \texttt{BestResponsePolicy}. The oracle ceiling is a memoised
-expectimax over the same game with the hidden state revealed. Both are exact deterministic values for the
-stated game and opponent policy, so they carry no seed noise and no confidence interval.
+expectimax over the same game with the hidden state revealed. Both are exact deterministic values
+for the stated game and opponent policy, so they carry no seed noise and no confidence interval.
 
 Probe runs use eight seeds per game unless the table says otherwise. The Gin Rummy arms use twelve.
 Tabular runs use \texttt{data/configs/}; neural runs use a fixed-width tensor observation and
