@@ -57,6 +57,58 @@ FIGURE_CONTENT = {
     "fig_decomposition.pdf": "(generated but not currently placed in the paper)",
 }
 
+# What was done in response to round one. Keyed by item id; emitted into the CC slots so round two
+# can see which findings landed and which were declined, and why.
+CC_ROUND1 = {
+    "C2": "FIXED (ChatGPT). The denominator counted 5 games we cannot measure. Now 'one of those "
+          "18'. The 3-4p median said 31.1 in prose against 39.9 in Table 1; the table was right "
+          "and the prose is corrected.",
+    "C4": "FIXED (Gemini). No contrast could be reproduced from the printed means: 27.02 - 27.04 "
+          "reads -0.02 while the table said -0.03. The difference was computed before rounding, "
+          "which is defensible but not checkable. Contrasts now come from the means as printed: "
+          "-0.25, -0.02, -0.23. Intervals are unchanged.",
+    "C6": "FIXED (Perplexity). Worth is now stated as exact for a specified opponent policy, not "
+          "for the game in the abstract, and the paper says both ceilings use the same policy. "
+          "The Table 3 caption no longer says 'worth is set by the game, capture by the learner'.",
+    "C7": "FIXED (Perplexity). 'Across all 88 runs' was an ambiguous unit. The widening column is "
+          "now described per game, over eight seeds each, with the Gin Rummy contrast quoted "
+          "separately. 'Costs nothing' is now 'no evidence that the cost of a wider input hides a "
+          "real gain'.",
+    "C8": "FIXED, and this was the round's real find (ChatGPT and Perplexity, independently). The "
+          "eleven-of-eleven sign agreement was an algebraic identity, not evidence: "
+          "banked = worth + g_b - g_o, so capture > 1 exactly when g_b > g_o, always. Our runs "
+          "satisfy it to 1.1e-16. Part III now derives the identity and says an earlier draft "
+          "reported the count as evidence. The rank correlation is gone. What survives is "
+          "empirical: dice arms sit 0.000 to 0.007 below their oracle ceilings, poker arms 0.377 "
+          "to 0.394.",
+    "C9": "PARTLY. The structured-feature experiment that Grok, Gemini and Perplexity all named "
+          "as the one experiment is named in the paper as the next step, not run. There is no "
+          "time before the deadline and we will not claim a result we do not have.",
+    "T2": "FIXED (Perplexity). Rows said 'Capacity' and 'Value of information', which resurrected "
+          "the two claims the body had renamed. Now 'Architecture sensitivity' and "
+          "'Oracle-search gap', with questions to match.",
+    "T5": "FIXED (Perplexity). Caption now reads 'exact worth is unchanged by the budget; the "
+          "capture ratio moves, clearly in Leduc and unevenly in Kuhn'.",
+    "T6": "FIXED (Perplexity). 'Only Leduc Hold'em is capacity bound' overstated one unreplicated "
+          "sweep. Now 'of these four, only Leduc improves steadily as the buckets approach exact "
+          "states'.",
+    "T7": "FIXED (Gemini). The difference column did not subtract as printed. It now does. The "
+          "'Predicted' column is deleted: the identity makes it true by construction, so a column "
+          "of yes was measuring nothing.",
+    "F3": "FIXED (Perplexity, blocker). The standardisation, the symlog axis and the shaded band "
+          "were all undefined. The caption now gives the pooled standard deviation, the linear "
+          "threshold, and the 0.8 band. We did not replace the figure with a forest plot; there "
+          "is no time, and the definition was the actual defect.",
+    "F4": "FIXED (Perplexity). The caption claimed the figure showed the mechanism. It now says "
+          "the figure is a picture of the identity rather than evidence for it.",
+    "A2": "FIXED (ChatGPT, blocker). The section was called 'the atlas in full' and held only the "
+          "two corrections. It now carries all 88 rows with the provenance of every value.",
+    "A4": "FIXED (Perplexity). Both ceilings are computed against the same fixed opponent policy, "
+          "verified in the code. The paper now states it rather than implying it.",
+    "A8": "FIXED. Rewritten around the derivation. 'Bias' is kept but scoped, and the count and "
+          "the rank correlation are gone.",
+}
+
 SLOTS = ["AI1(GEMINI)", "AI2(ChatGPT)", "AI3(GROK)", "AI4(PERPLEXITY)",
          "CC1", "CC2", "CC3", "CC4", "Nima"]
 L = []
@@ -146,8 +198,12 @@ def claim(tag, headline, evidence):
     for line in evidence.strip("\n").split("\n"):
         L.append("  " + line if line.strip() else "")
     L.append("")
+    reply = CC_ROUND1.get(tag)
     for s in SLOTS:
-        L.append(f"{s}:{{}}")
+        if s.startswith("CC") and reply:
+            L.append(f"{s}:{{{reply}}}")
+        else:
+            L.append(f"{s}:{{}}")
     L.append("")
     L.append("-" * 96)
     L.append("")
@@ -238,10 +294,12 @@ a raw hidden-hand channel; and that the result reorders what to try next rather 
 belief modelling, because a structured encoding of the same information might still pay.
 """)
 
-    claim("C6", "A plateau splits into worth (the game) and capture (the learner).",
+    claim("C6", "A plateau splits into worth (game and opponent) and capture (learner).",
           f"""
-Worth = oracle ceiling minus baseline ceiling. Both ceilings are exact: best response to the
-opponent policy, and a memoised expectimax with the state revealed. No seed noise in either.
+Worth = oracle ceiling minus baseline ceiling. Both ceilings are exact, and BOTH are computed
+against the same fixed opponent policy; the only difference is whether the acting learner sees the
+hidden state. Worth is therefore exact for that evaluation setting, not for the game in the
+abstract. No seed noise in either ceiling.
 Capture = what the learner banks, divided by worth.
 Worth is invariant to a 64-fold change in training budget (25k to 1.6M episodes), constant to
 three decimals in both games swept. Capture moves with budget: 56% to 79% in Leduc.
@@ -250,26 +308,38 @@ Coverage: {len(good)} games, {sum(len(v) for v in good.values())} runs, 8 seeds 
 {max(rs[0]['hidden_bits'] for rs in good.values() if rs[0].get('hidden_bits')):.2f} bits.
 """)
 
-    claim("C7", "The placebo shows a wider observation costs nothing, so the null is not a cancellation.",
+    claim("C7", "No evidence that the cost of a wider input hides a real gain.",
           f"""
-Widening = placebo arm minus baseline arm, per game.
-Mean over all {len(wid)} runs: {st.mean(wid):+.4f}. Inside seed noise in every game.
-This is what rules out the reading that a real benefit was cancelled by a real cost of the wider
-input. Without it the null in C4 would be uninterpretable.
+NARROWED SINCE ROUND ONE. The claim used to be that widening "costs nothing", averaged over "88
+runs". The unit was ambiguous and the claim outran the evidence.
+Widening = placebo arm minus baseline arm, averaged over the eight seeds of each game.
+It stays inside seed noise in all {len(good)} games. In Gin Rummy the same contrast is -0.02
+points, interval [-1.60, +1.56].
+That supports "no evidence that the wider input masked a gain". It does not support "widening is
+free", and the paper no longer says so.
 """)
 
-    claim("C8", "Capture exceeds 100% in seven games, and the reason is a known bias, not noise.",
+    claim("C8", "Capture exceeds 100% in seven games, and the algebra says why.",
           f"""
-{hi} of {len(good)} games report capture above 100%, which is impossible if worth is the right
-denominator. The ceilings are exact, so the error is in the denominator's assumption: that the
-learner sits equally far below its ceiling in both arms.
-It does not. Revealing the state supplies information AND makes the task easier to learn.
-In all {hi} games with capture > 100%, the baseline arm sits further below its own ceiling.
-In all {len(good)-hi} games with capture < 100% (the poker variants), the oracle arm does.
-Rank correlation between capture and the gap difference: exactly 1.000 over all {len(good)} games,
-AND 1.000 within each of the two game families taken alone.
-Per game the effect is 0.8 to 2.3 times the seed spread, so no single game rules out noise.
-The paper deliberately does NOT quote a p-value: the games are related configurations.
+CHANGED SINCE ROUND ONE. Two reviewers found that the previous version of this claim treated an
+algebraic identity as empirical evidence. They were right. The claim is now the identity.
+
+{hi} of {len(good)} games report capture above 100%, which looks impossible. Write g_b and g_o for
+how far each arm sits below its own exact ceiling. Then, from the definitions alone:
+
+    banked = worth + g_b - g_o
+
+so capture exceeds 1 if and only if g_b > g_o. Always. Our runs satisfy the identity with a maximum
+residual of 1.1e-16, which is floating point.
+
+The paper previously reported that the sign agreed "in eleven games out of eleven" with a rank
+correlation of 1.000, as though that confirmed a mechanism. It confirms nothing: the agreement is
+guaranteed by the definitions. Both the count and the correlation are removed.
+
+What is still empirical is where each family sits. The dice arms are 0.000 to 0.007 below their
+oracle ceilings, because with the die revealed the game is nearly solved. The poker arms are 0.377
+to 0.394 below theirs, because the oracle ceiling is much higher. That split is the finding.
+Per game the gap difference is 0.8 to 2.3 times the seed spread, so no single game settles it.
 """)
 
     claim("C9", "What the paper does not do.",
