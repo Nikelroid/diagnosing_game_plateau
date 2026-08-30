@@ -120,7 +120,7 @@ def fig_gin():
     arms = [a for a in arms if a[1]]
     if not arms:
         print("  [skip] gin: no data"); return
-    fig, ax = plt.subplots(figsize=(5.6, 3.5))
+    fig, ax = plt.subplots(figsize=(7.4, 4.3))
     for i, (lab, w, c, cl) in enumerate(arms):
         m, sd = st.mean(w), (st.stdev(w) if len(w) > 1 else 0.0)
         ci = 2.201 * sd / math.sqrt(len(w))
@@ -145,7 +145,7 @@ def fig_budget():
         r = json.load(open(p)); rows[(r["game"], r["episodes"])].append(r)
     if not rows:
         print("  [skip] budget: no data"); return
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.2, 3.2), gridspec_kw={"wspace": 0.3})
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.0, 3.9), gridspec_kw={"wspace": 0.28})
     for game, c, cl in (("leduc_poker", TEAL, TEAL_L), ("kuhn_poker", GOLD, GOLD_L)):
         eps = sorted(e for (g, e) in rows if g == game)
         if not eps: continue

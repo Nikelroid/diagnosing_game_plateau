@@ -87,7 +87,7 @@ def fig_sensitivity():
     b, o, _ = gin_arms()
     gd, gci, graw = d_and_ci(o, b)
 
-    fig, ax = plt.subplots(figsize=(7.6, 4.6))
+    fig, ax = plt.subplots(figsize=(8.4, 5.0))
     ax.axvline(0, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=1)
     ax.axvspan(-0.8, 0.8, color=PLUM_L, alpha=0.55, lw=0, zorder=0)
     ax.errorbar(gd, 0, xerr=gci, fmt="none", ecolor=PLUM, elinewidth=1.8, capsize=3.5,
@@ -174,32 +174,49 @@ def _spread(items, gap):
 
 
 def fig_mechanism():
-    """Why capture can exceed 100%: the oracle also changes how hard the task is to learn."""
+    """Why capture can exceed 100%, as one quantity per game.
+
+    This was a slope chart from "without the oracle" to "with the oracle", which spent half its
+    canvas on a block of series labels and made the reader compare eleven pairs of endpoints by
+    eye. The quantity that actually decides the question is the difference between the two gaps,
+    so plot that difference directly. The identity banked = worth + g_b - g_o makes the sign of
+    this bar and the side of 100 percent the same fact, and zero is the boundary.
+    """
     rows = load_axis()
-    if not rows: 
+    if not rows:
         print("  [skip] mechanism: no data"); return
-    fig, ax = plt.subplots(figsize=(6.8, 4.4))
-    lim, ends = 0, []
+    items = []
     for g, rs in rows.items():
         gb = st.mean([r["arms"]["baseline"]["gap_to_ceiling"] for r in rs])
         go = st.mean([r["arms"]["oracle"]["gap_to_ceiling"] for r in rs])
         cap = st.mean([r["capture"] for r in rs if r.get("capture") is not None])
-        c = TEAL if cap > 1 else GOLD
-        lim = max(lim, gb, go)
-        ax.plot([0, 1], [gb, go], "-", color=c, lw=1.6, alpha=0.75, zorder=3)
-        ax.plot([0, 1], [gb, go], "o", color="white", mec=c, mew=1.5, ms=6, zorder=4)
-        ends.append((go, (f"{nice(g)}  {cap:.0%}", c)))
-    # many liar's dice variants finish at almost the same height, so the labels are spread
-    for y, (lab, c) in _spread(ends, gap=lim * 0.062):
-        ax.text(1.04, y, lab, color=c, fontsize=8.0, va="center")
-    ax.set_xlim(-0.08, 1.95); ax.set_ylim(-0.02, lim * 1.22)
-    ax.set_xticks([0, 1]); ax.set_xticklabels(["without the oracle", "with the oracle"], color=INK)
-    ax.set_ylabel("how far the learner sits below its own ceiling")
-    ax.set_title("Why capture can exceed one hundred percent", pad=22)
-    ax.yaxis.grid(True); ax.tick_params(axis="x", length=0)
-    ax.text(0.0, 1.045, "a line sloping down means the oracle arm is closer to its own ceiling, "
-            "which is exactly when capture reads above 100%", transform=ax.transAxes,
-            fontsize=8.2, color=MUTED)
+        items.append((gb - go, nice(g), cap, gb, go))
+    items.sort()
+    y = np.arange(len(items))
+    diffs = [d for d, *_ in items]
+
+    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    for i, (d, lab, cap, gb, go) in enumerate(items):
+        c, cl = (TEAL, TEAL_L) if cap > 1 else (GOLD, GOLD_L)
+        ax.barh(i, d, height=0.66, color=cl, edgecolor=c, lw=1.2, zorder=3)
+        off = 0.012 * (1 if d > 0 else -1)
+        ax.text(d + off, i, f"{cap:.0%}", va="center", ha="left" if d > 0 else "right",
+                fontsize=8.6, fontweight="bold", color=c, zorder=5)
+    ax.axvline(0, color=INK, lw=1.2, zorder=4)
+    ax.set_yticks(y); ax.set_yticklabels([lab for _, lab, *_ in items], fontsize=9, color=INK)
+    ax.set_ylim(-0.7, len(items) - 0.3)
+    span = max(abs(min(diffs)), abs(max(diffs)))
+    ax.set_xlim(-span * 1.30, span * 1.30)
+    ax.set_xlabel("how much closer the oracle arm sits to its own ceiling "
+                  "($g_b - g_o$, in return)")
+    ax.set_title("Capture reads high exactly when the oracle arm is the easier one to learn",
+                 pad=20)
+    ax.xaxis.grid(True); ax.tick_params(axis="y", length=0)
+    for spine in ("top", "right", "left"):
+        ax.spines[spine].set_visible(False)
+    ax.text(0.0, 1.035, "bars right of the line: the oracle arm is closer to its ceiling, and "
+            "capture reads above 100%.  Left of it: the reverse.",
+            transform=ax.transAxes, fontsize=8.2, color=MUTED)
     fig.tight_layout(); save(fig, "fig_mechanism")
 
 
