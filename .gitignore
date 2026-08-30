@@ -13,3 +13,7 @@ paper/*.pdf
 # Jupyter writes checkpoint copies of every file opened in the browser. They are stale
 # duplicates by construction, and two of them outlived the files they copied.
 .ipynb_checkpoints/
+
+# The review workflow: the four experts, their sheets, our replies, and the generator.
+# Internal work product, and the reviews are other people's text. Never published.
+private/
